@@ -64,25 +64,39 @@ jobs:
       - name: Research and draft entries for new models
         if: steps.work.outputs.candidates != '0' && env.HAS_GEMINI_KEY == 'true'
         uses: google-github-actions/run-gemini-cli@v0
+        env:
+          # Bypasses the CLI's folder-trust prompt in headless CI (set by the
+          # official example workflows).
+          GEMINI_CLI_TRUST_WORKSPACE: 'true'
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
-          # auto_edit approves file edits; tools.allowed bypasses confirmation
-          # for the scoped shell commands and web tools the agent needs.
+          # The action runs the CLI with --yolo (all tool calls auto-approved),
+          # so tools.core is the access-control surface: it is an allowlist for
+          # ALL built-in tools — anything not listed is unavailable. Shell is
+          # scoped by command prefix; search_file_content is the legacy alias
+          # of grep_search, kept for older pinned CLI versions (inert extras
+          # are harmless). Committing is left to the create-pull-request step,
+          # so git is deliberately not allowlisted.
           settings: |-
             {
-              "general": {
-                "defaultApprovalMode": "auto_edit"
-              },
               "model": {
                 "maxSessionTurns": 50
               },
               "tools": {
-                "allowed": [
+                "core": [
+                  "list_directory",
+                  "read_file",
+                  "read_many_files",
+                  "glob",
+                  "grep_search",
+                  "search_file_content",
+                  "write_file",
+                  "replace",
+                  "web_fetch",
+                  "google_web_search",
                   "run_shell_command(npm)",
                   "run_shell_command(npx)",
-                  "run_shell_command(node)",
-                  "web_fetch",
-                  "google_web_search"
+                  "run_shell_command(node)"
                 ]
               },
               "telemetry": {

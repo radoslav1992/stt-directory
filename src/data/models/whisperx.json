@@ -1,0 +1,48 @@
+{
+  "id": "whisperx",
+  "hfId": "openai/whisper-large-v3",
+  "name": "WhisperX",
+  "org": "Max Bain (Oxford VGG)",
+  "year": 2022,
+  "kind": "runtime",
+  "status": "active",
+  "license": "BSD-2-Clause",
+  "licenseType": "permissive",
+  "params": "— (pipeline)",
+  "wer": 7.44,
+  "langs": "99 (Whisper)",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "Whisper with accurate word-level timestamps and speaker diarisation — ~70× realtime batched inference.",
+  "about": [
+    "WhisperX wraps Whisper (via faster-whisper) in a production pipeline: VAD preprocessing, batched inference at roughly 70× realtime on a GPU, forced phoneme alignment with wav2vec2 for accurate word-level timestamps, and speaker diarisation through pyannote-audio.",
+    "Whisper’s own timestamps are utterance-level and drift-prone — WhisperX is what most people reach for when they need subtitles, word highlighting, or who-said-what. The pyannote diarisation models require a (free) Hugging Face token."
+  ],
+  "install": "pip install whisperx\n\nwhisperx audio.wav --model large-v2 --diarize --highlight_words True",
+  "downloads": [
+    {
+      "label": "whisperX (GitHub)",
+      "url": "https://github.com/m-bain/whisperX"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Replicate (community)",
+      "price": "per-second GPU",
+      "url": "https://replicate.com/victor-upmeet/whisperx"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2303.00747"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/m-bain/whisperX"
+    }
+  ],
+  "demo": null
+}

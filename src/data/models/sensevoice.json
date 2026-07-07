@@ -1,0 +1,53 @@
+{
+  "id": "sensevoice",
+  "hfId": null,
+  "name": "SenseVoice",
+  "org": "Alibaba (FunAudioLLM)",
+  "year": 2024,
+  "kind": "model",
+  "status": "active",
+  "license": "Custom (Alibaba)",
+  "licenseType": "permissive",
+  "params": "234M",
+  "wer": null,
+  "langs": "Zh, Yue, En, Ja, Ko +",
+  "runs": [
+    "GPU",
+    "CPU",
+    "Mobile"
+  ],
+  "blurb": "Alibaba’s non-autoregressive multitasker — transcription, language ID, emotion, and audio events, far faster than Whisper.",
+  "about": [
+    "SenseVoice-Small is a non-autoregressive encoder that does four jobs at once: transcription, spoken language identification, emotion recognition, and audio-event detection. It processes ten seconds of audio in about 70 ms — Alibaba claims 15× faster than Whisper-large — and is particularly strong on Mandarin and Cantonese, backed by 400,000+ training hours.",
+    "The weights ship under Alibaba’s custom FunASR model licence — free for commercial use with attribution, but it is not a standard OSI licence, so read it. The FunASR code path is MIT, and community runtimes (sherpa-onnx, llama.cpp) take it to mobile and embedded devices."
+  ],
+  "install": "pip install funasr\n\npython -c \"\nfrom funasr import AutoModel\nm = AutoModel(model='FunAudioLLM/SenseVoiceSmall', trust_remote_code=True)\nprint(m.generate(input='audio.wav', language='auto'))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/FunAudioLLM/SenseVoiceSmall"
+    },
+    {
+      "label": "SenseVoice (GitHub)",
+      "url": "https://github.com/FunAudioLLM/SenseVoice"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Alibaba Model Studio",
+      "price": "usage-based",
+      "url": "https://www.alibabacloud.com/en/product/modelstudio"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2407.04051"
+    },
+    {
+      "label": "Model licence text",
+      "url": "https://github.com/modelscope/FunASR/blob/main/MODEL_LICENSE"
+    }
+  ],
+  "demo": null
+}

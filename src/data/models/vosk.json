@@ -1,0 +1,46 @@
+{
+  "id": "vosk",
+  "hfId": null,
+  "name": "Vosk",
+  "org": "Alpha Cephei",
+  "year": 2020,
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "50 MB – 4 GB",
+  "wer": null,
+  "langs": "20+",
+  "runs": [
+    "CPU",
+    "Mobile"
+  ],
+  "blurb": "Lightweight offline recognition for 20+ languages — models start at 50 MB and run on a Raspberry Pi.",
+  "about": [
+    "Vosk is a Kaldi-based offline recogniser with ready-made models for 20+ languages, starting at 50 MB — small enough for phones, Raspberry Pi, and embedded devices. It streams: you get words as they are spoken, with a zero-latency feel that batch models can’t match.",
+    "Bindings exist for Python, Java, Node, C#, Go, and more. Accuracy trails the transformer generation, but for wake words, commands, and live captioning on weak hardware it remains the pragmatic choice."
+  ],
+  "install": "pip install vosk\n\n# download a model from alphacephei.com/vosk/models\npython -c \"\nfrom vosk import Model, KaldiRecognizer\nmodel = Model('vosk-model-small-en-us-0.15')\"",
+  "downloads": [
+    {
+      "label": "Model downloads",
+      "url": "https://alphacephei.com/vosk/models"
+    },
+    {
+      "label": "vosk-api (GitHub)",
+      "url": "https://github.com/alphacep/vosk-api"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://alphacephei.com/vosk/"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/alphacep/vosk-api"
+    }
+  ],
+  "demo": null
+}

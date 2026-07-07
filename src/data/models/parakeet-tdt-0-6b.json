@@ -1,0 +1,53 @@
+{
+  "id": "parakeet-tdt-0-6b",
+  "hfId": "nvidia/parakeet-tdt-0.6b-v2",
+  "name": "Parakeet TDT 0.6B v2",
+  "org": "NVIDIA",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "CC-BY-4.0",
+  "licenseType": "permissive",
+  "params": "0.6B",
+  "wer": 6.05,
+  "langs": "English (v3: 25 EU)",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "Blistering speed — transcribes an hour of audio in about a second on a data-centre GPU.",
+  "about": [
+    "Parakeet is the speed king: a 600M-parameter FastConformer-TDT model that scores 6.05% WER while running orders of magnitude faster than real time. It powers a lot of production transcription pipelines where Whisper is too slow.",
+    "v2 is English-only; the v3 multilingual variant covers 25 European languages. It includes accurate word-level timestamps and punctuation out of the box."
+  ],
+  "install": "pip install -U nemo_toolkit[asr]\n\npython -c \"\nimport nemo.collections.asr as nemo_asr\nm = nemo_asr.models.ASRModel.from_pretrained('nvidia/parakeet-tdt-0.6b-v2')\nprint(m.transcribe(['audio.wav']))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2"
+    },
+    {
+      "label": "NeMo toolkit (GitHub)",
+      "url": "https://github.com/NVIDIA/NeMo"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "NVIDIA NIM / Riva",
+      "price": "per-GPU licence",
+      "url": "https://build.nvidia.com/"
+    },
+    {
+      "name": "Groq (hosted)",
+      "price": "usage-based",
+      "url": "https://groq.com/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2"
+    }
+  ],
+  "demo": null
+}

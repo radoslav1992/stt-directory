@@ -1,0 +1,42 @@
+{
+  "id": "silero",
+  "hfId": null,
+  "name": "Silero Models",
+  "org": "Silero",
+  "year": 2020,
+  "kind": "model",
+  "status": "active",
+  "license": "CC-BY-NC-SA",
+  "licenseType": "non-commercial",
+  "params": "~50M",
+  "wer": null,
+  "langs": "En, De, Es, Ua",
+  "runs": [
+    "CPU",
+    "Mobile"
+  ],
+  "blurb": "Compact one-file models for STT, TTS, and the ubiquitous Silero VAD.",
+  "about": [
+    "Silero ships compact, production-minded speech models that load in one line of PyTorch — STT for a handful of languages, plus the Silero VAD (voice activity detector) that has become a de-facto standard component in almost every open transcription pipeline.",
+    "STT models are CC-BY-NC-SA (commercial licences are sold separately); the VAD itself is MIT and safe to use anywhere."
+  ],
+  "install": "pip install torch torchaudio omegaconf\n\npython -c \"\nimport torch\nmodel, decoder, utils = torch.hub.load(\n  'snakers4/silero-models', 'silero_stt', language='en')\"",
+  "downloads": [
+    {
+      "label": "silero-models (GitHub)",
+      "url": "https://github.com/snakers4/silero-models"
+    },
+    {
+      "label": "Silero VAD (MIT)",
+      "url": "https://github.com/snakers4/silero-vad"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/snakers4/silero-models"
+    }
+  ],
+  "demo": null
+}

@@ -1,0 +1,46 @@
+{
+  "id": "seamless-m4t-v2",
+  "hfId": null,
+  "name": "Seamless M4T v2",
+  "org": "Meta AI",
+  "year": 2023,
+  "kind": "model",
+  "status": "legacy",
+  "license": "CC-BY-NC-4.0",
+  "licenseType": "non-commercial",
+  "params": "2.3B",
+  "wer": null,
+  "langs": "~100",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "Meta’s all-in-one speech translator — ASR plus speech-to-speech translation across roughly 100 languages.",
+  "about": [
+    "SeamlessM4T v2 is one model for five tasks: speech recognition, speech-to-text and text-to-speech translation, and speech-to-speech translation, covering roughly 100 input languages. Built on Meta’s UnitY2 framework and trained with the 114,800-hour SeamlessAlign corpus.",
+    "Like MMS, it is CC-BY-NC 4.0 — research and non-commercial use only — and upstream development has been dormant since late 2024, though it remains fully usable through Hugging Face Transformers. For pure ASR newer models beat it; its niche is combined recognition and translation in one checkpoint."
+  ],
+  "install": "pip install transformers sentencepiece torch\n\npython -c \"\nfrom transformers import AutoProcessor, SeamlessM4Tv2Model\nm = SeamlessM4Tv2Model.from_pretrained('facebook/seamless-m4t-v2-large')\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/facebook/seamless-m4t-v2-large"
+    },
+    {
+      "label": "seamless_communication (GitHub)",
+      "url": "https://github.com/facebookresearch/seamless_communication"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2312.05187"
+    },
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/facebook/seamless-m4t-v2-large"
+    }
+  ],
+  "demo": null
+}

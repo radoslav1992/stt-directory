@@ -1,0 +1,53 @@
+{
+  "id": "distil-whisper",
+  "hfId": "distil-whisper/distil-large-v3.5",
+  "name": "Distil-Whisper large-v3.5",
+  "org": "Hugging Face",
+  "year": 2023,
+  "kind": "model",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "756M",
+  "wer": 7.21,
+  "langs": "English",
+  "runs": [
+    "GPU",
+    "CPU",
+    "Browser"
+  ],
+  "blurb": "Whisper distilled to half the size and several times the speed — v3.5 now beats its teacher on the leaderboard.",
+  "about": [
+    "Distil-Whisper is a knowledge-distilled version of Whisper large-v3: about half the parameters and several times faster. The current v3.5 release scores 7.21% average WER on the Open ASR Leaderboard — actually beating full large-v3’s 7.44% while running roughly 3× faster. English-only.",
+    "It drops into any Hugging Face Transformers pipeline as a straight replacement, and pairs well with speculative decoding — using it as a draft model to speed up full Whisper with zero accuracy loss."
+  ],
+  "install": "pip install transformers accelerate\n\npython -c \"\nfrom transformers import pipeline\nasr = pipeline('automatic-speech-recognition',\n  'distil-whisper/distil-large-v3.5')\nprint(asr('audio.wav'))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/distil-whisper/distil-large-v3.5"
+    },
+    {
+      "label": "distil-whisper (GitHub)",
+      "url": "https://github.com/huggingface/distil-whisper"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "HF Inference Endpoints",
+      "price": "per-hour GPU",
+      "url": "https://huggingface.co/inference-endpoints"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2311.00430"
+    },
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/distil-whisper/distil-large-v3"
+    }
+  ],
+  "demo": null
+}

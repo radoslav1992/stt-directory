@@ -1,0 +1,52 @@
+{
+  "id": "canary-1b-v2",
+  "hfId": "nvidia/canary-1b-v2",
+  "name": "Canary 1B v2",
+  "org": "NVIDIA",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "CC-BY-4.0",
+  "licenseType": "permissive",
+  "params": "978M",
+  "wer": 7.15,
+  "langs": "25 European",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "NVIDIA’s multilingual Canary — 25 European languages, translation both ways, and extreme throughput.",
+  "about": [
+    "Canary 1B v2 is the multilingual sibling of Canary-Qwen: a FastConformer encoder + Transformer decoder that transcribes and translates across 25 European languages with punctuation, capitalisation, and word timestamps. At 7.15% average English WER with a throughput around 749× realtime, it sits in the leaderboard’s best speed-for-accuracy region.",
+    "It was trained on roughly 1.7M hours including NVIDIA’s openly released Granary corpus, with non-speech audio mixed in to curb hallucination. CC-BY-4.0, so commercial use with attribution. Community ONNX ports enable CPU inference."
+  ],
+  "install": "pip install -U nemo_toolkit[asr]\n\npython -c \"\nfrom nemo.collections.asr.models import EncDecMultiTaskModel\nm = EncDecMultiTaskModel.from_pretrained('nvidia/canary-1b-v2')\nprint(m.transcribe(['audio.wav'], source_lang='en', target_lang='en')[0].text)\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/nvidia/canary-1b-v2"
+    },
+    {
+      "label": "NeMo toolkit (GitHub)",
+      "url": "https://github.com/NVIDIA/NeMo"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "NVIDIA NIM / Riva",
+      "price": "per-GPU licence",
+      "url": "https://build.nvidia.com/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2509.14128"
+    },
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/nvidia/canary-1b-v2"
+    }
+  ],
+  "demo": null
+}

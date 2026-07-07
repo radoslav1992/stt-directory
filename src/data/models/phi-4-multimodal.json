@@ -1,0 +1,52 @@
+{
+  "id": "phi-4-multimodal",
+  "hfId": "microsoft/Phi-4-multimodal-instruct",
+  "name": "Phi-4-multimodal",
+  "org": "Microsoft",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "5.6B",
+  "wer": 6.02,
+  "langs": "8 speech",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "A general multimodal LLM whose speech recognition briefly topped the ASR leaderboard — under MIT.",
+  "about": [
+    "Phi-4-multimodal is a text + vision + audio model built as a frozen 3.8B Phi-4-Mini backbone with plug-in LoRA adapters per modality. Its ASR was strong enough to take #1 on the Open ASR Leaderboard at release in early 2025 — the first general-purpose multimodal model to do so — and it still sits in the top ten at 6.02% average WER.",
+    "One 5.6B checkpoint handles transcription in eight languages, speech translation, spoken Q&A, and speech summarisation, with a 128k context. An official ONNX build targets edge deployment, and the MIT licence makes it the most permissive of the LLM-based options."
+  ],
+  "install": "pip install transformers accelerate soundfile peft\n\n# checkpoint: microsoft/Phi-4-multimodal-instruct\n# prompt with <|audio_1|>Transcribe the audio to text.\n# (see the model card for the full snippet)",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/microsoft/Phi-4-multimodal-instruct"
+    },
+    {
+      "label": "ONNX build (edge)",
+      "url": "https://huggingface.co/microsoft/Phi-4-multimodal-instruct-onnx"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Azure AI Foundry",
+      "price": "per-token",
+      "url": "https://ai.azure.com/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2503.01743"
+    },
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/microsoft/Phi-4-multimodal-instruct"
+    }
+  ],
+  "demo": null
+}

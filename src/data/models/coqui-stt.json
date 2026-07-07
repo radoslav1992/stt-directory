@@ -1,0 +1,42 @@
+{
+  "id": "coqui-stt",
+  "hfId": null,
+  "name": "Coqui STT",
+  "org": "Coqui (ex-Mozilla)",
+  "year": 2021,
+  "kind": "model",
+  "status": "discontinued",
+  "license": "MPL-2.0",
+  "licenseType": "permissive",
+  "params": "~47M",
+  "wer": null,
+  "langs": "En + community",
+  "runs": [
+    "CPU",
+    "Mobile"
+  ],
+  "blurb": "The successor to Mozilla DeepSpeech — archived, but its small on-device models still circulate.",
+  "about": [
+    "Coqui STT carried on Mozilla’s DeepSpeech after that project wound down: small, streaming, on-device models with bindings for Python, Node, Android, and iOS. The company pivoted to TTS and the STT project is now archived.",
+    "Listed for completeness — the repos and model files remain available and functional, but there is no maintenance. For new on-device work, look at Moonshine, Vosk, or whisper.cpp instead."
+  ],
+  "install": "# archived — pinned versions only\npip install stt\n\n# models from the GitHub releases page",
+  "downloads": [
+    {
+      "label": "STT (GitHub, archived)",
+      "url": "https://github.com/coqui-ai/STT"
+    },
+    {
+      "label": "Released models",
+      "url": "https://github.com/coqui-ai/STT-models"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/coqui-ai/STT"
+    }
+  ],
+  "demo": null
+}

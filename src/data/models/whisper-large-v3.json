@@ -1,0 +1,69 @@
+{
+  "id": "whisper-large-v3",
+  "hfId": "openai/whisper-large-v3",
+  "name": "Whisper large-v3",
+  "org": "OpenAI",
+  "year": 2023,
+  "kind": "model",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "1.55B",
+  "wer": 7.44,
+  "langs": "99",
+  "runs": [
+    "GPU",
+    "CPU",
+    "Browser",
+    "Mobile"
+  ],
+  "blurb": "The default choice. 99 languages, MIT licence, and the largest ecosystem of any speech model ever released.",
+  "about": [
+    "Whisper is the model that made open speech recognition mainstream. Trained on 680k+ hours of audio, large-v3 transcribes and translates 99 languages under an MIT licence, and nearly every STT tool built since 2022 is Whisper-shaped or Whisper-compatible.",
+    "Its ecosystem is the real superpower: faster-whisper for 4× speed, whisper.cpp for laptops and phones, distil-whisper for cheap inference, and browser builds via transformers.js — which is exactly what the demo below runs."
+  ],
+  "install": "pip install -U openai-whisper\n\nwhisper audio.mp3 --model large-v3\n\n# or the 4x-faster route:\npip install faster-whisper",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/openai/whisper-large-v3"
+    },
+    {
+      "label": "openai/whisper (GitHub)",
+      "url": "https://github.com/openai/whisper"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "OpenAI API",
+      "price": "$0.006 / min",
+      "url": "https://platform.openai.com/docs/guides/speech-to-text"
+    },
+    {
+      "name": "Groq",
+      "price": "~$0.111 / hr",
+      "url": "https://groq.com/"
+    },
+    {
+      "name": "Replicate",
+      "price": "per-second GPU",
+      "url": "https://replicate.com/openai/whisper"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2212.04356"
+    },
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/openai/whisper-large-v3"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/openai/whisper"
+    }
+  ],
+  "demo": "whisper",
+  "demoNote": "This loads Whisper tiny.en (≈40 MB, English) via transformers.js and runs it right here — the same architecture as large-v3, shrunk to fit a browser tab."
+}

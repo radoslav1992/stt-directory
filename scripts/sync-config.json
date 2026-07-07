@@ -1,0 +1,18 @@
+{
+  "candidateWerThreshold": 7.5,
+  "maxCandidates": 10,
+  "ignorePatterns": [
+    "^openai/whisper",
+    "^distil-whisper/",
+    "^usefulsensors/moonshine",
+    "^nvidia/(canary|parakeet)",
+    "^ibm-granite/granite",
+    "^Qwen/Qwen3-ASR",
+    "^mistralai/Voxtral",
+    "^kyutai/stt",
+    "^CohereLabs/cohere-transcribe",
+    "^espnet/owsm",
+    "^assemblyai/",
+    "^assembly/"
+  ]
+}

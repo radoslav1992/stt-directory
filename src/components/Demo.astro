@@ -1,0 +1,152 @@
+---
+import type { ModelEntry } from '../data/models';
+
+interface Props {
+  model: ModelEntry;
+}
+
+const { model } = Astro.props;
+const hfModel =
+  model.demo === 'moonshine' ? 'onnx-community/moonshine-tiny-ONNX' : 'onnx-community/whisper-tiny.en';
+const loadLabel =
+  model.demo === 'moonshine' ? 'Load Moonshine tiny (~27 MB)' : 'Load Whisper tiny.en (~40 MB)';
+---
+
+<div class="demo" data-demo data-hf-model={hfModel}>
+  <div class="demo-head">
+    <h2 class="demo-title">Run it in your browser</h2>
+    <span class="demo-live">● LIVE — 100% LOCAL</span>
+  </div>
+  <p class="demo-note">
+    {model.demoNote} Your audio is processed on your device and never uploaded anywhere.
+  </p>
+  <div class="demo-controls">
+    <button class="demo-btn" data-load>{loadLabel}</button>
+    <button class="demo-btn" data-record hidden>● Record from mic</button>
+    <label class="demo-upload" hidden>
+      Upload an audio file
+      <input type="file" accept="audio/*" data-file />
+    </label>
+    <span class="demo-status" data-status aria-live="polite"></span>
+  </div>
+  <blockquote class="demo-result" data-result hidden></blockquote>
+</div>
+
+<script>
+  const TRANSFORMERS_CDN =
+    'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.3.3/dist/transformers.min.js';
+
+  const root = document.querySelector<HTMLElement>('[data-demo]');
+
+  if (root) {
+    const hfModel = root.dataset.hfModel!;
+    const loadBtn = root.querySelector<HTMLButtonElement>('[data-load]')!;
+    const recordBtn = root.querySelector<HTMLButtonElement>('[data-record]')!;
+    const uploadLabel = root.querySelector<HTMLLabelElement>('.demo-upload')!;
+    const fileInput = root.querySelector<HTMLInputElement>('[data-file]')!;
+    const statusEl = root.querySelector<HTMLElement>('[data-status]')!;
+    const resultEl = root.querySelector<HTMLElement>('[data-result]')!;
+
+    let asr: any = null;
+    let recorder: MediaRecorder | null = null;
+    let recording = false;
+
+    const setStatus = (msg: string) => {
+      statusEl.textContent = msg;
+    };
+
+    loadBtn.addEventListener('click', async () => {
+      loadBtn.disabled = true;
+      setStatus('loading runtime…');
+      try {
+        const tf: any = await import(/* @vite-ignore */ TRANSFORMERS_CDN);
+        const progress_callback = (p: any) => {
+          if (p.status === 'progress' && p.file) {
+            setStatus(
+              `downloading ${p.file.split('/').pop()} — ${Math.round(p.progress || 0)}%`
+            );
+          }
+        };
+        try {
+          asr = await tf.pipeline('automatic-speech-recognition', hfModel, {
+            device: 'webgpu',
+            progress_callback,
+          });
+        } catch {
+          asr = await tf.pipeline('automatic-speech-recognition', hfModel, { progress_callback });
+        }
+        loadBtn.hidden = true;
+        recordBtn.hidden = false;
+        uploadLabel.hidden = false;
+        setStatus('model loaded — record or upload audio');
+      } catch (err: any) {
+        loadBtn.disabled = false;
+        setStatus('could not load model: ' + ((err && err.message) || err));
+      }
+    });
+
+    recordBtn.addEventListener('click', async () => {
+      if (recording) {
+        try {
+          recorder?.stop();
+        } catch {}
+        return;
+      }
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const rec = new MediaRecorder(stream);
+        const chunks: Blob[] = [];
+        rec.ondataavailable = (e) => chunks.push(e.data);
+        rec.onstop = () => {
+          stream.getTracks().forEach((t) => t.stop());
+          recording = false;
+          recordBtn.textContent = '● Record from mic';
+          recordBtn.classList.remove('recording');
+          transcribeBlob(new Blob(chunks, { type: rec.mimeType }));
+        };
+        recorder = rec;
+        rec.start();
+        recording = true;
+        recordBtn.textContent = '■ Stop recording';
+        recordBtn.classList.add('recording');
+        setStatus('recording — press stop when done');
+      } catch (err: any) {
+        setStatus('microphone unavailable: ' + ((err && err.message) || err));
+      }
+    });
+
+    fileInput.addEventListener('change', () => {
+      const f = fileInput.files && fileInput.files[0];
+      if (f) transcribeBlob(f);
+      fileInput.value = '';
+    });
+
+    async function transcribeBlob(blob: Blob) {
+      if (!asr) return;
+      setStatus('transcribing locally…');
+      resultEl.hidden = true;
+      resultEl.textContent = '';
+      try {
+        const buf = await blob.arrayBuffer();
+        const Ctx = window.AudioContext || (window as any).webkitAudioContext;
+        const ctx = new Ctx({ sampleRate: 16000 });
+        const audio = await ctx.decodeAudioData(buf);
+        let data = audio.getChannelData(0);
+        if (audio.numberOfChannels > 1) {
+          const b = audio.getChannelData(1);
+          const mix = new Float32Array(data.length);
+          for (let i = 0; i < data.length; i++) mix[i] = (data[i] + b[i]) / 2;
+          data = mix;
+        }
+        ctx.close();
+        const out = await asr(data, { chunk_length_s: 30 });
+        const text = ((out && out.text) || '').trim();
+        resultEl.textContent = '“' + (text || '(no speech detected)') + '”';
+        resultEl.hidden = false;
+        setStatus('done — transcribed on your device');
+      } catch (err: any) {
+        setStatus('error: ' + ((err && err.message) || err));
+      }
+    }
+  }
+</script>

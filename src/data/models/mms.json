@@ -1,0 +1,46 @@
+{
+  "id": "mms",
+  "hfId": null,
+  "name": "MMS",
+  "org": "Meta AI",
+  "year": 2023,
+  "kind": "model",
+  "status": "active",
+  "license": "CC-BY-NC-4.0",
+  "licenseType": "non-commercial",
+  "params": "1B",
+  "wer": null,
+  "langs": "1,100+",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "Massively Multilingual Speech — transcription for over 1,100 languages, most of them served by no other model.",
+  "about": [
+    "Meta’s Massively Multilingual Speech project scaled wav2vec 2.0 to more than 1,100 languages — roughly 10× the coverage of Whisper. For hundreds of low-resource languages, MMS is effectively the only ASR available.",
+    "Note the licence: CC-BY-NC 4.0 — research and non-commercial use only. For the languages it uniquely covers, that is usually an acceptable trade."
+  ],
+  "install": "pip install transformers torchaudio\n\npython -c \"\nfrom transformers import pipeline\nasr = pipeline('automatic-speech-recognition',\n  'facebook/mms-1b-all')\nprint(asr('audio.wav'))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/facebook/mms-1b-all"
+    },
+    {
+      "label": "MMS (GitHub)",
+      "url": "https://github.com/facebookresearch/fairseq/tree/main/examples/mms"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2305.13516"
+    },
+    {
+      "label": "Language coverage map",
+      "url": "https://ai.meta.com/blog/multilingual-model-speech-recognition/"
+    }
+  ],
+  "demo": null
+}

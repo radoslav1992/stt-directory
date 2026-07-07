@@ -1,0 +1,43 @@
+{
+  "id": "wenet",
+  "hfId": null,
+  "name": "WeNet",
+  "org": "WeNet community",
+  "year": 2021,
+  "kind": "toolkit",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "— (toolkit)",
+  "wer": null,
+  "langs": "Zh, En + recipes",
+  "runs": [
+    "GPU",
+    "CPU",
+    "Mobile"
+  ],
+  "blurb": "Production-first ASR toolkit — one U2++ model serves both streaming and batch, with x86 and Android runtimes.",
+  "about": [
+    "WeNet is built for shipping, not just research: its U2/U2++ architecture serves streaming and non-streaming recognition from a single model, and the project includes deployable runtimes for x86 (libtorch/ONNX) and Android. Strong Mandarin recipes (AISHELL, WenetSpeech) plus LibriSpeech and GigaSpeech for English.",
+    "Recent development focuses on running external pretrained models — Whisper, Paraformer, SenseVoice, FireRed — through the same production runtime, making it a pragmatic bridge from research checkpoints to on-device products."
+  ],
+  "install": "pip install git+https://github.com/wenet-e2e/wenet.git\n\nwenet --language chinese audio.wav",
+  "downloads": [
+    {
+      "label": "wenet (GitHub)",
+      "url": "https://github.com/wenet-e2e/wenet"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://wenet-e2e.github.io/wenet/"
+    },
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2102.01547"
+    }
+  ],
+  "demo": null
+}

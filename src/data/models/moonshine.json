@@ -1,0 +1,48 @@
+{
+  "id": "moonshine",
+  "hfId": "usefulsensors/moonshine-streaming-medium",
+  "name": "Moonshine",
+  "org": "Useful Sensors",
+  "year": 2024,
+  "kind": "model",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "27M – 245M",
+  "wer": 6.66,
+  "langs": "En + 7",
+  "runs": [
+    "CPU",
+    "Mobile",
+    "Browser"
+  ],
+  "blurb": "Tiny models built for edge devices — beats Whisper tiny/base at a fraction of the compute.",
+  "about": [
+    "Moonshine was designed from scratch for edge hardware: variable-length windows instead of Whisper’s fixed 30-second chunks mean short utterances transcribe several times faster. The tiny model is 27M parameters — small enough for microcontroller-class devices and instant browser loading.",
+    "It beats Whisper tiny and base on accuracy at a fraction of the compute, which has made it the default for live captions, voice interfaces, and wearables. A 2026 streaming line (up to 245M parameters) reaches 6.66% average WER on the Open ASR Leaderboard. Runs natively, via ONNX, or in-browser through transformers.js — try it below."
+  ],
+  "install": "pip install useful-moonshine\n\npython -c \"\nimport moonshine\nprint(moonshine.transcribe('audio.wav', 'moonshine/base'))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/UsefulSensors/moonshine"
+    },
+    {
+      "label": "moonshine (GitHub)",
+      "url": "https://github.com/usefulsensors/moonshine"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2410.15608"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/usefulsensors/moonshine"
+    }
+  ],
+  "demo": "moonshine",
+  "demoNote": "This loads Moonshine tiny (≈27M params) via transformers.js and runs it right here in the tab."
+}

@@ -1,0 +1,47 @@
+{
+  "id": "whisper-cpp",
+  "hfId": "openai/whisper-large-v3",
+  "name": "whisper.cpp",
+  "org": "ggml / G. Gerganov",
+  "year": 2022,
+  "kind": "runtime",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "— (runtime)",
+  "wer": 7.44,
+  "langs": "99 (Whisper)",
+  "runs": [
+    "CPU",
+    "Mobile",
+    "Browser"
+  ],
+  "blurb": "Whisper in plain C/C++ — runs on a laptop, a phone, a Raspberry Pi, or as WebAssembly in a browser.",
+  "about": [
+    "whisper.cpp ports Whisper to dependency-free C/C++ with quantised GGML weights. It runs on anything: Apple Silicon (with Metal and Core ML acceleration), Windows, Linux, iOS, Android, Raspberry Pi, and even WebAssembly in the browser.",
+    "This is the easiest way to run Whisper fully offline on a normal computer — one small binary, one model file, no Python. It powers most on-device dictation apps built on Whisper."
+  ],
+  "install": "git clone https://github.com/ggml-org/whisper.cpp\ncd whisper.cpp && make\n\n# grab a quantised model (~488 MB for medium)\n./models/download-ggml-model.sh base.en\n./build/bin/whisper-cli -m models/ggml-base.en.bin audio.wav",
+  "downloads": [
+    {
+      "label": "whisper.cpp (GitHub)",
+      "url": "https://github.com/ggml-org/whisper.cpp"
+    },
+    {
+      "label": "GGML weights on Hugging Face",
+      "url": "https://huggingface.co/ggerganov/whisper.cpp"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/ggml-org/whisper.cpp"
+    },
+    {
+      "label": "WASM demo",
+      "url": "https://ggml.ai/whisper.cpp/"
+    }
+  ],
+  "demo": null
+}

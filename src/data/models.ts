@@ -17,6 +17,8 @@ export const modelSchema = z.object({
   name: z.string(),
   org: z.string(),
   year: z.number().int(),
+  /** ISO date (YYYY-MM-DD) the entry joined the catalogue — drives the RSS feed. */
+  added: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   kind: z.enum(['model', 'runtime', 'toolkit', 'api']),
   status: z.enum(['active', 'legacy', 'discontinued']),
   license: z.string(),

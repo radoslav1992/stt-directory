@@ -30,6 +30,10 @@ export const LEGAL: Record<string, LegalDoc> = {
         p: 'Loading this site fetches fonts from Google Fonts, and running a demo fetches model files from cdn.jsdelivr.net and huggingface.co. Those services see a standard HTTP request (your IP address and user agent), governed by their own privacy policies. No audio or transcript content is ever included in those requests.',
       },
       {
+        h: 'Email updates (optional)',
+        p: 'If you choose to subscribe to email updates, the address you enter is sent directly to our newsletter provider, Buttondown, which stores it and handles confirmation and unsubscribing under its own privacy policy. We can see the subscriber list and nothing else about you. The form is entirely optional and sets no cookies; the RSS feed offers the same updates with no data shared at all.',
+      },
+      {
         h: 'Outbound links',
         p: 'Model pages link to GitHub, Hugging Face, vendor sites, and papers. Once you leave this site, the destination’s privacy policy applies.',
       },

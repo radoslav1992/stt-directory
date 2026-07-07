@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { MODELS } from '../data/models';
+import { BUTTONDOWN_USERNAME } from '../config';
 
 interface Props {
   title: string;
@@ -24,6 +25,7 @@ const entryCount = String(MODELS.length);
     <link rel="canonical" href={canonical.href} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title="STT Index — new in the index" href="/rss.xml" />
     <meta name="generator" content={Astro.generator} />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="STT—INDEX" />
@@ -79,6 +81,25 @@ const entryCount = String(MODELS.length);
           <a href="/legal/privacy/">Privacy policy</a>
           <a href="/legal/terms/">Terms of use</a>
           <a href="/legal/licences/">Model licences &amp; data</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">FOLLOW</div>
+          <a href="/rss.xml">RSS feed ↗</a>
+          {
+            BUTTONDOWN_USERNAME && (
+              <>
+                <form
+                  class="subscribe-form"
+                  action={`https://buttondown.com/api/emails/embed-subscribe/${BUTTONDOWN_USERNAME}`}
+                  method="post"
+                >
+                  <input type="email" name="email" placeholder="you@example.com" required aria-label="Email address" />
+                  <button type="submit">Subscribe</button>
+                </form>
+                <span class="subscribe-note">One email when new models land. No tracking, unsubscribe anytime.</span>
+              </>
+            )
+          }
         </div>
       </div>
       <div class="footer-bottom">

@@ -4,6 +4,7 @@
   "name": "Vosk",
   "org": "Alpha Cephei",
   "year": 2020,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "Apache-2.0",

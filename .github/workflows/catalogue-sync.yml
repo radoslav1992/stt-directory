@@ -119,7 +119,9 @@ jobs:
             2. For each accepted candidate: research it on the web (model card,
                GitHub repo, the actual LICENSE file, vendor announcement).
                Create src/data/models/<id>.json and insert the id at the
-               editorially correct position in src/data/catalogue.json.
+               editorially correct position in src/data/catalogue.json. Set the
+               entry's "added" field to the date (YYYY-MM-DD) of the report's
+               fetchedAt — it drives the RSS feed.
             3. For each entry in `updates`, check whether its about/blurb prose
                quotes the old WER figure and fix the prose if so.
             4. Never invent numbers: wer only from leaderboard-report.json;

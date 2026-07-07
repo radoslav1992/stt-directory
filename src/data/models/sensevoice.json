@@ -4,6 +4,7 @@
   "name": "SenseVoice",
   "org": "Alibaba (FunAudioLLM)",
   "year": 2024,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "Custom (Alibaba)",

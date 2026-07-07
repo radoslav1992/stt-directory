@@ -4,6 +4,7 @@
   "name": "Kaldi",
   "org": "Kaldi project",
   "year": 2011,
+  "added": "2026-07-07",
   "kind": "toolkit",
   "status": "legacy",
   "license": "Apache-2.0",

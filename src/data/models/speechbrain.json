@@ -4,6 +4,7 @@
   "name": "SpeechBrain",
   "org": "SpeechBrain project",
   "year": 2021,
+  "added": "2026-07-07",
   "kind": "toolkit",
   "status": "active",
   "license": "Apache-2.0",

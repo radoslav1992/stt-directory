@@ -60,3 +60,8 @@ Adding a model = one JSON file in `src/data/models/` plus its id in `src/data/ca
 3. **PR-gated publish** — everything lands as a `bot/catalogue-sync` PR with sources cited. Merging deploys (via your deploy-on-merge setup). Without the secret, WER-refresh PRs still work; only drafting is skipped.
 
 `ci.yml` builds and type-checks every PR, so a malformed bot entry can never merge.
+
+## Subscriptions
+
+- **RSS** — `/rss.xml` is generated at build time from each entry's `added` date (newest first, 20 items, summaries only — every item links to the entry page). Linked in the footer and via `<link rel="alternate">`.
+- **Email** — the footer has a Buttondown subscribe form that stays hidden until configured: create an account at [buttondown.com](https://buttondown.com), set `BUTTONDOWN_USERNAME` in `src/config.ts`, and enable Buttondown's RSS-to-email automation pointed at `https://speechtotext.dev/rss.xml` so new entries are emailed automatically. The privacy policy's "Email updates" section already describes this setup — revise it if you pick a different provider.

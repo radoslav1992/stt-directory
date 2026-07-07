@@ -4,6 +4,7 @@
   "name": "Whisper large-v3-turbo",
   "org": "OpenAI",
   "year": 2024,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "MIT",

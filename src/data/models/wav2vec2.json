@@ -4,6 +4,7 @@
   "name": "wav2vec 2.0",
   "org": "Meta AI",
   "year": 2020,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "legacy",
   "license": "MIT",

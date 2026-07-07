@@ -4,6 +4,7 @@
   "name": "Cohere Transcribe",
   "org": "Cohere Labs",
   "year": 2026,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "Apache-2.0",

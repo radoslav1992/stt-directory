@@ -4,6 +4,7 @@
   "name": "faster-whisper",
   "org": "SYSTRAN",
   "year": 2023,
+  "added": "2026-07-07",
   "kind": "runtime",
   "status": "active",
   "license": "MIT",

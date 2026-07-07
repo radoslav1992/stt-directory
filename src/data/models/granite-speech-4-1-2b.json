@@ -4,6 +4,7 @@
   "name": "Granite Speech 4.1 2B",
   "org": "IBM",
   "year": 2026,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "Apache-2.0",

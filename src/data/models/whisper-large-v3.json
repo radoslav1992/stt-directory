@@ -4,6 +4,7 @@
   "name": "Whisper large-v3",
   "org": "OpenAI",
   "year": 2023,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "MIT",

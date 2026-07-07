@@ -4,6 +4,7 @@
   "name": "whisper.cpp",
   "org": "ggml / G. Gerganov",
   "year": 2022,
+  "added": "2026-07-07",
   "kind": "runtime",
   "status": "active",
   "license": "MIT",

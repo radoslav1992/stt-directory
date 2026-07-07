@@ -4,6 +4,7 @@
   "name": "Coqui STT",
   "org": "Coqui (ex-Mozilla)",
   "year": 2021,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "discontinued",
   "license": "MPL-2.0",

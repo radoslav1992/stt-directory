@@ -4,6 +4,7 @@
   "name": "Phi-4-multimodal",
   "org": "Microsoft",
   "year": 2025,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "MIT",

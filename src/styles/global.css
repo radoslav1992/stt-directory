@@ -1091,8 +1091,59 @@ a:hover {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr 1.4fr;
   gap: 40px;
+}
+
+.subscribe-form {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.subscribe-form input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 12px;
+  background: transparent;
+  border: 1px solid var(--footer-line);
+  border-radius: 0;
+  color: var(--bg);
+  outline: none;
+}
+
+.subscribe-form input::placeholder {
+  color: var(--footer-muted);
+  opacity: 1;
+}
+
+.subscribe-form input:focus {
+  border-color: var(--accent);
+}
+
+.subscribe-form button {
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 10px 14px;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.subscribe-form button:hover {
+  background: var(--bg);
+  color: var(--ink);
+}
+
+.subscribe-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--footer-muted);
 }
 
 .footer-brand {

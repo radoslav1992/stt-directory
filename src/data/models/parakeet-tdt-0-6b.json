@@ -4,6 +4,7 @@
   "name": "Parakeet TDT 0.6B v2",
   "org": "NVIDIA",
   "year": 2025,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "CC-BY-4.0",

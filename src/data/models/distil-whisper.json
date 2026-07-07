@@ -4,6 +4,7 @@
   "name": "Distil-Whisper large-v3.5",
   "org": "Hugging Face",
   "year": 2023,
+  "added": "2026-07-07",
   "kind": "model",
   "status": "active",
   "license": "MIT",

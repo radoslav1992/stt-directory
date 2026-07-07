@@ -56,7 +56,7 @@ Adding a model = one JSON file in `src/data/models/` plus its id in `src/data/ca
 `.github/workflows/catalogue-sync.yml` runs every Monday (or on demand via *Run workflow*):
 
 1. **Deterministic sync** — `scripts/sync-leaderboard.mjs` fetches the [Open ASR Leaderboard](https://github.com/huggingface/open_asr_leaderboard) data, applies WER drift to existing entries (joined via each entry's `hfId`), and lists new models below the notability threshold in `scripts/sync-config.json`.
-2. **Agentic drafting** — if new candidates exist and the `ANTHROPIC_API_KEY` repository secret is set, Claude researches each one (model card, licence file, announcements), drafts the entry per `CLAUDE.md`'s style and verification rules, and validates the build.
+2. **Agentic drafting** — if new candidates exist and the `GEMINI_API_KEY` repository secret is set (Google AI Studio key), Gemini CLI researches each one (model card, licence file, announcements), drafts the entry per the style and verification rules in `CLAUDE.md`, and validates the build.
 3. **PR-gated publish** — everything lands as a `bot/catalogue-sync` PR with sources cited. Merging deploys (via your deploy-on-merge setup). Without the secret, WER-refresh PRs still work; only drafting is skipped.
 
 `ci.yml` builds and type-checks every PR, so a malformed bot entry can never merge.

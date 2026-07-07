@@ -2,13 +2,13 @@
 #
 # 1. scripts/sync-leaderboard.mjs applies WER drift to src/data/models/*.json
 #    and lists new leaderboard models worth cataloguing (deterministic, no AI).
-# 2. If there are candidates and ANTHROPIC_API_KEY is configured, Claude
+# 2. If there are candidates and GEMINI_API_KEY is configured, Gemini CLI
 #    researches each one (model card, licence file, announcements), drafts the
 #    entry JSON in house style (see CLAUDE.md), and validates the build.
 # 3. Everything lands as a PR for human review — merging deploys.
 #
-# Setup: add an ANTHROPIC_API_KEY repository secret. Without it, the workflow
-# still opens WER-refresh PRs; only the entry-drafting step is skipped.
+# Setup: add a GEMINI_API_KEY repository secret (Google AI Studio key). Without
+# it, the workflow still opens WER-refresh PRs; only entry drafting is skipped.
 
 name: Catalogue sync
 
@@ -25,7 +25,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     env:
-      HAS_ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+      HAS_GEMINI_KEY: ${{ secrets.GEMINI_API_KEY != '' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -62,12 +62,33 @@ jobs:
           "
 
       - name: Research and draft entries for new models
-        if: steps.work.outputs.candidates != '0' && env.HAS_ANTHROPIC_KEY == 'true'
-        uses: anthropics/claude-code-action@v1
+        if: steps.work.outputs.candidates != '0' && env.HAS_GEMINI_KEY == 'true'
+        uses: google-github-actions/run-gemini-cli@v0
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          claude_args: '--allowedTools "Read,Write,Edit,Glob,Grep,WebFetch,WebSearch,Bash(npm:*),Bash(npx:*),Bash(node:*)"'
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          # auto_edit approves file edits; tools.allowed bypasses confirmation
+          # for the scoped shell commands and web tools the agent needs.
+          settings: |-
+            {
+              "general": {
+                "defaultApprovalMode": "auto_edit"
+              },
+              "model": {
+                "maxSessionTurns": 50
+              },
+              "tools": {
+                "allowed": [
+                  "run_shell_command(npm)",
+                  "run_shell_command(npx)",
+                  "run_shell_command(node)",
+                  "web_fetch",
+                  "google_web_search"
+                ]
+              },
+              "telemetry": {
+                "enabled": false
+              }
+            }
           prompt: |
             You are updating STT-Index, a curated speech-to-text model directory.
             Read CLAUDE.md first — it defines the data model, curation scope,

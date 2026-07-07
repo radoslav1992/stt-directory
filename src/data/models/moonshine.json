@@ -44,6 +44,21 @@
       "url": "https://github.com/usefulsensors/moonshine"
     }
   ],
-  "demo": "moonshine",
-  "demoNote": "This loads Moonshine tiny (≈27M params) via transformers.js and runs it right here in the tab."
+  "demo": {
+    "note": "Pick a checkpoint — both are small enough to load in seconds and run in realtime even without a GPU.",
+    "models": [
+      {
+        "label": "Moonshine tiny",
+        "hfId": "onnx-community/moonshine-tiny-ONNX",
+        "size": "~30 MB",
+        "dtype": "q8"
+      },
+      {
+        "label": "Moonshine base",
+        "hfId": "onnx-community/moonshine-base-ONNX",
+        "size": "~65 MB",
+        "dtype": "q8"
+      }
+    ]
+  }
 }

@@ -13,6 +13,7 @@ Static Astro 5 directory of speech-to-text models, deployed to Cloudflare Worker
 - Display order (and the "ENTRY NN" numbers) come from `src/data/catalogue.json`. Insert new ids at the editorially correct place: leaderboard leaders first, then the Whisper ecosystem, edge/multilingual models, toolkits, legacy entries, hosted APIs last.
 - `id` must match the filename. `hfId` is the Open ASR Leaderboard join key used by the sync script (runtimes that execute Whisper weights share `openai/whisper-large-v3`); `null` means never auto-synced.
 - `added` is the ISO date (YYYY-MM-DD) the entry joined the catalogue — it drives the RSS feed (`/rss.xml`). Stamp new entries with the date they are created (in the sync workflow, use the date from the report's `fetchedAt`). Never backdate or change it on existing entries.
+- `demo` (nullable) renders the in-browser transcription box: `{ note, models: [{ label, hfId, size, webgpuOnly? }] }`. Only for architectures with a transformers.js-compatible ONNX build, and every `hfId` must be a verified Hugging Face repo — a wrong id fails at user-click time, not build time. Mark multi-hundred-MB checkpoints `webgpuOnly: true`.
 - Adding a valid file + catalogue.json entry is all it takes — page, library row, ticker, counts, sitemap, and structured data generate at build time.
 
 ## Curation rules (what belongs)

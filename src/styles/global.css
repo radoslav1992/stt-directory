@@ -824,6 +824,23 @@ a:hover {
   align-items: center;
 }
 
+.demo-select {
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 12px 14px;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: var(--card);
+  color: var(--ink);
+  max-width: 100%;
+  cursor: pointer;
+}
+
+.demo-select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
 .demo-btn {
   font-family: var(--mono);
   font-size: 13px;

@@ -1,0 +1,184 @@
+---
+import Base from '../../layouts/Base.astro';
+import Demo from '../../components/Demo.astro';
+import {
+  MODELS,
+  KIND_LABELS,
+  STATUS_MAP,
+  licenseUrl,
+  werLabel,
+  modelPath,
+} from '../../data/models';
+
+export function getStaticPaths() {
+  return MODELS.map((m) => ({ params: { id: m.id }, props: { model: m } }));
+}
+
+const { model: m } = Astro.props;
+const status = STATUS_MAP[m.status];
+const entryCount = String(MODELS.length);
+
+const withWer = MODELS.filter((x) => x.wer != null).sort((a, b) => a.wer! - b.wer!);
+const maxWer = Math.max(...withWer.map((x) => x.wer!));
+const werBars = withWer.map((x) => ({
+  id: x.id,
+  name: x.name,
+  werLabel: werLabel(x.wer),
+  pct: Math.round((x.wer! / maxWer) * 100),
+  current: x.id === m.id,
+}));
+
+const title = `${m.name} — specs, licence, downloads · STT Index`;
+const description = m.blurb;
+
+const jsonLd: object[] = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'SoftwareApplication',
+    name: m.name,
+    applicationCategory: 'DeveloperApplication',
+    applicationSubCategory: 'Speech-to-text',
+    operatingSystem: m.runs.join(', '),
+    description: m.blurb,
+    datePublished: String(m.year),
+    author: { '@type': 'Organization', name: m.org },
+    license: licenseUrl(m.license) ?? m.license,
+    url: new URL(modelPath(m), Astro.site).href,
+    ...(m.downloads[0] ? { downloadUrl: m.downloads[0].url } : {}),
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Library', item: new URL('/library/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: m.name, item: new URL(modelPath(m), Astro.site).href },
+    ],
+  },
+];
+---
+
+<Base {title} {description} ogType="article" {jsonLd}>
+  <div class="model-page">
+    <a href="/library/" class="back-link">← Back to library</a>
+
+    <div class="model-head">
+      <div>
+        <div class="entry-num">ENTRY {m.num} / {entryCount}</div>
+        <h1 class="model-title">{m.name}</h1>
+        <div class="model-org">{m.org} · {m.year}</div>
+      </div>
+      <div class="status-badge" style={`color: ${status.color};`}>{status.label}</div>
+    </div>
+
+    <div class="spec-grid">
+      <div class="spec">
+        <div class="spec-label">LICENCE</div>
+        <div class="spec-value">{m.license}</div>
+      </div>
+      <div class="spec">
+        <div class="spec-label">PARAMETERS</div>
+        <div class="spec-value">{m.params}</div>
+      </div>
+      <div class="spec">
+        <div class="spec-label">WER (OPEN ASR)</div>
+        <div class:list={['spec-value', { 'spec-value--none': m.wer == null }]}>
+          {werLabel(m.wer)}
+        </div>
+      </div>
+      <div class="spec">
+        <div class="spec-label">LANGUAGES</div>
+        <div class="spec-value">{m.langs}</div>
+      </div>
+      <div class="spec">
+        <div class="spec-label">TYPE</div>
+        <div class="spec-value">{KIND_LABELS[m.kind]}</div>
+      </div>
+      <div class="spec">
+        <div class="spec-label">RUNS ON</div>
+        <div class="spec-value">{m.runs.join(' · ')}</div>
+      </div>
+    </div>
+
+    <div class="model-body">
+      <div class="model-main">
+        <div class="about">
+          <h2 class="sec-label">ABOUT</h2>
+          {m.about.map((para) => <p>{para}</p>)}
+        </div>
+
+        <div>
+          <h2 class="sec-label">INSTALL &amp; RUN LOCALLY</h2>
+          <pre class="install-block">{m.install}</pre>
+        </div>
+
+        {
+          m.wer != null && (
+            <div class="bench">
+              <h2 class="sec-label">BENCHMARK — WORD ERROR RATE</h2>
+              <div class="bench-sub">Open ASR Leaderboard average · shorter bar is better</div>
+              <div class="bars">
+                {werBars.map((b) => (
+                  <div class:list={['bar-row', { current: b.current }]}>
+                    <div class="bar-name">{b.name}</div>
+                    <div class="bar-track">
+                      <div class="bar-fill" style={`width: ${b.pct}%;`} />
+                    </div>
+                    <div class="bar-val">{b.werLabel}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        {m.demo && <Demo model={m} />}
+      </div>
+
+      <aside class="model-aside">
+        <div>
+          <h2 class="sec-label">GET IT — FREE</h2>
+          <div class="dl-list">
+            {
+              m.downloads.map((d) => (
+                <a href={d.url} target="_blank" rel="noopener" class="dl-link">
+                  <span class="dl-label">{d.label}</span>
+                  <span class="dl-arrow">↓</span>
+                </a>
+              ))
+            }
+          </div>
+        </div>
+
+        {
+          m.hosted.length > 0 && (
+            <div>
+              <h2 class="sec-label">HOSTED / PAID ACCESS</h2>
+              <div class="hosted-list">
+                {m.hosted.map((h) => (
+                  <a href={h.url} target="_blank" rel="noopener" class="hosted-link">
+                    <span class="hosted-name">{h.name}</span>
+                    <span class="hosted-price">{h.price}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
+
+        <div>
+          <h2 class="sec-label">LINKS</h2>
+          <div class="links-list">
+            {
+              m.links.map((l) => (
+                <a href={l.url} target="_blank" rel="noopener" class="ext-link">
+                  {l.label} ↗
+                </a>
+              ))
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</Base>

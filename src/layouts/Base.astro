@@ -1,0 +1,90 @@
+---
+import '../styles/global.css';
+import { MODELS } from '../data/models';
+
+interface Props {
+  title: string;
+  description: string;
+  ogType?: string;
+  jsonLd?: object | object[];
+}
+
+const { title, description, ogType = 'website', jsonLd } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const entryCount = String(MODELS.length);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical.href} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="STT—INDEX" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical.href} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+  </head>
+  <body>
+    <header class="site-header">
+      <a href="/" class="brand">
+        <span class="brand-name">STT—INDEX</span>
+        <span class="brand-vol">VOL. 1 / 2026</span>
+      </a>
+      <nav class="site-nav">
+        <a href="/">Home</a>
+        <a href="/library/">Library</a>
+        <a href="/legal/licences/">Legal</a>
+        <a href="/model/whisper-large-v3/" class="nav-cta">Try one in-browser ↗</a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-grid container">
+        <div>
+          <div class="footer-brand">STT—INDEX</div>
+          <p class="footer-about">
+            An independent, open catalogue of speech-to-text models. Not affiliated with any vendor.
+            Figures are drawn from public leaderboards and model cards — always check the source.
+          </p>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">INDEX</div>
+          <a href="/library/">Library</a>
+          <a href="/model/whisper-large-v3/">Run Whisper in-browser</a>
+          <a href="/model/canary-qwen-2-5b/">Most accurate entry</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">LEGAL</div>
+          <a href="/legal/privacy/">Privacy policy</a>
+          <a href="/legal/terms/">Terms of use</a>
+          <a href="/legal/licences/">Model licences &amp; data</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 STT—INDEX</span>
+        <span>VOL. 1 — {entryCount} ENTRIES</span>
+      </div>
+    </footer>
+  </body>
+</html>

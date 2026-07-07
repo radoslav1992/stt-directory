@@ -1,0 +1,113 @@
+---
+import Base from '../layouts/Base.astro';
+import { MODELS, FEATURED_IDS, getModel, specline, modelPath } from '../data/models';
+
+const featured = FEATURED_IDS.map((id) => getModel(id)!);
+const tickerText = MODELS.map((m) => m.name.toUpperCase()).join('  ✳  ') + '  ✳  ';
+const entryCount = String(MODELS.length);
+
+const description =
+  'An open directory of speech-to-text models. Specs, licences, benchmarks, and exactly where to get each model — download it, run it locally, or transcribe right in your browser.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'STT—INDEX',
+  alternateName: 'STT Index',
+  description,
+  url: Astro.site?.href,
+};
+---
+
+<Base title="STT Index — every speech-to-text model, catalogued" {description} {jsonLd}>
+  <section class="hero">
+    <div class="container">
+      <div class="hero-kicker">AN OPEN DIRECTORY OF SPEECH-TO-TEXT MODELS</div>
+      <h1 class="hero-title">Every speech-to-text model, <em>catalogued.</em></h1>
+      <p class="hero-sub">
+        Specs, licences, benchmarks, and exactly where to get each model — download it, run it
+        locally, or transcribe right here in your browser. No account, no tracking.
+      </p>
+      <div class="hero-ctas">
+        <a href="/library/" class="btn-primary">Browse the library →</a>
+        <a href="/model/whisper-large-v3/" class="btn-secondary">● Run Whisper in this tab</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker-band" aria-hidden="true">
+    <div class="ticker-track">
+      <span>{tickerText}</span><span>{tickerText}</span>
+    </div>
+  </div>
+
+  <section class="stats-band">
+    <div class="stats-grid container">
+      <div class="stat">
+        <div class="stat-value">{entryCount}</div>
+        <div class="stat-label">MODELS &amp; TOOLKITS INDEXED</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">1,100+</div>
+        <div class="stat-label">LANGUAGES COVERED</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value">5.63%</div>
+        <div class="stat-label">BEST OPEN WER ON RECORD</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Selected entries</h2>
+        <a href="/library/" class="view-all">View all {entryCount} →</a>
+      </div>
+      <div class="featured-grid">
+        {
+          featured.map((f) => (
+            <a href={modelPath(f)} class="card">
+              <div class="card-num">{f.num}</div>
+              <div>
+                <div class="card-name">{f.name}</div>
+                <div class="card-org">{f.org}</div>
+              </div>
+              <p class="card-blurb">{f.blurb}</p>
+              <div class="card-spec">{specline(f)}</div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <h2 class="how-title">How the index works</h2>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="how-num">01 — FIND</div>
+          <p class="how-text">
+            Search and filter the library by licence, accuracy, language coverage, and whether it
+            runs on-device or in a browser.
+          </p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">02 — GET</div>
+          <p class="how-text">
+            Every entry links straight to the weights, the repo, and any hosted APIs — with install
+            commands you can paste into a terminal.
+          </p>
+        </div>
+        <div class="how-step">
+          <div class="how-num">03 — RUN</div>
+          <p class="how-text">
+            Where a model has a browser build, you can load it and transcribe your own voice on the
+            model's page — audio never leaves your machine.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

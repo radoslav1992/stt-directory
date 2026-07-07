@@ -1,0 +1,38 @@
+---
+import Base from '../../layouts/Base.astro';
+import { LEGAL, LEGAL_NAV } from '../../data/legal';
+
+export function getStaticPaths() {
+  return Object.keys(LEGAL).map((doc) => ({ params: { doc }, props: { docKey: doc } }));
+}
+
+const { docKey } = Astro.props;
+const doc = LEGAL[docKey]!;
+---
+
+<Base title={`${doc.title} · STT Index`} description={doc.description}>
+  <div class="legal-page">
+    <nav class="legal-nav" aria-label="Legal pages">
+      <div class="legal-nav-label">LEGAL</div>
+      {
+        LEGAL_NAV.map((n) => (
+          <a href={`/legal/${n.key}/`} class:list={{ active: n.key === docKey }}>
+            {n.label}
+          </a>
+        ))
+      }
+    </nav>
+    <article class="legal-article">
+      <h1 class="legal-title">{doc.title}</h1>
+      <div class="legal-updated">Last updated {doc.updated}</div>
+      {
+        doc.sections.map((s) => (
+          <div class="legal-section">
+            <h2>{s.h}</h2>
+            <p>{s.p}</p>
+          </div>
+        ))
+      }
+    </article>
+  </div>
+</Base>

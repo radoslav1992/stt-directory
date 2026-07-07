@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import { MODELS, KIND_LABELS, werLabel, modelPath } from '../data/models';
+
+const description =
+  'Browse every indexed speech-to-text model and toolkit — filter by licence, accuracy, language coverage, and whether it runs on-device or in a browser.';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'The STT Index library',
+  description,
+  numberOfItems: MODELS.length,
+  itemListElement: MODELS.map((m, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: m.name,
+    url: new URL(modelPath(m), Astro.site).href,
+  })),
+};
+---
+
+<Base title={`The library — all ${MODELS.length} entries · STT Index`} {description} {jsonLd}>
+  <div class="page">
+    <div class="lib-head">
+      <h1 class="page-title">The library</h1>
+      <div class="count-label" data-count>{MODELS.length} of {MODELS.length} entries</div>
+    </div>
+
+    <div class="lib-controls">
+      <input
+        type="search"
+        class="search-input"
+        data-search-input
+        placeholder="Search models, orgs, licences, languages…"
+        aria-label="Search models, orgs, licences, languages"
+      />
+      <div class="chips">
+        <button class="chip" data-filter="browser" aria-pressed="false">Runs in browser</button>
+        <button class="chip" data-filter="ondevice" aria-pressed="false">On-device / CPU</button>
+        <button class="chip" data-filter="permissive" aria-pressed="false">Permissive licence</button>
+        <button class="chip" data-filter="active" aria-pressed="false">Actively maintained</button>
+      </div>
+    </div>
+
+    <div class="lib-scroll">
+      <div class="lib-table">
+        <div class="lib-cols" aria-hidden="true">
+          <div>NO.</div>
+          <div>MODEL</div>
+          <div>TYPE</div>
+          <div>LICENCE</div>
+          <div>PARAMS</div>
+          <div>WER*</div>
+          <div>RUNS ON</div>
+          <div></div>
+        </div>
+
+        {
+          MODELS.map((m) => (
+            <a
+              href={modelPath(m)}
+              class="lib-row"
+              data-row
+              data-search={`${m.name} ${m.org} ${m.license} ${m.langs} ${m.kind}`.toLowerCase()}
+              data-runs={m.runs.join('|')}
+              data-license-type={m.licenseType}
+              data-status={m.status}
+            >
+              <div class="row-num">{m.num}</div>
+              <div>
+                <div class="row-name">{m.name}</div>
+                <div class="row-org">
+                  {m.org} · {m.year}
+                </div>
+              </div>
+              <div class="row-cell">{KIND_LABELS[m.kind]}</div>
+              <div class="row-cell">{m.license}</div>
+              <div class="row-cell">{m.params}</div>
+              <div class:list={['row-cell', m.wer == null ? 'row-wer--none' : 'row-wer--val']}>
+                {werLabel(m.wer)}
+              </div>
+              <div class="row-runs">{m.runs.join(' · ')}</div>
+              <div class="row-arrow">→</div>
+            </a>
+          ))
+        }
+
+        <div class="lib-empty" data-empty hidden>No entries match — try clearing a filter or the search.</div>
+      </div>
+    </div>
+
+    <p class="lib-note">
+      * Average word error rate on the Hugging Face Open ASR Leaderboard, where reported. Lower is
+      better. Blank means not benchmarked there.
+    </p>
+  </div>
+</Base>
+
+<script>
+  const input = document.querySelector<HTMLInputElement>('[data-search-input]')!;
+  const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.chip[data-filter]'));
+  const rows = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-row]'));
+  const count = document.querySelector<HTMLElement>('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+
+  function apply() {
+    const q = input.value.trim().toLowerCase();
+    const on = new Set(chips.filter((c) => c.classList.contains('on')).map((c) => c.dataset.filter));
+    let shown = 0;
+
+    for (const row of rows) {
+      const runs = (row.dataset.runs ?? '').split('|');
+      let show = true;
+      if (q && !(row.dataset.search ?? '').includes(q)) show = false;
+      if (on.has('browser') && !runs.includes('Browser')) show = false;
+      if (on.has('ondevice') && !(runs.includes('CPU') || runs.includes('Mobile'))) show = false;
+      if (on.has('permissive') && row.dataset.licenseType !== 'permissive') show = false;
+      if (on.has('active') && row.dataset.status !== 'active') show = false;
+      row.style.display = show ? '' : 'none';
+      if (show) shown++;
+    }
+
+    count.textContent = `${shown} of ${rows.length} entries`;
+    empty.hidden = shown > 0;
+  }
+
+  input.addEventListener('input', apply);
+  for (const chip of chips) {
+    chip.addEventListener('click', () => {
+      chip.classList.toggle('on');
+      chip.setAttribute('aria-pressed', String(chip.classList.contains('on')));
+      apply();
+    });
+  }
+</script>

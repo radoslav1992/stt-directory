@@ -1,0 +1,61 @@
+{
+  "id": "voxtral",
+  "hfId": "mistralai/Voxtral-Small-24B-2507",
+  "name": "Voxtral",
+  "org": "Mistral AI",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "3B / 24B",
+  "wer": 6.62,
+  "langs": "8+ auto-detect",
+  "runs": [
+    "GPU",
+    "Browser"
+  ],
+  "blurb": "Mistral’s audio-text LLMs — transcription plus voice Q&A and summarisation, Apache 2.0 at two sizes.",
+  "about": [
+    "Voxtral pairs a Whisper-style audio encoder with Mistral language backbones: Mini (3B backbone) and Small (24B). Beyond pure transcription they answer questions about the audio, summarise it, and function-call from voice, with a 32k context that fits half an hour of audio. Small scores 6.62% average WER and is the strongest open-weights entry on the leaderboard’s multilingual track.",
+    "The family moves fast: a February 2026 update added Voxtral Realtime — an open-weights streaming variant with configurable sub-200 ms latency — plus cheap hosted transcription on Mistral’s platform. An official ONNX build runs Mini fully in-browser on WebGPU."
+  ],
+  "install": "pip install -U \"vllm[audio]\" mistral-common\n\nvllm serve mistralai/Voxtral-Mini-3B-2507 \\\n  --tokenizer_mode mistral --config_format mistral --load_format mistral\n# OpenAI-compatible /v1/audio/transcriptions endpoint",
+  "downloads": [
+    {
+      "label": "Voxtral Mini on Hugging Face",
+      "url": "https://huggingface.co/mistralai/Voxtral-Mini-3B-2507"
+    },
+    {
+      "label": "Voxtral Small on Hugging Face",
+      "url": "https://huggingface.co/mistralai/Voxtral-Small-24B-2507"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Mistral (transcribe)",
+      "price": "from $0.003 / min",
+      "url": "https://mistral.ai/news/voxtral-transcribe-2/"
+    },
+    {
+      "name": "Mistral Realtime",
+      "price": "$0.006 / min",
+      "url": "https://mistral.ai/news/voxtral-transcribe-2/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2507.13264"
+    },
+    {
+      "label": "Announcement",
+      "url": "https://mistral.ai/news/voxtral"
+    },
+    {
+      "label": "In-browser demo (WebGPU)",
+      "url": "https://huggingface.co/spaces/webml-community/Voxtral-WebGPU"
+    }
+  ],
+  "demo": null
+}

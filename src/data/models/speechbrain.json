@@ -1,0 +1,42 @@
+{
+  "id": "speechbrain",
+  "hfId": null,
+  "name": "SpeechBrain",
+  "org": "SpeechBrain project",
+  "year": 2021,
+  "kind": "toolkit",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "— (toolkit)",
+  "wer": null,
+  "langs": "varies",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "The PyTorch speech toolkit — 200+ training recipes and 100+ pre-trained models for every speech task.",
+  "about": [
+    "SpeechBrain is not one model but a full PyTorch toolkit: 200+ training recipes and 100+ pre-trained models spanning ASR, speaker diarisation, enhancement, separation, and TTS. If you need to train or fine-tune a speech pipeline rather than just run one, start here.",
+    "v1.1 (2026) added HuggingFace-LLM integration, mixed-precision multi-GPU training, and new augmentation techniques."
+  ],
+  "install": "pip install speechbrain\n\npython -c \"\nfrom speechbrain.inference import EncoderDecoderASR\nasr = EncoderDecoderASR.from_hparams(\n  'speechbrain/asr-conformer-transformerlm-librispeech')\nprint(asr.transcribe_file('audio.wav'))\"",
+  "downloads": [
+    {
+      "label": "speechbrain (GitHub)",
+      "url": "https://github.com/speechbrain/speechbrain"
+    },
+    {
+      "label": "Models on Hugging Face",
+      "url": "https://huggingface.co/speechbrain"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://speechbrain.github.io/"
+    }
+  ],
+  "demo": null
+}

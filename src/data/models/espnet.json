@@ -1,0 +1,46 @@
+{
+  "id": "espnet",
+  "hfId": null,
+  "name": "ESPnet",
+  "org": "ESPnet community",
+  "year": 2018,
+  "kind": "toolkit",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "— (toolkit)",
+  "wer": null,
+  "langs": "varies",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "The academic workhorse — end-to-end recipes for ASR, TTS, translation, enhancement, and the OWSM models.",
+  "about": [
+    "ESPnet has been the standard end-to-end speech research toolkit since 2018: hundreds of reproducible dataset recipes across ASR, TTS, speech translation, enhancement, diarisation, and spoken language understanding, with a pretrained model zoo on Hugging Face.",
+    "It is also the training and release vehicle for the OWSM open Whisper-style models. If you want to reproduce a paper or train on your own corpus with a known-good recipe, this is the reference stack."
+  ],
+  "install": "pip install espnet espnet_model_zoo\n\n# full recipes: clone the repo and use egs2/<dataset>/run.sh",
+  "downloads": [
+    {
+      "label": "espnet (GitHub)",
+      "url": "https://github.com/espnet/espnet"
+    },
+    {
+      "label": "Models on Hugging Face",
+      "url": "https://huggingface.co/espnet"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://espnet.github.io/espnet/"
+    },
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/1804.00015"
+    }
+  ],
+  "demo": null
+}

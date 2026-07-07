@@ -1,0 +1,47 @@
+{
+  "id": "qwen3-asr",
+  "hfId": "Qwen/Qwen3-ASR-1.7B",
+  "name": "Qwen3-ASR",
+  "org": "Alibaba",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "1.7B / 0.6B",
+  "wer": 5.76,
+  "langs": "11",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "Alibaba’s multilingual ASR from the Qwen family — strong on Chinese, English, and code-switching.",
+  "about": [
+    "Qwen3-ASR brings the Qwen LLM family’s multilingual strength to speech: 11 languages with particularly strong Mandarin and English, robust handling of accents, code-switching, and noisy audio, plus contextual biasing — you can feed it a vocabulary list to steer transcription.",
+    "The 1.7B checkpoint scores 5.76% average WER on the Open ASR Leaderboard — top-five territory — with a 0.6B sibling for lighter deployments. A good pick when Chinese-language accuracy matters, where Whisper is comparatively weak."
+  ],
+  "install": "pip install transformers torch\n\n# checkpoints: Qwen/Qwen3-ASR-1.7B and Qwen/Qwen3-ASR-0.6B\n# see the model card for pipeline usage — the family moves fast.",
+  "downloads": [
+    {
+      "label": "Qwen3-ASR-1.7B on Hugging Face",
+      "url": "https://huggingface.co/Qwen/Qwen3-ASR-1.7B"
+    },
+    {
+      "label": "Qwen (GitHub)",
+      "url": "https://github.com/QwenLM"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Alibaba Model Studio",
+      "price": "usage-based",
+      "url": "https://www.alibabacloud.com/en/product/modelstudio"
+    }
+  ],
+  "links": [
+    {
+      "label": "Qwen organisation",
+      "url": "https://huggingface.co/Qwen"
+    }
+  ],
+  "demo": null
+}

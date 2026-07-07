@@ -1,0 +1,52 @@
+{
+  "id": "assemblyai",
+  "hfId": "assemblyai/universal-3-pro",
+  "name": "AssemblyAI Universal-3 Pro",
+  "org": "AssemblyAI",
+  "year": 2026,
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": 6.21,
+  "langs": "6 native, 99 fallback",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "A promptable speech model as an API — steer transcription with natural-language instructions.",
+  "about": [
+    "Universal-3 Pro (February 2026) is a promptable speech language model: pass natural-language instructions — names, terminology, formatting rules — before transcription, with up to 45% claimed accuracy gains from good prompting. Its 6.21% average WER on the Open ASR Leaderboard is among the strongest API results the leaderboard measures.",
+    "The March 2026 streaming variant brings prompting, real-time speaker diarisation, and 99+ languages to live transcription (~300 ms word emission, immutable finals). Async Universal-3 Pro runs $0.21/hr, the base Universal tier $0.15/hr, with a $50 signup credit. Cloud-only — there is no self-hosted option. Prices change — check the pricing page."
+  ],
+  "install": "pip install assemblyai\n# aai.settings.api_key = 'YOUR_API_KEY'\n\npython -c \"\nimport assemblyai as aai\ncfg = aai.TranscriptionConfig(speech_models=['universal-3-pro', 'universal-2'])\nt = aai.Transcriber().transcribe('audio.mp3', cfg)\nprint(t.text)\"",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Universal (async)",
+      "price": "$0.15 / hr",
+      "url": "https://www.assemblyai.com/pricing"
+    },
+    {
+      "name": "Universal-3 Pro (async)",
+      "price": "$0.21 / hr",
+      "url": "https://www.assemblyai.com/pricing"
+    },
+    {
+      "name": "U3 Pro streaming",
+      "price": "$0.45 / hr",
+      "url": "https://www.assemblyai.com/pricing"
+    }
+  ],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://www.assemblyai.com/docs"
+    },
+    {
+      "label": "Universal-3 Pro announcement",
+      "url": "https://www.assemblyai.com/blog/introducing-universal-3-pro"
+    }
+  ],
+  "demo": null
+}

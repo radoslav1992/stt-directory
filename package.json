@@ -8,6 +8,7 @@
     "build": "astro build",
     "preview": "wrangler dev",
     "check": "astro check",
+    "sync": "node scripts/sync-leaderboard.mjs",
     "deploy": "astro build && wrangler deploy"
   },
   "dependencies": {

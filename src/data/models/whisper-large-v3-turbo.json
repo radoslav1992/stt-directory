@@ -1,0 +1,59 @@
+{
+  "id": "whisper-large-v3-turbo",
+  "hfId": "openai/whisper-large-v3-turbo",
+  "name": "Whisper large-v3-turbo",
+  "org": "OpenAI",
+  "year": 2024,
+  "kind": "model",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "809M",
+  "wer": 7.83,
+  "langs": "99 (no translation)",
+  "runs": [
+    "GPU",
+    "CPU",
+    "Browser",
+    "Mobile"
+  ],
+  "blurb": "large-v3 with the decoder pruned from 32 layers to 4 — near-identical accuracy at several times the speed.",
+  "about": [
+    "Turbo is Whisper large-v3 with its decoder pruned from 32 layers to four, then fine-tuned: about half the parameters, several times the decode speed, and only a modest accuracy cost (7.83% vs 7.44% average WER). The ~1.6 GB checkpoint runs in about 6 GB of VRAM — or on a laptop via whisper.cpp.",
+    "For most self-hosted transcription it has replaced large-v3 as the default: same 99 languages, same MIT licence, same ecosystem (faster-whisper, whisper.cpp, MLX, transformers.js). One trade-off: turbo is transcription-only — it was not trained for Whisper’s translation task."
+  ],
+  "install": "pip install -U openai-whisper\n\nwhisper audio.mp3 --model turbo\n\n# hosted: Groq serves it at ~$0.04/hr of audio",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/openai/whisper-large-v3-turbo"
+    },
+    {
+      "label": "openai/whisper (GitHub)",
+      "url": "https://github.com/openai/whisper"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Groq",
+      "price": "~$0.04 / hr",
+      "url": "https://groq.com/pricing"
+    },
+    {
+      "name": "Cloudflare Workers AI",
+      "price": "usage-based",
+      "url": "https://developers.cloudflare.com/workers-ai/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/openai/whisper-large-v3-turbo"
+    },
+    {
+      "label": "GitHub",
+      "url": "https://github.com/openai/whisper"
+    }
+  ],
+  "demo": null
+}

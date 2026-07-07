@@ -1,0 +1,57 @@
+{
+  "id": "cohere-transcribe",
+  "hfId": "CohereLabs/cohere-transcribe-03-2026",
+  "name": "Cohere Transcribe",
+  "org": "Cohere Labs",
+  "year": 2026,
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "2B",
+  "wer": 5.42,
+  "langs": "14",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "Cohere’s first speech model — debuted at #1 on the leaderboard, open weights across 14 languages.",
+  "about": [
+    "Cohere Transcribe is a 2B Conformer encoder + Transformer decoder that debuted at #1 on the Open ASR Leaderboard (5.42% average WER, March 2026) with roughly 525× realtime throughput. It covers 14 languages including Arabic, Mandarin, Japanese, Korean, and Vietnamese.",
+    "Unlike many lab releases, the weights are Apache 2.0 — commercial use from day one — and it is small enough to run on consumer GPUs. Hosted access is available through Cohere’s API and Azure AI Foundry."
+  ],
+  "install": "pip install transformers torch\n\n# checkpoint: CohereLabs/cohere-transcribe-03-2026\n# see the model card for current pipeline usage.",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "Cohere API",
+      "price": "usage-based",
+      "url": "https://cohere.com/pricing"
+    },
+    {
+      "name": "Azure AI Foundry",
+      "price": "usage-based",
+      "url": "https://ai.azure.com/"
+    },
+    {
+      "name": "fal.ai",
+      "price": "~$0.25 / hr",
+      "url": "https://fal.ai/models/fal-ai/cohere-transcribe"
+    }
+  ],
+  "links": [
+    {
+      "label": "Cohere announcement",
+      "url": "https://cohere.com/blog/transcribe"
+    },
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/CohereLabs/cohere-transcribe-03-2026"
+    }
+  ],
+  "demo": null
+}

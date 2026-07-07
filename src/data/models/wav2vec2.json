@@ -1,0 +1,42 @@
+{
+  "id": "wav2vec2",
+  "hfId": null,
+  "name": "wav2vec 2.0",
+  "org": "Meta AI",
+  "year": 2020,
+  "kind": "model",
+  "status": "legacy",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "95M / 317M",
+  "wer": null,
+  "langs": "En (XLSR: 53+)",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "The self-supervised breakthrough that taught speech models to learn from unlabelled audio.",
+  "about": [
+    "wav2vec 2.0 pioneered self-supervised learning for speech: pre-train on unlabelled audio, then fine-tune with as little as 10 minutes of transcripts. It set 2020-era records on LibriSpeech and its XLSR variants brought usable ASR to dozens of low-resource languages.",
+    "Newer encoder-decoder models have passed it for general transcription, but it remains a workhorse for fine-tuning on niche languages and domains where labelled data is scarce."
+  ],
+  "install": "pip install transformers torchaudio\n\npython -c \"\nfrom transformers import pipeline\nasr = pipeline('automatic-speech-recognition',\n  'facebook/wav2vec2-large-960h-lv60-self')\nprint(asr('audio.wav'))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/facebook/wav2vec2-large-960h-lv60-self"
+    },
+    {
+      "label": "fairseq (GitHub)",
+      "url": "https://github.com/facebookresearch/fairseq"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2006.11477"
+    }
+  ],
+  "demo": null
+}

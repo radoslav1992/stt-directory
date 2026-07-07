@@ -1,0 +1,53 @@
+{
+  "id": "deepgram",
+  "hfId": null,
+  "name": "Deepgram Nova-3",
+  "org": "Deepgram",
+  "year": 2025,
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": null,
+  "langs": "36+",
+  "runs": [
+    "Cloud API",
+    "Self-hosted"
+  ],
+  "blurb": "Real-time STT API built for voice agents — multilingual code-switching, keyterm prompting, optional self-hosting.",
+  "about": [
+    "Nova-3 is Deepgram’s flagship transcription model: sub-300 ms streaming, real-time code-switching across 36+ languages, and \"keyterm prompting\" — pass up to ~100 domain terms at request time to adapt vocabulary without retraining. The newer Flux model adds native end-of-turn detection (~260 ms) for voice agents. Deepgram does not appear on the Open ASR Leaderboard, so no independent WER figure is listed here.",
+    "Unusually for a hosted API, Deepgram also sells self-hosted deployment (Docker/Kubernetes, Enterprise plan) for audio that can’t leave your infrastructure. Pay-as-you-go starts around $0.0043/min for batch and $0.0077/min for streaming English, with a $200 signup credit. Prices change — check the pricing page."
+  ],
+  "install": "pip install deepgram-sdk\n# export DEEPGRAM_API_KEY=...\n\npython -c \"\nfrom deepgram import DeepgramClient, PrerecordedOptions\ndg = DeepgramClient()\nopts = PrerecordedOptions(model='nova-3', smart_format=True)\nres = dg.listen.rest.v('1').transcribe_file(open('audio.wav','rb').read(), opts)\nprint(res.results.channels[0].alternatives[0].transcript)\"",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Nova-3 batch",
+      "price": "from $0.0043 / min",
+      "url": "https://deepgram.com/pricing"
+    },
+    {
+      "name": "Nova-3 streaming",
+      "price": "from $0.0077 / min",
+      "url": "https://deepgram.com/pricing"
+    },
+    {
+      "name": "Self-hosted",
+      "price": "Enterprise",
+      "url": "https://developers.deepgram.com/docs/self-hosted-introduction"
+    }
+  ],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://developers.deepgram.com/docs"
+    },
+    {
+      "label": "Nova-3 announcement",
+      "url": "https://deepgram.com/learn/introducing-nova-3-speech-to-text-api"
+    }
+  ],
+  "demo": null
+}

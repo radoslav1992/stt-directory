@@ -1,0 +1,46 @@
+{
+  "id": "faster-whisper",
+  "hfId": "openai/whisper-large-v3",
+  "name": "faster-whisper",
+  "org": "SYSTRAN",
+  "year": 2023,
+  "kind": "runtime",
+  "status": "active",
+  "license": "MIT",
+  "licenseType": "permissive",
+  "params": "— (runtime)",
+  "wer": 7.44,
+  "langs": "99 (Whisper)",
+  "runs": [
+    "GPU",
+    "CPU"
+  ],
+  "blurb": "The same Whisper weights, re-implemented in CTranslate2 — up to 4× faster on the same hardware.",
+  "about": [
+    "faster-whisper is not a new model but a reimplementation of Whisper inference on the CTranslate2 engine. Same weights, same accuracy, up to 4× faster and with markedly lower memory use — with int8 quantisation it runs large-v3 comfortably on CPU.",
+    "It is the engine behind many popular tools (WhisperX, wyoming-faster-whisper for Home Assistant, and countless transcription apps). If you self-host Whisper in production, you probably want this."
+  ],
+  "install": "pip install faster-whisper\n\npython -c \"\nfrom faster_whisper import WhisperModel\nm = WhisperModel('large-v3', compute_type='int8')\nsegs, _ = m.transcribe('audio.wav')\nprint(' '.join(s.text for s in segs))\"",
+  "downloads": [
+    {
+      "label": "faster-whisper (GitHub)",
+      "url": "https://github.com/SYSTRAN/faster-whisper"
+    },
+    {
+      "label": "CT2 weights on Hugging Face",
+      "url": "https://huggingface.co/Systran"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "GitHub",
+      "url": "https://github.com/SYSTRAN/faster-whisper"
+    },
+    {
+      "label": "CTranslate2",
+      "url": "https://github.com/OpenNMT/CTranslate2"
+    }
+  ],
+  "demo": null
+}

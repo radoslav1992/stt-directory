@@ -1,0 +1,47 @@
+{
+  "id": "granite-speech-3-3-8b",
+  "hfId": "ibm-granite/granite-speech-3.3-8b",
+  "name": "Granite Speech 3.3 8B",
+  "org": "IBM",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "8B",
+  "wer": 5.74,
+  "langs": "En + translation",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "IBM’s 8B speech-aware LLM — near the top of the leaderboard under a genuinely permissive licence.",
+  "about": [
+    "Granite Speech bolts a speech encoder onto IBM’s Granite 3.3 8B LLM. It sits just behind Canary-Qwen on the Open ASR Leaderboard (5.74% WER) and is released under Apache 2.0 — among openly licensed models fit for commercial use without attribution clauses, only IBM’s own newer Granite Speech 4.1 scores better.",
+    "Beyond transcription it handles speech translation to several languages. The 8B footprint means you need a serious GPU (or quantisation) to self-host."
+  ],
+  "install": "pip install transformers torchaudio peft soundfile\n\npython -c \"\nfrom transformers import AutoProcessor, AutoModelForSpeechSeq2Seq\nm = AutoModelForSpeechSeq2Seq.from_pretrained('ibm-granite/granite-speech-3.3-8b')\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/ibm-granite/granite-speech-3.3-8b"
+    },
+    {
+      "label": "Granite repo (GitHub)",
+      "url": "https://github.com/ibm-granite"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "IBM watsonx.ai",
+      "price": "usage-based",
+      "url": "https://www.ibm.com/watsonx"
+    }
+  ],
+  "links": [
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/ibm-granite/granite-speech-3.3-8b"
+    }
+  ],
+  "demo": null
+}

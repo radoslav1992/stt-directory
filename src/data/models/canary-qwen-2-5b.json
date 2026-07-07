@@ -1,0 +1,51 @@
+{
+  "id": "canary-qwen-2-5b",
+  "hfId": "nvidia/canary-qwen-2.5b",
+  "name": "Canary-Qwen 2.5B",
+  "org": "NVIDIA",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "CC-BY-4.0",
+  "licenseType": "permissive",
+  "params": "2.5B",
+  "wer": 5.63,
+  "langs": "English",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "Held #1 on the Open ASR Leaderboard through 2025 — a FastConformer encoder paired with a Qwen3 LLM decoder.",
+  "about": [
+    "Canary-Qwen pairs a FastConformer speech encoder with an unmodified Qwen3-1.7B language-model decoder (a \"SALM\" architecture). It held the #1 spot on the Hugging Face Open ASR Leaderboard at 5.63% average WER through 2025 — ahead of every commercial API measured there at the time — and remains within a few tenths of the 2026 leaders.",
+    "It has a dual mode: pure transcription, or an analysis mode where you can ask the model questions about the audio it just heard. English-only for now, and it wants a GPU — this is not an edge model."
+  ],
+  "install": "# via NVIDIA NeMo\npip install -U nemo_toolkit[asr]\n\npython -c \"\nimport nemo.collections.speechlm2 as slm\nm = slm.models.SALM.from_pretrained('nvidia/canary-qwen-2.5b')\nprint(m.transcribe(['audio.wav']))\"",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/nvidia/canary-qwen-2.5b"
+    },
+    {
+      "label": "NeMo toolkit (GitHub)",
+      "url": "https://github.com/NVIDIA/NeMo"
+    }
+  ],
+  "hosted": [
+    {
+      "name": "NVIDIA NIM / Riva",
+      "price": "per-GPU licence",
+      "url": "https://build.nvidia.com/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/nvidia/canary-qwen-2.5b"
+    },
+    {
+      "label": "Open ASR Leaderboard",
+      "url": "https://huggingface.co/spaces/hf-audio/open_asr_leaderboard"
+    }
+  ],
+  "demo": null
+}

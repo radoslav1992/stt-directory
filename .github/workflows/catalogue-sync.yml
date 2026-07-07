@@ -1,0 +1,111 @@
+# Weekly catalogue sync against the Open ASR Leaderboard.
+#
+# 1. scripts/sync-leaderboard.mjs applies WER drift to src/data/models/*.json
+#    and lists new leaderboard models worth cataloguing (deterministic, no AI).
+# 2. If there are candidates and ANTHROPIC_API_KEY is configured, Claude
+#    researches each one (model card, licence file, announcements), drafts the
+#    entry JSON in house style (see CLAUDE.md), and validates the build.
+# 3. Everything lands as a PR for human review — merging deploys.
+#
+# Setup: add an ANTHROPIC_API_KEY repository secret. Without it, the workflow
+# still opens WER-refresh PRs; only the entry-drafting step is skipped.
+
+name: Catalogue sync
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    env:
+      HAS_ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY != '' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Sync WER figures and detect candidates
+        run: node scripts/sync-leaderboard.mjs --write --report leaderboard-report.json
+
+      - name: Summarise work
+        id: work
+        run: |
+          echo "updates=$(node -p "JSON.parse(require('fs').readFileSync('leaderboard-report.json','utf8')).updates.length")" >> "$GITHUB_OUTPUT"
+          echo "candidates=$(node -p "JSON.parse(require('fs').readFileSync('leaderboard-report.json','utf8')).candidates.length")" >> "$GITHUB_OUTPUT"
+
+      - name: Write fallback PR body
+        if: steps.work.outputs.updates != '0' || steps.work.outputs.candidates != '0'
+        run: |
+          node -e "
+          const r = JSON.parse(require('fs').readFileSync('leaderboard-report.json','utf8'));
+          let md = '## Catalogue sync\n\nSource: ' + r.source + ' (fetched ' + r.fetchedAt + ')\n';
+          if (r.updates.length) {
+            md += '\n### WER updates (applied)\n\n' + r.updates.map(u => '- \`' + u.id + '\`: ' + u.oldWer + ' → ' + u.newWer).join('\n') + '\n';
+            md += '\nCheck each entry\'s prose for stale figure mentions before merging.\n';
+          }
+          if (r.candidates.length) {
+            md += '\n### New leaderboard models (need research)\n\n' + r.candidates.map(c => '- \`' + c.hfId + '\` — ' + c.wer + '% WER, ' + c.license).join('\n') + '\n';
+          }
+          require('fs').writeFileSync('/tmp/sync-summary.md', md);
+          "
+
+      - name: Research and draft entries for new models
+        if: steps.work.outputs.candidates != '0' && env.HAS_ANTHROPIC_KEY == 'true'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          claude_args: '--allowedTools "Read,Write,Edit,Glob,Grep,WebFetch,WebSearch,Bash(npm:*),Bash(npx:*),Bash(node:*)"'
+          prompt: |
+            You are updating STT-Index, a curated speech-to-text model directory.
+            Read CLAUDE.md first — it defines the data model, curation scope,
+            house style, and verification rules. Follow them exactly.
+
+            A sync script has just run. leaderboard-report.json (repo root)
+            lists `updates` (WER figures already applied to the JSON files) and
+            `candidates` (leaderboard models not yet catalogued).
+
+            1. For each candidate, decide whether it belongs per the curation
+               rules. Skip duplicates of covered families and minor fine-tunes;
+               it is fine to reject most candidates.
+            2. For each accepted candidate: research it on the web (model card,
+               GitHub repo, the actual LICENSE file, vendor announcement).
+               Create src/data/models/<id>.json and insert the id at the
+               editorially correct position in src/data/catalogue.json.
+            3. For each entry in `updates`, check whether its about/blurb prose
+               quotes the old WER figure and fix the prose if so.
+            4. Never invent numbers: wer only from leaderboard-report.json;
+               pricing only with a fetched source, else "usage-based"; licence
+               only after verifying the licence file or card metadata.
+            5. Run `npm run build` and `npx astro check`; fix validation errors.
+            6. Overwrite /tmp/sync-summary.md with a markdown summary of
+               everything added/changed, citing a source URL per claim, plus a
+               one-line reason for each rejected candidate.
+
+      - name: Verify build
+        if: steps.work.outputs.updates != '0' || steps.work.outputs.candidates != '0'
+        run: npm run build && npx astro check
+
+      - name: Open PR
+        if: steps.work.outputs.updates != '0' || steps.work.outputs.candidates != '0'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: bot/catalogue-sync
+          delete-branch: true
+          add-paths: src/data/**
+          commit-message: 'Sync catalogue with Open ASR Leaderboard'
+          title: 'Catalogue sync: leaderboard updates'
+          body-path: /tmp/sync-summary.md
+          labels: catalogue-sync

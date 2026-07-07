@@ -1,0 +1,37 @@
+{
+  "id": "kaldi",
+  "hfId": null,
+  "name": "Kaldi",
+  "org": "Kaldi project",
+  "year": 2011,
+  "kind": "toolkit",
+  "status": "legacy",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "— (toolkit)",
+  "wer": null,
+  "langs": "varies",
+  "runs": [
+    "CPU"
+  ],
+  "blurb": "The C++ toolkit that carried a decade of ASR research — legacy now, but still under countless production systems.",
+  "about": [
+    "Kaldi defined open-source speech recognition for a decade: a C++ toolkit of WFST decoders, acoustic-model recipes, and pipelines that trained most pre-transformer production systems. Vosk is built on it.",
+    "New projects should not start here — the transformer generation is more accurate and vastly easier to use — but enormous amounts of deployed ASR still run Kaldi, and its recipes remain a reference for classical techniques."
+  ],
+  "install": "git clone https://github.com/kaldi-asr/kaldi\ncd kaldi/tools && make\ncd ../src && ./configure && make\n\n# then pick a recipe under egs/",
+  "downloads": [
+    {
+      "label": "kaldi (GitHub)",
+      "url": "https://github.com/kaldi-asr/kaldi"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Docs",
+      "url": "https://kaldi-asr.org/"
+    }
+  ],
+  "demo": null
+}

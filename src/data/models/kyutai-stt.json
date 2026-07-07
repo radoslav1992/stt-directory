@@ -1,0 +1,50 @@
+{
+  "id": "kyutai-stt",
+  "hfId": "kyutai/stt-2.6b-en",
+  "name": "Kyutai STT",
+  "org": "Kyutai",
+  "year": 2025,
+  "kind": "model",
+  "status": "active",
+  "license": "CC-BY-4.0",
+  "licenseType": "permissive",
+  "params": "2.6B / 1B",
+  "wer": 6.4,
+  "langs": "En (1B: +Fr)",
+  "runs": [
+    "GPU",
+    "Mobile"
+  ],
+  "blurb": "True streaming transcription — words appear as you speak, and one H100 serves 400 live streams.",
+  "about": [
+    "Kyutai STT is a genuinely streaming model from the Moshi lineage: a decoder-only transformer over Mimi codec tokens that emits text as audio arrives, with a fixed delay of 2.5 seconds (2.6B model) or 0.5 seconds (1B). Despite the streaming constraint it scores 6.40% average WER — better than offline Whisper large-v3.",
+    "It is built for production voice agents: batched streaming serves 400 realtime streams on one H100 via the Rust server, the 1B model has integrated semantic voice-activity detection, and MLX builds run on Apple Silicon — including an iPhone. Weights are CC-BY-4.0."
+  ],
+  "install": "pip install \"moshi>=0.2.6\"\n\npython -m moshi.run_inference --hf-repo kyutai/stt-2.6b-en audio.mp3\n\n# Apple Silicon: pip install moshi-mlx",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/kyutai/stt-2.6b-en"
+    },
+    {
+      "label": "delayed-streams-modeling (GitHub)",
+      "url": "https://github.com/kyutai-labs/delayed-streams-modeling"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Project page",
+      "url": "https://kyutai.org/stt"
+    },
+    {
+      "label": "Paper (arXiv)",
+      "url": "https://arxiv.org/abs/2509.08753"
+    },
+    {
+      "label": "Live demo (unmute.sh)",
+      "url": "https://unmute.sh"
+    }
+  ],
+  "demo": null
+}

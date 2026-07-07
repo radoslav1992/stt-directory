@@ -30,7 +30,9 @@ To preview the exact Worker locally after a build: `npm run preview` (runs `wran
 
 ```
 src/
-  data/models.ts       # the catalogue — all model entries live here
+  data/models/*.json   # the catalogue — one validated JSON file per entry
+  data/catalogue.json  # display order (entry numbers derive from position)
+  data/models.ts       # zod schema + loader (invalid data fails the build)
   data/legal.ts        # legal page copy
   layouts/Base.astro   # head/SEO, header, footer
   components/Demo.astro# in-browser transcription demo island
@@ -42,6 +44,19 @@ src/
     404.astro
     robots.txt.ts
   styles/global.css    # design system (IBM Plex + Instrument Serif, cream/ink/orange)
+scripts/
+  sync-leaderboard.mjs # WER drift + new-model detection vs the Open ASR Leaderboard
+  sync-config.json     # candidate threshold + ignore patterns (covered families)
 ```
 
-Adding a model = adding one object to `src/data/models.ts`; its page, library row, sitemap entry, and structured data are generated at build time.
+Adding a model = one JSON file in `src/data/models/` plus its id in `src/data/catalogue.json`; the page, library row, sitemap entry, entry number, and structured data are generated at build time. Editorial rules live in `CLAUDE.md`.
+
+## Automated catalogue updates
+
+`.github/workflows/catalogue-sync.yml` runs every Monday (or on demand via *Run workflow*):
+
+1. **Deterministic sync** — `scripts/sync-leaderboard.mjs` fetches the [Open ASR Leaderboard](https://github.com/huggingface/open_asr_leaderboard) data, applies WER drift to existing entries (joined via each entry's `hfId`), and lists new models below the notability threshold in `scripts/sync-config.json`.
+2. **Agentic drafting** — if new candidates exist and the `ANTHROPIC_API_KEY` repository secret is set, Claude researches each one (model card, licence file, announcements), drafts the entry per `CLAUDE.md`'s style and verification rules, and validates the build.
+3. **PR-gated publish** — everything lands as a `bot/catalogue-sync` PR with sources cited. Merging deploys (via your deploy-on-merge setup). Without the secret, WER-refresh PRs still work; only drafting is skipped.
+
+`ci.yml` builds and type-checks every PR, so a malformed bot entry can never merge.

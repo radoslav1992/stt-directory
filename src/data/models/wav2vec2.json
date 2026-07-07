@@ -39,5 +39,15 @@
       "url": "https://arxiv.org/abs/2006.11477"
     }
   ],
-  "demo": null
+  "demo": {
+    "note": "This loads the English wav2vec2-base-960h — a CTC model, so expect uncased text without punctuation; a nice contrast to the Whisper generation.",
+    "models": [
+      {
+        "label": "wav2vec2-base-960h",
+        "hfId": "Xenova/wav2vec2-base-960h",
+        "size": "~95 MB",
+        "dtype": "q8"
+      }
+    ]
+  }
 }

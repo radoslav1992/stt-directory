@@ -21,7 +21,12 @@ const demo = model.demo!;
     <select class="demo-select" data-model-select aria-label="Choose a checkpoint to load">
       {
         demo.models.map((m) => (
-          <option value={m.hfId} data-webgpu-only={m.webgpuOnly ? 'true' : 'false'} data-label={m.label}>
+          <option
+            value={m.hfId}
+            data-webgpu-only={m.webgpuOnly ? 'true' : 'false'}
+            data-dtype={m.dtype ?? ''}
+            data-label={m.label}
+          >
             {m.label} — {m.size}
             {m.webgpuOnly ? ' · WebGPU' : ''}
           </option>
@@ -89,8 +94,10 @@ const demo = model.demo!;
     });
 
     loadBtn.addEventListener('click', async () => {
+      const opt = select.selectedOptions[0];
       const modelId = select.value;
-      const label = select.selectedOptions[0]?.dataset.label ?? modelId;
+      const label = opt?.dataset.label ?? modelId;
+      const dtype = opt?.dataset.dtype || undefined;
       loadBtn.disabled = true;
       select.disabled = true;
       setStatus('loading runtime…');
@@ -101,17 +108,18 @@ const demo = model.demo!;
             setStatus(`downloading ${p.file.split('/').pop()} — ${Math.round(p.progress || 0)}%`);
           }
         };
+        const base = { progress_callback, ...(dtype ? { dtype } : {}) };
         if (hasWebGPU) {
           try {
             asr = await tf.pipeline('automatic-speech-recognition', modelId, {
+              ...base,
               device: 'webgpu',
-              progress_callback,
             });
           } catch {
-            asr = await tf.pipeline('automatic-speech-recognition', modelId, { progress_callback });
+            asr = await tf.pipeline('automatic-speech-recognition', modelId, base);
           }
         } else {
-          asr = await tf.pipeline('automatic-speech-recognition', modelId, { progress_callback });
+          asr = await tf.pipeline('automatic-speech-recognition', modelId, base);
         }
         loadedModelId = modelId;
         loadBtn.hidden = true;

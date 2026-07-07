@@ -48,6 +48,9 @@ export const modelSchema = z.object({
             hfId: z.string(),
             /** Approximate download size shown to the user, e.g. "~40 MB" */
             size: z.string(),
+            /** transformers.js dtype (e.g. "q8", "q4") — controls which
+             *  quantisation is downloaded; the shown size must match it. */
+            dtype: z.string().optional(),
             /** Requires WebGPU — disabled on browsers without navigator.gpu */
             webgpuOnly: z.boolean().optional(),
           })

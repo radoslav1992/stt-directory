@@ -50,5 +50,28 @@
       "url": "https://huggingface.co/distil-whisper/distil-large-v3"
     }
   ],
-  "demo": null
+  "demo": {
+    "note": "Pick a checkpoint — the English distil-small loads in seconds, and the multilingual v3.5 distillation runs on WebGPU.",
+    "models": [
+      {
+        "label": "Distil-Whisper small.en",
+        "hfId": "onnx-community/distil-small.en",
+        "size": "~170 MB",
+        "dtype": "q8"
+      },
+      {
+        "label": "Distil-Whisper medium.en",
+        "hfId": "distil-whisper/distil-medium.en",
+        "size": "~400 MB",
+        "dtype": "q8"
+      },
+      {
+        "label": "Distil-Whisper large-v3.5",
+        "hfId": "onnx-community/distil-large-v3.5-ONNX",
+        "size": "~750 MB",
+        "dtype": "q4",
+        "webgpuOnly": true
+      }
+    ]
+  }
 }

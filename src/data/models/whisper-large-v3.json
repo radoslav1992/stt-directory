@@ -66,12 +66,32 @@
     }
   ],
   "demo": {
-    "note": "Pick a checkpoint below — each loads via transformers.js and runs right here in the tab: the same architecture as large-v3, at sizes your browser can handle.",
+    "note": "Pick a checkpoint — each loads via transformers.js and runs right here in the tab, from a 40 MB English model to the full large-v3-turbo on WebGPU.",
     "models": [
       {
         "label": "Whisper tiny.en",
         "hfId": "onnx-community/whisper-tiny.en",
-        "size": "~40 MB"
+        "size": "~40 MB",
+        "dtype": "q8"
+      },
+      {
+        "label": "Whisper base",
+        "hfId": "onnx-community/whisper-base",
+        "size": "~80 MB",
+        "dtype": "q8"
+      },
+      {
+        "label": "Whisper small",
+        "hfId": "onnx-community/whisper-small",
+        "size": "~250 MB",
+        "dtype": "q8"
+      },
+      {
+        "label": "Whisper large-v3-turbo",
+        "hfId": "onnx-community/whisper-large-v3-turbo",
+        "size": "~450 MB",
+        "dtype": "q4",
+        "webgpuOnly": true
       }
     ]
   }

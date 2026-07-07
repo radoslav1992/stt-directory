@@ -56,5 +56,22 @@
       "url": "https://github.com/openai/whisper"
     }
   ],
-  "demo": null
+  "demo": {
+    "note": "This loads the actual large-v3-turbo, quantised to roughly 450 MB — it wants WebGPU and a decent connection. Whisper tiny.en is offered as a light alternative.",
+    "models": [
+      {
+        "label": "Whisper large-v3-turbo",
+        "hfId": "onnx-community/whisper-large-v3-turbo",
+        "size": "~450 MB",
+        "dtype": "q4",
+        "webgpuOnly": true
+      },
+      {
+        "label": "Whisper tiny.en",
+        "hfId": "onnx-community/whisper-tiny.en",
+        "size": "~40 MB",
+        "dtype": "q8"
+      }
+    ]
+  }
 }

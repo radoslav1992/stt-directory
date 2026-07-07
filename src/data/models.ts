@@ -59,9 +59,9 @@ const CATALOGUE: ModelInput[] = [
     langs: 'English',
     runs: ['GPU'],
     blurb:
-      'Current #1 on the Open ASR Leaderboard — a FastConformer encoder paired with a Qwen3 LLM decoder.',
+      'Held #1 on the Open ASR Leaderboard through 2025 — a FastConformer encoder paired with a Qwen3 LLM decoder.',
     about: [
-      'Canary-Qwen pairs a FastConformer speech encoder with an unmodified Qwen3-1.7B language-model decoder (a "SALM" architecture). The result tops the Hugging Face Open ASR Leaderboard at 5.63% average WER, ahead of every commercial API on the same benchmark.',
+      'Canary-Qwen pairs a FastConformer speech encoder with an unmodified Qwen3-1.7B language-model decoder (a "SALM" architecture). It held the #1 spot on the Hugging Face Open ASR Leaderboard at 5.63% average WER through 2025 — ahead of every commercial API measured there at the time — and remains within a few tenths of the 2026 leaders.',
       'It has a dual mode: pure transcription, or an analysis mode where you can ask the model questions about the audio it just heard. English-only for now, and it wants a GPU — this is not an edge model.',
     ],
     install: `# via NVIDIA NeMo
@@ -92,12 +92,12 @@ print(m.transcribe(['audio.wav']))"`,
     license: 'Apache-2.0',
     licenseType: 'permissive',
     params: '8B',
-    wer: 5.85,
+    wer: 5.74,
     langs: 'En + translation',
     runs: ['GPU'],
-    blurb: 'IBM’s speech-aware LLM — second most accurate open model, under a genuinely permissive licence.',
+    blurb: 'IBM’s 8B speech-aware LLM — near the top of the leaderboard under a genuinely permissive licence.',
     about: [
-      'Granite Speech bolts a speech encoder onto IBM’s Granite 3.3 8B LLM. It sits just behind Canary-Qwen on the Open ASR Leaderboard (5.85% WER) but is released under Apache 2.0, which makes it the most accurate open model you can use commercially without attribution clauses.',
+      'Granite Speech bolts a speech encoder onto IBM’s Granite 3.3 8B LLM. It sits just behind Canary-Qwen on the Open ASR Leaderboard (5.74% WER) and is released under Apache 2.0 — among openly licensed models fit for commercial use without attribution clauses, only IBM’s own newer Granite Speech 4.1 scores better.',
       'Beyond transcription it handles speech translation to several languages. The 8B footprint means you need a serious GPU (or quantisation) to self-host.',
     ],
     install: `pip install transformers torchaudio peft soundfile
@@ -193,7 +193,7 @@ pip install faster-whisper`,
   },
   {
     id: 'distil-whisper',
-    name: 'Distil-Whisper large-v3',
+    name: 'Distil-Whisper large-v3.5',
     org: 'Hugging Face',
     year: 2023,
     kind: 'model',
@@ -201,12 +201,12 @@ pip install faster-whisper`,
     license: 'MIT',
     licenseType: 'permissive',
     params: '756M',
-    wer: 7.53,
+    wer: 7.21,
     langs: 'English',
     runs: ['GPU', 'CPU', 'Browser'],
-    blurb: 'Whisper distilled to half the size and ~6× the speed, within 1% WER of the original.',
+    blurb: 'Whisper distilled to half the size and several times the speed — v3.5 now beats its teacher on the leaderboard.',
     about: [
-      'Distil-Whisper is a knowledge-distilled version of Whisper large-v3: about half the parameters, roughly 6× faster, and within one WER point of its teacher on out-of-distribution audio. English-only.',
+      'Distil-Whisper is a knowledge-distilled version of Whisper large-v3: about half the parameters and several times faster. The current v3.5 release scores 7.21% average WER on the Open ASR Leaderboard — actually beating full large-v3’s 7.44% while running roughly 3× faster. English-only.',
       'It drops into any Hugging Face Transformers pipeline as a straight replacement, and pairs well with speculative decoding — using it as a draft model to speed up full Whisper with zero accuracy loss.',
     ],
     install: `pip install transformers accelerate
@@ -214,10 +214,10 @@ pip install faster-whisper`,
 python -c "
 from transformers import pipeline
 asr = pipeline('automatic-speech-recognition',
-  'distil-whisper/distil-large-v3')
+  'distil-whisper/distil-large-v3.5')
 print(asr('audio.wav'))"`,
     downloads: [
-      { label: 'Weights on Hugging Face', url: 'https://huggingface.co/distil-whisper/distil-large-v3' },
+      { label: 'Weights on Hugging Face', url: 'https://huggingface.co/distil-whisper/distil-large-v3.5' },
       { label: 'distil-whisper (GitHub)', url: 'https://github.com/huggingface/distil-whisper' },
     ],
     hosted: [
@@ -309,14 +309,14 @@ cd whisper.cpp && make
     status: 'active',
     license: 'MIT',
     licenseType: 'permissive',
-    params: '27M / 62M',
-    wer: null,
+    params: '27M – 245M',
+    wer: 6.66,
     langs: 'En + 7',
     runs: ['CPU', 'Mobile', 'Browser'],
     blurb: 'Tiny models built for edge devices — beats Whisper tiny/base at a fraction of the compute.',
     about: [
       'Moonshine was designed from scratch for edge hardware: variable-length windows instead of Whisper’s fixed 30-second chunks mean short utterances transcribe several times faster. The tiny model is 27M parameters — small enough for microcontroller-class devices and instant browser loading.',
-      'It beats Whisper tiny and base on accuracy at a fraction of the compute, which has made it the default for live captions, voice interfaces, and wearables. Runs natively, via ONNX, or in-browser through transformers.js — try it below.',
+      'It beats Whisper tiny and base on accuracy at a fraction of the compute, which has made it the default for live captions, voice interfaces, and wearables. A 2026 streaming line (up to 245M parameters) reaches 6.66% average WER on the Open ASR Leaderboard. Runs natively, via ONNX, or in-browser through transformers.js — try it below.',
     ],
     install: `pip install useful-moonshine
 
@@ -344,21 +344,21 @@ print(moonshine.transcribe('audio.wav', 'moonshine/base'))"`,
     status: 'active',
     license: 'Apache-2.0',
     licenseType: 'permissive',
-    params: '~2B class',
-    wer: null,
+    params: '1.7B / 0.6B',
+    wer: 5.76,
     langs: '11',
     runs: ['GPU'],
     blurb: 'Alibaba’s multilingual ASR from the Qwen family — strong on Chinese, English, and code-switching.',
     about: [
       'Qwen3-ASR brings the Qwen LLM family’s multilingual strength to speech: 11 languages with particularly strong Mandarin and English, robust handling of accents, code-switching, and noisy audio, plus contextual biasing — you can feed it a vocabulary list to steer transcription.',
-      'A good pick when Chinese-language accuracy matters, where Whisper is comparatively weak.',
+      'The 1.7B checkpoint scores 5.76% average WER on the Open ASR Leaderboard — top-five territory — with a 0.6B sibling for lighter deployments. A good pick when Chinese-language accuracy matters, where Whisper is comparatively weak.',
     ],
     install: `pip install transformers torch
 
-# see the model card for the current checkpoint name
-# and pipeline usage — the family moves fast.`,
+# checkpoints: Qwen/Qwen3-ASR-1.7B and Qwen/Qwen3-ASR-0.6B
+# see the model card for pipeline usage — the family moves fast.`,
     downloads: [
-      { label: 'Qwen on Hugging Face', url: 'https://huggingface.co/Qwen' },
+      { label: 'Qwen3-ASR-1.7B on Hugging Face', url: 'https://huggingface.co/Qwen/Qwen3-ASR-1.7B' },
       { label: 'Qwen (GitHub)', url: 'https://github.com/QwenLM' },
     ],
     hosted: [

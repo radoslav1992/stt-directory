@@ -31,7 +31,7 @@ export const LEGAL: Record<string, LegalDoc> = {
       },
       {
         h: 'Email updates (optional)',
-        p: 'If you choose to subscribe to email updates, the address you enter is sent directly to our newsletter provider, Buttondown, which stores it and handles confirmation and unsubscribing under its own privacy policy. We can see the subscriber list and nothing else about you. The form is entirely optional and sets no cookies; the RSS feed offers the same updates with no data shared at all.',
+        p: 'If you choose to subscribe to email updates, the address you enter is stored on our own self-hosted newsletter system (listmonk) and used solely to send you index updates. It is never sold or shared; a commercial email delivery relay handles the actual sending and sees recipient addresses in transit, as any mail carrier does. Every email contains an unsubscribe link that removes you immediately. The form is entirely optional and sets no cookies; the RSS feed offers the same updates with no data shared at all.',
       },
       {
         h: 'Outbound links',

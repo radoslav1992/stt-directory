@@ -70,6 +70,7 @@ jobs:
           GEMINI_CLI_TRUST_WORKSPACE: 'true'
         with:
           gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          gemini_model: gemini-3.5-flash
           # The action runs the CLI with --yolo (all tool calls auto-approved),
           # so tools.core is the access-control surface: it is an allowlist for
           # ALL built-in tools — anything not listed is unavailable. Shell is

@@ -6,5 +6,5 @@
 //                        (listmonk admin → Lists → copy UUID)
 // The privacy policy's "Email updates" section describes this self-hosted
 // setup — update it if you switch providers.
-export const LISTMONK_URL = '';
+export const LISTMONK_URL = 'https://news.speechtotext.dev';
 export const LISTMONK_LIST_UUID = '';

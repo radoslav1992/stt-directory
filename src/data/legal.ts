@@ -39,7 +39,7 @@ export const LEGAL: Record<string, LegalDoc> = {
       },
       {
         h: 'Contact',
-        p: 'Questions about this policy can be raised as an issue on the project’s repository.',
+        p: 'Questions about this policy — or anything else — can be sent to info@speechtotext.dev.',
       },
     ],
   },
@@ -91,7 +91,7 @@ export const LEGAL: Record<string, LegalDoc> = {
       },
       {
         h: 'Corrections',
-        p: 'Spotted a stale figure or a mis-classified licence? Corrections are welcome via the project repository.',
+        p: 'Spotted a stale figure or a mis-classified licence? Corrections are welcome at info@speechtotext.dev.',
       },
     ],
   },

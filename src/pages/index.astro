@@ -16,6 +16,12 @@ const jsonLd = {
   alternateName: 'STT Index',
   description,
   url: Astro.site?.href,
+  publisher: {
+    '@type': 'Organization',
+    name: 'STT—INDEX',
+    email: 'info@speechtotext.dev',
+    url: Astro.site?.href,
+  },
 };
 ---
 

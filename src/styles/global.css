@@ -1162,6 +1162,22 @@ a:hover {
   text-wrap: pretty;
 }
 
+.footer-contact {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--bg);
+  text-decoration: none;
+  margin-top: 14px;
+  border-bottom: 1px solid var(--footer-line);
+  padding-bottom: 2px;
+}
+
+.footer-contact:hover {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
 .footer-col {
   display: flex;
   flex-direction: column;

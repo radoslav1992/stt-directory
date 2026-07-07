@@ -22,7 +22,7 @@ npm run build      # static build into dist/
 npm run deploy     # build + wrangler deploy (needs `wrangler login` or CLOUDFLARE_API_TOKEN)
 ```
 
-> **Set the production URL** before the first real deploy: canonical URLs, OG tags, robots.txt, and the sitemap are generated from the `site` value in `astro.config.mjs`. Either edit the fallback there or build with `SITE_URL=https://your-domain.example npm run build`.
+> The production origin is `https://speechtotext.dev` (set in `astro.config.mjs`); canonical URLs, OG tags, robots.txt, and the sitemap are generated from it. Override per-build with `SITE_URL=… npm run build` for previews.
 
 To preview the exact Worker locally after a build: `npm run preview` (runs `wrangler dev`).
 

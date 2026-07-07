@@ -45,7 +45,7 @@ const jsonLd: object[] = [
     license: licenseUrl(m.license) ?? m.license,
     url: new URL(modelPath(m), Astro.site).href,
     ...(m.downloads[0] ? { downloadUrl: m.downloads[0].url } : {}),
-    offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+    ...(m.kind !== 'api' ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
   },
   {
     '@context': 'https://schema.org',
@@ -108,7 +108,7 @@ const jsonLd: object[] = [
         </div>
 
         <div>
-          <h2 class="sec-label">INSTALL &amp; RUN LOCALLY</h2>
+          <h2 class="sec-label">{m.kind === 'api' ? 'QUICKSTART' : 'INSTALL & RUN LOCALLY'}</h2>
           <pre class="install-block">{m.install}</pre>
         </div>
 
@@ -136,24 +136,26 @@ const jsonLd: object[] = [
       </div>
 
       <aside class="model-aside">
-        <div>
-          <h2 class="sec-label">GET IT — FREE</h2>
-          <div class="dl-list">
-            {
-              m.downloads.map((d) => (
-                <a href={d.url} target="_blank" rel="noopener" class="dl-link">
-                  <span class="dl-label">{d.label}</span>
-                  <span class="dl-arrow">↓</span>
-                </a>
-              ))
-            }
-          </div>
-        </div>
+        {
+          m.downloads.length > 0 && (
+            <div>
+              <h2 class="sec-label">GET IT — FREE</h2>
+              <div class="dl-list">
+                {m.downloads.map((d) => (
+                  <a href={d.url} target="_blank" rel="noopener" class="dl-link">
+                    <span class="dl-label">{d.label}</span>
+                    <span class="dl-arrow">↓</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )
+        }
 
         {
           m.hosted.length > 0 && (
             <div>
-              <h2 class="sec-label">HOSTED / PAID ACCESS</h2>
+              <h2 class="sec-label">{m.kind === 'api' ? 'ACCESS — PRICING' : 'HOSTED / PAID ACCESS'}</h2>
               <div class="hosted-list">
                 {m.hosted.map((h) => (
                   <a href={h.url} target="_blank" rel="noopener" class="hosted-link">

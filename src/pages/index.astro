@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-import { MODELS, FEATURED_IDS, getModel, specline, modelPath } from '../data/models';
+import { MODELS, FEATURED_IDS, getModel, specline, modelPath, bestOpenWer } from '../data/models';
 
 const featured = FEATURED_IDS.map((id) => getModel(id)!);
 const tickerText = MODELS.map((m) => m.name.toUpperCase()).join('  ✳  ') + '  ✳  ';
@@ -52,7 +52,7 @@ const jsonLd = {
         <div class="stat-label">LANGUAGES COVERED</div>
       </div>
       <div class="stat">
-        <div class="stat-value">5.63%</div>
+        <div class="stat-value">{bestOpenWer()}</div>
         <div class="stat-label">BEST OPEN WER ON RECORD</div>
       </div>
     </div>

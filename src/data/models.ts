@@ -1,6 +1,6 @@
-export type Kind = 'model' | 'runtime' | 'toolkit';
+export type Kind = 'model' | 'runtime' | 'toolkit' | 'api';
 export type Status = 'active' | 'legacy' | 'discontinued';
-export type LicenseType = 'permissive' | 'non-commercial';
+export type LicenseType = 'permissive' | 'non-commercial' | 'proprietary';
 export type DemoKind = 'whisper' | 'moonshine';
 
 export interface LinkItem {
@@ -38,10 +38,15 @@ export interface ModelEntry {
   demoNote?: string;
 }
 
-export const MODELS: ModelEntry[] = [
+// Catalogue order is editorial: leaderboard leaders first, then the Whisper
+// ecosystem, edge/multilingual models, toolkits, legacy entries, and hosted
+// APIs last. Entry numbers are derived from position — insert anywhere and
+// numbering stays consistent.
+type ModelInput = Omit<ModelEntry, 'num'>;
+
+const CATALOGUE: ModelInput[] = [
   {
     id: 'canary-qwen-2-5b',
-    num: '01',
     name: 'Canary-Qwen 2.5B',
     org: 'NVIDIA',
     year: 2025,
@@ -79,7 +84,6 @@ print(m.transcribe(['audio.wav']))"`,
   },
   {
     id: 'granite-speech-3-3-8b',
-    num: '02',
     name: 'Granite Speech 3.3 8B',
     org: 'IBM',
     year: 2025,
@@ -111,7 +115,6 @@ m = AutoModelForSpeechSeq2Seq.from_pretrained('ibm-granite/granite-speech-3.3-8b
   },
   {
     id: 'parakeet-tdt-0-6b',
-    num: '03',
     name: 'Parakeet TDT 0.6B v2',
     org: 'NVIDIA',
     year: 2025,
@@ -147,7 +150,6 @@ print(m.transcribe(['audio.wav']))"`,
   },
   {
     id: 'whisper-large-v3',
-    num: '04',
     name: 'Whisper large-v3',
     org: 'OpenAI',
     year: 2023,
@@ -191,7 +193,6 @@ pip install faster-whisper`,
   },
   {
     id: 'distil-whisper',
-    num: '05',
     name: 'Distil-Whisper large-v3',
     org: 'Hugging Face',
     year: 2023,
@@ -230,7 +231,6 @@ print(asr('audio.wav'))"`,
   },
   {
     id: 'faster-whisper',
-    num: '06',
     name: 'faster-whisper',
     org: 'SYSTRAN',
     year: 2023,
@@ -267,7 +267,6 @@ print(' '.join(s.text for s in segs))"`,
   },
   {
     id: 'whisper-cpp',
-    num: '07',
     name: 'whisper.cpp',
     org: 'ggml / G. Gerganov',
     year: 2022,
@@ -303,7 +302,6 @@ cd whisper.cpp && make
   },
   {
     id: 'moonshine',
-    num: '08',
     name: 'Moonshine',
     org: 'Useful Sensors',
     year: 2024,
@@ -339,7 +337,6 @@ print(moonshine.transcribe('audio.wav', 'moonshine/base'))"`,
   },
   {
     id: 'qwen3-asr',
-    num: '09',
     name: 'Qwen3-ASR',
     org: 'Alibaba',
     year: 2025,
@@ -376,7 +373,6 @@ print(moonshine.transcribe('audio.wav', 'moonshine/base'))"`,
   },
   {
     id: 'vosk',
-    num: '10',
     name: 'Vosk',
     org: 'Alpha Cephei',
     year: 2020,
@@ -412,7 +408,6 @@ model = Model('vosk-model-small-en-us-0.15')"`,
   },
   {
     id: 'wav2vec2',
-    num: '11',
     name: 'wav2vec 2.0',
     org: 'Meta AI',
     year: 2020,
@@ -449,7 +444,6 @@ print(asr('audio.wav'))"`,
   },
   {
     id: 'mms',
-    num: '12',
     name: 'MMS',
     org: 'Meta AI',
     year: 2023,
@@ -490,7 +484,6 @@ print(asr('audio.wav'))"`,
   },
   {
     id: 'silero',
-    num: '13',
     name: 'Silero Models',
     org: 'Silero',
     year: 2020,
@@ -523,7 +516,6 @@ model, decoder, utils = torch.hub.load(
   },
   {
     id: 'speechbrain',
-    num: '14',
     name: 'SpeechBrain',
     org: 'SpeechBrain project',
     year: 2021,
@@ -557,7 +549,6 @@ print(asr.transcribe_file('audio.wav'))"`,
   },
   {
     id: 'kaldi',
-    num: '15',
     name: 'Kaldi',
     org: 'Kaldi project',
     year: 2011,
@@ -587,7 +578,6 @@ cd ../src && ./configure && make
   },
   {
     id: 'coqui-stt',
-    num: '16',
     name: 'Coqui STT',
     org: 'Coqui (ex-Mozilla)',
     year: 2021,
@@ -618,13 +608,27 @@ pip install stt
   },
 ];
 
+export const MODELS: ModelEntry[] = CATALOGUE.map((m, i) => ({
+  ...m,
+  num: String(i + 1).padStart(2, '0'),
+}));
+
 export const FEATURED_IDS = ['whisper-large-v3', 'canary-qwen-2-5b', 'moonshine', 'vosk'];
 
 export const KIND_LABELS: Record<Kind, string> = {
   model: 'Model',
   runtime: 'Runtime',
   toolkit: 'Toolkit',
+  api: 'API',
 };
+
+/** Best average WER among open (non-proprietary) entries, e.g. "5.63%". */
+export function bestOpenWer(): string {
+  const best = Math.min(
+    ...MODELS.filter((m) => m.licenseType !== 'proprietary' && m.wer != null).map((m) => m.wer!)
+  );
+  return best.toFixed(2) + '%';
+}
 
 export const STATUS_MAP: Record<Status, { label: string; color: string }> = {
   active: { label: '● ACTIVE', color: '#1F7A3D' },

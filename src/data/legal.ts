@@ -75,7 +75,7 @@ export const LEGAL: Record<string, LegalDoc> = {
     sections: [
       {
         h: 'How we classify licences',
-        p: '"Permissive" covers MIT, Apache-2.0, MPL-2.0 and CC-BY-4.0 — usable commercially, with varying attribution requirements. "Non-commercial" covers CC-BY-NC variants, which prohibit commercial use without a separate licence from the publisher.',
+        p: '"Permissive" covers MIT, Apache-2.0, MPL-2.0 and CC-BY-4.0 — usable commercially, with varying attribution requirements. "Non-commercial" covers CC-BY-NC variants, which prohibit commercial use without a separate licence from the publisher. "Proprietary" marks hosted commercial APIs where no weights are published — you access the model per-use under the vendor’s terms of service.',
       },
       {
         h: 'CC-BY caveat for models',

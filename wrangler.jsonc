@@ -2,7 +2,7 @@
 // Build first (`npm run build`), then `npx wrangler deploy` — or just `npm run deploy`.
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "stt-index",
+  "name": "stt-directory",
   "compatibility_date": "2026-07-01",
   "assets": {
     "directory": "./dist",

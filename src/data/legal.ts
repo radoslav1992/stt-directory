@@ -15,11 +15,15 @@ export const LEGAL: Record<string, LegalDoc> = {
     title: 'Privacy policy',
     updated: 'July 2026',
     description:
-      'STT-Index is a static directory with no accounts, no analytics, and no cookies. Read how the in-browser demos keep your audio on your device.',
+      'STT-Index is a static directory with no accounts. Read what analytics we collect and how the in-browser demos keep your audio on your device.',
     sections: [
       {
         h: 'The short version',
-        p: 'STT-Index is a static directory. It has no accounts, no analytics, no cookies, and no server that receives your data.',
+        p: 'STT-Index is a static directory. It has no accounts and no server of ours that receives your content. We use Google Analytics to understand aggregate traffic; your audio and transcripts never leave your device.',
+      },
+      {
+        h: 'Analytics',
+        p: 'We use Google Analytics 4 to see aggregate usage — which pages are visited, roughly where traffic comes from, and what devices are used. This sets Google cookies in your browser and shares your IP address and usage events with Google, governed by Google’s privacy policy. It tells us nothing about what you type, record, or transcribe.',
       },
       {
         h: 'In-browser demos',
@@ -27,7 +31,7 @@ export const LEGAL: Record<string, LegalDoc> = {
       },
       {
         h: 'Third-party requests',
-        p: 'Loading this site fetches fonts from Google Fonts, and running a demo fetches model files from cdn.jsdelivr.net and huggingface.co. Those services see a standard HTTP request (your IP address and user agent), governed by their own privacy policies. No audio or transcript content is ever included in those requests.',
+        p: 'Loading this site fetches fonts from Google Fonts and the analytics script from googletagmanager.com; running a demo fetches model files from cdn.jsdelivr.net and huggingface.co. Those services see a standard HTTP request (your IP address and user agent), governed by their own privacy policies. No audio or transcript content is ever included in those requests.',
       },
       {
         h: 'Email updates (optional)',
@@ -39,7 +43,7 @@ export const LEGAL: Record<string, LegalDoc> = {
       },
       {
         h: 'Contact',
-        p: 'Questions about this policy can be raised as an issue on the project’s repository.',
+        p: 'Questions about this policy — or anything else — can be sent to info@speechtotext.dev.',
       },
     ],
   },
@@ -91,7 +95,7 @@ export const LEGAL: Record<string, LegalDoc> = {
       },
       {
         h: 'Corrections',
-        p: 'Spotted a stale figure or a mis-classified licence? Corrections are welcome via the project repository.',
+        p: 'Spotted a stale figure or a mis-classified licence? Corrections are welcome at info@speechtotext.dev.',
       },
     ],
   },

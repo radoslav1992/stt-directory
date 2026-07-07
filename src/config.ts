@@ -8,3 +8,7 @@
 // setup — update it if you switch providers.
 export const LISTMONK_URL = 'https://news.speechtotext.dev';
 export const LISTMONK_LIST_UUID = 'aef0a058-4b8a-4e1e-a8a9-475d3b108d3f';
+
+// Google Analytics 4 measurement id. Empty string disables the gtag snippet.
+// The privacy policy's "Analytics" section describes GA — keep them in sync.
+export const GA_MEASUREMENT_ID = 'G-PF14W9N7K5';

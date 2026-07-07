@@ -22,7 +22,7 @@ npm run build      # static build into dist/
 npm run deploy     # build + wrangler deploy (needs `wrangler login` or CLOUDFLARE_API_TOKEN)
 ```
 
-> The production origin is `https://speechtotext.dev` (set in `astro.config.mjs`); canonical URLs, OG tags, robots.txt, and the sitemap are generated from it. Override per-build with `SITE_URL=… npm run build` for previews. `sttindex.com` should 301-redirect to speechtotext.dev (Cloudflare redirect rule) — never serve the site on both domains.
+> The production origin is `https://speechtotext.dev` (set in `astro.config.mjs`); canonical URLs, OG tags, robots.txt, and the sitemap are generated from it. Override per-build with `SITE_URL=… npm run build` for previews.
 
 To preview the exact Worker locally after a build: `npm run preview` (runs `wrangler dev`).
 

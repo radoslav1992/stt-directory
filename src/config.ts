@@ -7,4 +7,4 @@
 // The privacy policy's "Email updates" section describes this self-hosted
 // setup — update it if you switch providers.
 export const LISTMONK_URL = 'https://news.speechtotext.dev';
-export const LISTMONK_LIST_UUID = '';
+export const LISTMONK_LIST_UUID = 'aef0a058-4b8a-4e1e-a8a9-475d3b108d3f';

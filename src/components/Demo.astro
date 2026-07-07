@@ -6,22 +6,29 @@ interface Props {
 }
 
 const { model } = Astro.props;
-const hfModel =
-  model.demo === 'moonshine' ? 'onnx-community/moonshine-tiny-ONNX' : 'onnx-community/whisper-tiny.en';
-const loadLabel =
-  model.demo === 'moonshine' ? 'Load Moonshine tiny (~27 MB)' : 'Load Whisper tiny.en (~40 MB)';
+const demo = model.demo!;
 ---
 
-<div class="demo" data-demo data-hf-model={hfModel}>
+<div class="demo" data-demo>
   <div class="demo-head">
     <h2 class="demo-title">Run it in your browser</h2>
     <span class="demo-live">● LIVE — 100% LOCAL</span>
   </div>
   <p class="demo-note">
-    {model.demoNote} Your audio is processed on your device and never uploaded anywhere.
+    {demo.note} Your audio is processed on your device and never uploaded anywhere.
   </p>
   <div class="demo-controls">
-    <button class="demo-btn" data-load>{loadLabel}</button>
+    <select class="demo-select" data-model-select aria-label="Choose a checkpoint to load">
+      {
+        demo.models.map((m) => (
+          <option value={m.hfId} data-webgpu-only={m.webgpuOnly ? 'true' : 'false'} data-label={m.label}>
+            {m.label} — {m.size}
+            {m.webgpuOnly ? ' · WebGPU' : ''}
+          </option>
+        ))
+      }
+    </select>
+    <button class="demo-btn" data-load>Load model</button>
     <button class="demo-btn" data-record hidden>● Record from mic</button>
     <label class="demo-upload" hidden>
       Upload an audio file
@@ -39,7 +46,7 @@ const loadLabel =
   const root = document.querySelector<HTMLElement>('[data-demo]');
 
   if (root) {
-    const hfModel = root.dataset.hfModel!;
+    const select = root.querySelector<HTMLSelectElement>('[data-model-select]')!;
     const loadBtn = root.querySelector<HTMLButtonElement>('[data-load]')!;
     const recordBtn = root.querySelector<HTMLButtonElement>('[data-record]')!;
     const uploadLabel = root.querySelector<HTMLLabelElement>('.demo-upload')!;
@@ -48,40 +55,74 @@ const loadLabel =
     const resultEl = root.querySelector<HTMLElement>('[data-result]')!;
 
     let asr: any = null;
+    let loadedModelId: string | null = null;
     let recorder: MediaRecorder | null = null;
     let recording = false;
+
+    const hasWebGPU = 'gpu' in navigator;
 
     const setStatus = (msg: string) => {
       statusEl.textContent = msg;
     };
 
+    // Checkpoints marked WebGPU-only are unusable on WASM-only browsers.
+    if (!hasWebGPU) {
+      for (const opt of Array.from(select.options)) {
+        if (opt.dataset.webgpuOnly === 'true') {
+          opt.disabled = true;
+          opt.textContent += ' (needs WebGPU — not available in this browser)';
+        }
+      }
+      if (select.selectedOptions[0]?.disabled) {
+        const firstEnabled = Array.from(select.options).find((o) => !o.disabled);
+        if (firstEnabled) select.value = firstEnabled.value;
+      }
+    }
+
+    // Switching checkpoints after a load brings the Load button back.
+    select.addEventListener('change', () => {
+      const changed = select.value !== loadedModelId;
+      loadBtn.hidden = !changed && loadedModelId != null;
+      recordBtn.hidden = changed;
+      uploadLabel.hidden = changed;
+      if (changed) setStatus('');
+    });
+
     loadBtn.addEventListener('click', async () => {
+      const modelId = select.value;
+      const label = select.selectedOptions[0]?.dataset.label ?? modelId;
       loadBtn.disabled = true;
+      select.disabled = true;
       setStatus('loading runtime…');
       try {
         const tf: any = await import(/* @vite-ignore */ TRANSFORMERS_CDN);
         const progress_callback = (p: any) => {
           if (p.status === 'progress' && p.file) {
-            setStatus(
-              `downloading ${p.file.split('/').pop()} — ${Math.round(p.progress || 0)}%`
-            );
+            setStatus(`downloading ${p.file.split('/').pop()} — ${Math.round(p.progress || 0)}%`);
           }
         };
-        try {
-          asr = await tf.pipeline('automatic-speech-recognition', hfModel, {
-            device: 'webgpu',
-            progress_callback,
-          });
-        } catch {
-          asr = await tf.pipeline('automatic-speech-recognition', hfModel, { progress_callback });
+        if (hasWebGPU) {
+          try {
+            asr = await tf.pipeline('automatic-speech-recognition', modelId, {
+              device: 'webgpu',
+              progress_callback,
+            });
+          } catch {
+            asr = await tf.pipeline('automatic-speech-recognition', modelId, { progress_callback });
+          }
+        } else {
+          asr = await tf.pipeline('automatic-speech-recognition', modelId, { progress_callback });
         }
+        loadedModelId = modelId;
         loadBtn.hidden = true;
         recordBtn.hidden = false;
         uploadLabel.hidden = false;
-        setStatus('model loaded — record or upload audio');
+        setStatus(`${label} loaded — record or upload audio`);
       } catch (err: any) {
-        loadBtn.disabled = false;
         setStatus('could not load model: ' + ((err && err.message) || err));
+      } finally {
+        loadBtn.disabled = false;
+        select.disabled = false;
       }
     });
 

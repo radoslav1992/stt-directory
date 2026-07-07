@@ -34,15 +34,33 @@ export const modelSchema = z.object({
   downloads: z.array(z.object({ label: z.string(), url: z.string().url() })),
   hosted: z.array(z.object({ name: z.string(), price: z.string(), url: z.string().url() })),
   links: z.array(z.object({ label: z.string(), url: z.string().url() })),
-  demo: z.enum(['whisper', 'moonshine']).nullable(),
-  demoNote: z.string().optional(),
+  /** In-browser demo via transformers.js. Only for architectures with a
+   *  browser-runnable ONNX build; every hfId must be a verified HF repo. */
+  demo: z
+    .object({
+      note: z.string(),
+      models: z
+        .array(
+          z.object({
+            /** Display label, e.g. "Whisper tiny.en" */
+            label: z.string(),
+            /** transformers.js-compatible HF repo id, e.g. "onnx-community/whisper-tiny.en" */
+            hfId: z.string(),
+            /** Approximate download size shown to the user, e.g. "~40 MB" */
+            size: z.string(),
+            /** Requires WebGPU — disabled on browsers without navigator.gpu */
+            webgpuOnly: z.boolean().optional(),
+          })
+        )
+        .min(1),
+    })
+    .nullable(),
 });
 
 export type ModelInput = z.infer<typeof modelSchema>;
 export type Kind = ModelInput['kind'];
 export type Status = ModelInput['status'];
 export type LicenseType = ModelInput['licenseType'];
-export type DemoKind = NonNullable<ModelInput['demo']>;
 
 export interface ModelEntry extends ModelInput {
   num: string;

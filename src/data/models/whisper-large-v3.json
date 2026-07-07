@@ -65,6 +65,14 @@
       "url": "https://github.com/openai/whisper"
     }
   ],
-  "demo": "whisper",
-  "demoNote": "This loads Whisper tiny.en (≈40 MB, English) via transformers.js and runs it right here — the same architecture as large-v3, shrunk to fit a browser tab."
+  "demo": {
+    "note": "Pick a checkpoint below — each loads via transformers.js and runs right here in the tab: the same architecture as large-v3, at sizes your browser can handle.",
+    "models": [
+      {
+        "label": "Whisper tiny.en",
+        "hfId": "onnx-community/whisper-tiny.en",
+        "size": "~40 MB"
+      }
+    ]
+  }
 }

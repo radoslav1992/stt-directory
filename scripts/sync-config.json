@@ -13,6 +13,7 @@
     "^CohereLabs/cohere-transcribe",
     "^espnet/owsm",
     "^assemblyai/",
-    "^assembly/"
+    "^assembly/",
+    "^elevenlabs/"
   ]
 }

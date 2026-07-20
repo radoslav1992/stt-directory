@@ -1,5 +1,4 @@
 [
-  "granite-speech-4-1-2b",
   "cohere-transcribe",
   "canary-qwen-2-5b",
   "granite-speech-3-3-8b",
@@ -9,6 +8,7 @@
   "kyutai-stt",
   "voxtral",
   "canary-1b-v2",
+  "granite-speech-4-1-2b",
   "whisper-large-v3",
   "whisper-large-v3-turbo",
   "distil-whisper",
@@ -29,5 +29,6 @@
   "kaldi",
   "coqui-stt",
   "deepgram",
-  "assemblyai"
+  "assemblyai",
+  "elevenlabs-scribe-v2"
 ]

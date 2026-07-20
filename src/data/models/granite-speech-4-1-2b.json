@@ -10,15 +10,15 @@
   "license": "Apache-2.0",
   "licenseType": "permissive",
   "params": "2B",
-  "wer": 5.33,
+  "wer": null,
   "langs": "6 + translation",
   "runs": [
     "GPU"
   ],
-  "blurb": "Current #1 on the Open ASR Leaderboard — 5.33% average WER from a 2B model, under Apache 2.0.",
+  "blurb": "Compact multilingual speech model — ASR, translation, keyword biasing, timestamps, and faster NAR variants.",
   "about": [
-    "Granite Speech 4.1 pairs a Conformer speech encoder with IBM’s Granite LLM through a Q-Former adapter. At 5.33% average WER it currently tops the Hugging Face Open ASR Leaderboard — ahead of every proprietary API measured there — from a checkpoint small enough for a single consumer GPU.",
-    "It transcribes six languages (English, French, German, Spanish, Portuguese, Japanese) and does bidirectional speech translation. Three variants ship: the standard autoregressive model, a \"-plus\" with richer punctuated output, and a \"-nar\" non-autoregressive variant that trades a little accuracy for dramatic speed. All Apache 2.0."
+    "Granite Speech 4.1 is IBM’s compact speech-language family for multilingual ASR and bidirectional speech translation. The 2B line aligns a speech encoder with Granite 4.0 1B, adding punctuation, truecasing and keyword-list biasing for English, French, German, Spanish, Portuguese and Japanese.",
+    "Standard, Plus and NAR variants cover general transcription, speaker-attributed output with word timestamps, and higher-throughput non-autoregressive inference. The model remains Apache 2.0 and runs through Transformers, vLLM, llama.cpp and MLX; its previous 5.33% result is no longer present in the leaderboard’s current published CSV, so this catalogue does not display a WER."
   ],
   "install": "pip install \"transformers>=4.52\" torchaudio peft soundfile\n\npython -c \"\nfrom transformers import AutoProcessor, AutoModelForSpeechSeq2Seq\nm = AutoModelForSpeechSeq2Seq.from_pretrained('ibm-granite/granite-speech-4.1-2b')\"",
   "downloads": [

@@ -1,0 +1,56 @@
+{
+  "id": "elevenlabs-scribe-v2",
+  "hfId": "elevenlabs/scribe_v2",
+  "name": "ElevenLabs Scribe v2",
+  "org": "ElevenLabs",
+  "year": 2026,
+  "added": "2026-07-20",
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": 5.83,
+  "langs": "90+",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "High-accuracy STT across 90+ languages — batch and realtime APIs with diarisation, timestamps, and prompting.",
+  "about": [
+    "Scribe v2 is ElevenLabs’ batch speech-to-text model for transcription, subtitling and captioning, with keyterm prompting, entity detection, speaker diarisation, word-level timestamps and automatic language detection across 90+ languages. It records 5.83% average WER on the Open ASR Leaderboard.",
+    "Scribe v2 Realtime covers the same broad language set with roughly 150 ms model latency for live agents and captions. API pricing is $0.22 per audio hour for Scribe and $0.39 per audio hour for Scribe v2 Realtime; entity detection and keyterm prompting cost extra. Prices change — check the pricing page."
+  ],
+  "install": "curl -X POST https://api.elevenlabs.io/v1/speech-to-text \\\n  -H \"xi-api-key: $ELEVENLABS_API_KEY\" \\\n  -F \"file=@audio.mp3\" \\\n  -F \"model_id=scribe_v2\"",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Scribe v2",
+      "price": "$0.22 / hr",
+      "url": "https://elevenlabs.io/pricing/api"
+    },
+    {
+      "name": "Scribe v2 Realtime",
+      "price": "$0.39 / hr",
+      "url": "https://elevenlabs.io/pricing/api"
+    }
+  ],
+  "links": [
+    {
+      "label": "Speech-to-text docs",
+      "url": "https://elevenlabs.io/docs/overview/capabilities/speech-to-text"
+    },
+    {
+      "label": "Scribe v2 announcement",
+      "url": "https://elevenlabs.io/blog/introducing-scribe-v2"
+    },
+    {
+      "label": "API reference",
+      "url": "https://elevenlabs.io/docs/api-reference/speech-to-text/convert"
+    },
+    {
+      "label": "Open ASR Leaderboard",
+      "url": "https://huggingface.co/spaces/hf-audio/open_asr_leaderboard"
+    }
+  ],
+  "demo": null
+}

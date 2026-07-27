@@ -12,6 +12,7 @@
     "^kyutai/stt",
     "^CohereLabs/cohere-transcribe",
     "^espnet/owsm",
+    "^facebook/omniASR",
     "^assemblyai/",
     "^assembly/",
     "^elevenlabs/"

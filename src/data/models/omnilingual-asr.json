@@ -1,0 +1,54 @@
+{
+  "id": "omnilingual-asr",
+  "hfId": "facebook/omniASR-LLM-7B-v2",
+  "name": "Omnilingual ASR",
+  "org": "Meta AI",
+  "year": 2025,
+  "added": "2026-07-27",
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "300M – 7B",
+  "wer": 8.14,
+  "langs": "1,600+",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "Meta’s open ASR family for 1,600+ languages — including hundreds with no previous speech-recognition coverage.",
+  "about": [
+    "Omnilingual ASR scales wav2vec 2.0 encoders from 300M to 7B parameters and offers CTC and LLM-style decoders across more than 1,600 languages. The 7B LLM v2 checkpoint records 8.14% average WER on the current Open ASR Leaderboard; Meta reports character error below 10 for 78% of supported languages.",
+    "The family is built for long-tail and community-added languages: a few paired examples can extend it to previously unsupported speech. December 2025 v2 checkpoints improve the original models, and Unlimited variants support long audio without the standard 40-second cap. Code and weights are Apache 2.0; the companion corpus is CC-BY-4.0."
+  ],
+  "install": "pip install omnilingual-asr\n\npython -c \"\nfrom omnilingual_asr.models.inference.pipeline import ASRInferencePipeline\np = ASRInferencePipeline(model_card='omniASR_LLM_Unlimited_7B_v2')\nprint(p.transcribe(['audio.wav'], lang=['eng_Latn'])[0])\"",
+  "downloads": [
+    {
+      "label": "LLM 7B v2 weights",
+      "url": "https://dl.fbaipublicfiles.com/mms/omniASR-LLM-7B-v2.pt"
+    },
+    {
+      "label": "All models and code (GitHub)",
+      "url": "https://github.com/facebookresearch/omnilingual-asr"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Meta announcement",
+      "url": "https://ai.meta.com/blog/omnilingual-asr-advancing-automatic-speech-recognition/"
+    },
+    {
+      "label": "Research paper",
+      "url": "https://ai.meta.com/research/publications/omnilingual-asr-open-source-multilingual-speech-recognition-for-1600-languages/"
+    },
+    {
+      "label": "Hugging Face demo",
+      "url": "https://huggingface.co/spaces/facebook/omniasr-transcriptions"
+    },
+    {
+      "label": "Open ASR Leaderboard",
+      "url": "https://huggingface.co/spaces/hf-audio/open_asr_leaderboard"
+    }
+  ],
+  "demo": null
+}

@@ -1,7 +1,7 @@
 {
   "id": "parakeet-tdt-0-6b",
-  "hfId": "nvidia/parakeet-tdt-0.6b-v2",
-  "name": "Parakeet TDT 0.6B v2",
+  "hfId": "nvidia/parakeet-tdt-0.6b-v3",
+  "name": "Parakeet TDT 0.6B v3",
   "org": "NVIDIA",
   "year": 2025,
   "added": "2026-07-07",
@@ -10,21 +10,25 @@
   "license": "CC-BY-4.0",
   "licenseType": "permissive",
   "params": "0.6B",
-  "wer": 6.05,
-  "langs": "English (v3: 25 EU)",
+  "wer": 6.32,
+  "langs": "25 European",
   "runs": [
     "GPU",
     "CPU"
   ],
-  "blurb": "Blistering speed — transcribes an hour of audio in about a second on a data-centre GPU.",
+  "blurb": "NVIDIA’s high-throughput multilingual ASR — 25 European languages from a 600M-parameter FastConformer-TDT.",
   "about": [
-    "Parakeet is the speed king: a 600M-parameter FastConformer-TDT model that scores 6.05% WER while running orders of magnitude faster than real time. It powers a lot of production transcription pipelines where Whisper is too slow.",
-    "v2 is English-only; the v3 multilingual variant covers 25 European languages. It includes accurate word-level timestamps and punctuation out of the box."
+    "Parakeet TDT 0.6B v3 is NVIDIA’s current multilingual FastConformer-TDT checkpoint: 25 European languages, automatic language detection, punctuation and capitalisation, plus word-level timestamps. It records 6.32% average WER at more than 3,300× realtime in the current Open ASR Leaderboard evaluation.",
+    "The English-only v2 remains slightly better on that benchmark at 6.05%, while v3 is the stronger default for multilingual work. Both are CC-BY-4.0; v3 now loads through Transformers as well as NVIDIA NeMo, making deployment simpler than earlier Parakeet releases."
   ],
-  "install": "pip install -U nemo_toolkit[asr]\n\npython -c \"\nimport nemo.collections.asr as nemo_asr\nm = nemo_asr.models.ASRModel.from_pretrained('nvidia/parakeet-tdt-0.6b-v2')\nprint(m.transcribe(['audio.wav']))\"",
+  "install": "pip install -U transformers torch torchaudio\n\npython -c \"\nfrom transformers import pipeline\nasr = pipeline('automatic-speech-recognition',\n  model='nvidia/parakeet-tdt-0.6b-v3')\nprint(asr('audio.wav')['text'])\"",
   "downloads": [
     {
-      "label": "Weights on Hugging Face",
+      "label": "v3 weights on Hugging Face",
+      "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3"
+    },
+    {
+      "label": "English v2 weights",
       "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2"
     },
     {
@@ -37,17 +41,20 @@
       "name": "NVIDIA NIM / Riva",
       "price": "per-GPU licence",
       "url": "https://build.nvidia.com/"
-    },
-    {
-      "name": "Groq (hosted)",
-      "price": "usage-based",
-      "url": "https://groq.com/"
     }
   ],
   "links": [
     {
-      "label": "Model card",
-      "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v2"
+      "label": "v3 model card",
+      "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3"
+    },
+    {
+      "label": "Technical report",
+      "url": "https://arxiv.org/abs/2509.14128"
+    },
+    {
+      "label": "Open ASR Leaderboard",
+      "url": "https://huggingface.co/spaces/hf-audio/open_asr_leaderboard"
     }
   ],
   "demo": null

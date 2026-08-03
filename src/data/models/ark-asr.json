@@ -1,0 +1,54 @@
+{
+  "id": "ark-asr",
+  "hfId": "AutoArk-AI/ARK-ASR-3B",
+  "name": "ARK-ASR",
+  "org": "AutoArk",
+  "year": 2026,
+  "added": "2026-08-03",
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "0.6B / 3B",
+  "wer": 4.64,
+  "langs": "19",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "A leading multilingual open ASR family — Whisper-style audio encoding with Qwen decoders at 0.6B and 3B.",
+  "about": [
+    "ARK-ASR combines a Whisper-style audio encoder, an MLP adapter, and a Qwen language-model decoder. The 3B checkpoint records 4.64% average cleaned WER at roughly 484× realtime in the current Open ASR Leaderboard, placing it among the strongest openly downloadable systems measured there.",
+    "A compact 0.6B sibling reaches 5.14% on the same benchmark and both checkpoints cover 19 languages, including Chinese, English, Japanese, Korean, and 15 European languages. The weights and accompanying training, inference, evaluation, and vLLM serving code are Apache 2.0; loading currently requires `trust_remote_code=True`."
+  ],
+  "install": "pip install torch torchaudio transformers accelerate\n\npython -c \"\nfrom transformers import pipeline\nasr = pipeline('automatic-speech-recognition',\n  model='AutoArk-AI/ARK-ASR-3B', trust_remote_code=True, device_map='auto')\nprint(asr('audio.wav')['text'])\"",
+  "downloads": [
+    {
+      "label": "ARK-ASR-3B weights",
+      "url": "https://huggingface.co/AutoArk-AI/ARK-ASR-3B"
+    },
+    {
+      "label": "ARK-ASR-0.6B weights",
+      "url": "https://huggingface.co/AutoArk-AI/ARK-ASR-0.6B"
+    },
+    {
+      "label": "Training and inference code",
+      "url": "https://github.com/AutoArk/open-audio-opd"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "3B model card",
+      "url": "https://huggingface.co/AutoArk-AI/ARK-ASR-3B"
+    },
+    {
+      "label": "Distillation paper",
+      "url": "https://arxiv.org/abs/2605.28139"
+    },
+    {
+      "label": "Open ASR result data",
+      "url": "https://huggingface.co/datasets/hf-audio/open-asr-leaderboard-results/blob/main/english_short_latest.csv"
+    }
+  ],
+  "demo": null
+}

@@ -1,6 +1,6 @@
 {
   "id": "assemblyai",
-  "hfId": null,
+  "hfId": "assemblyai/universal-3-5-pro",
   "name": "AssemblyAI Universal-3.5 Pro",
   "org": "AssemblyAI",
   "year": 2026,
@@ -10,14 +10,14 @@
   "license": "Proprietary",
   "licenseType": "proprietary",
   "params": "— (hosted)",
-  "wer": null,
+  "wer": 5.03,
   "langs": "18 native, 99 fallback",
   "runs": [
     "Cloud API"
   ],
   "blurb": "AssemblyAI’s current flagship — contextual prompting, native code-switching, and diarisation for real conversations.",
   "about": [
-    "Universal-3.5 Pro (July 2026) is AssemblyAI’s current pre-recorded flagship. It adds native mid-sentence code-switching across 18 languages, contextual prompting, and the company’s most accurate speaker diarisation. The current Open ASR Leaderboard has not yet published a Universal-3.5 Pro row, so no independent WER is shown.",
+    "Universal-3.5 Pro (July 2026) is AssemblyAI’s current pre-recorded flagship. It adds native mid-sentence code-switching across 18 languages, contextual prompting, and the company’s most accurate speaker diarisation. It records 5.03% average cleaned WER in the current Open ASR Leaderboard evaluation.",
     "Universal-3.5 Pro Realtime carries conversation context between turns and accepts agent context for live voice applications. Pre-recorded usage is $0.21/hr and Realtime is $0.45/hr; Universal-2 remains the 99-language fallback. Cloud-only — prices change, so check the pricing page."
   ],
   "install": "pip install assemblyai\n# export ASSEMBLYAI_API_KEY=...\n\npython -c \"\nimport assemblyai as aai\nt = aai.Transcriber().transcribe('audio.mp3')\nprint(t.text)\"",

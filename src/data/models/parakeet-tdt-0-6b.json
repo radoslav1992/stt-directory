@@ -10,7 +10,7 @@
   "license": "CC-BY-4.0",
   "licenseType": "permissive",
   "params": "0.6B",
-  "wer": 6.32,
+  "wer": 5.66,
   "langs": "25 European",
   "runs": [
     "GPU",
@@ -18,8 +18,8 @@
   ],
   "blurb": "NVIDIA’s high-throughput multilingual ASR — 25 European languages from a 600M-parameter FastConformer-TDT.",
   "about": [
-    "Parakeet TDT 0.6B v3 is NVIDIA’s current multilingual FastConformer-TDT checkpoint: 25 European languages, automatic language detection, punctuation and capitalisation, plus word-level timestamps. It records 6.32% average WER at more than 3,300× realtime in the current Open ASR Leaderboard evaluation.",
-    "The English-only v2 remains slightly better on that benchmark at 6.05%, while v3 is the stronger default for multilingual work. Both are CC-BY-4.0; v3 now loads through Transformers as well as NVIDIA NeMo, making deployment simpler than earlier Parakeet releases."
+    "Parakeet TDT 0.6B v3 is NVIDIA’s current multilingual FastConformer-TDT checkpoint: 25 European languages, automatic language detection, punctuation and capitalisation, plus word-level timestamps. It records 5.66% average cleaned WER at roughly 6,098× realtime in the current Open ASR Leaderboard evaluation.",
+    "The English-only v2 remains slightly better on that benchmark at 5.39%, while v3 is the stronger default for multilingual work. Both are CC-BY-4.0; v3 now loads through Transformers as well as NVIDIA NeMo, making deployment simpler than earlier Parakeet releases."
   ],
   "install": "pip install -U transformers torch torchaudio\n\npython -c \"\nfrom transformers import pipeline\nasr = pipeline('automatic-speech-recognition',\n  model='nvidia/parakeet-tdt-0.6b-v3')\nprint(asr('audio.wav')['text'])\"",
   "downloads": [

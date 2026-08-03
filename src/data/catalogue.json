@@ -1,4 +1,5 @@
 [
+  "ark-asr",
   "cohere-transcribe",
   "canary-qwen-2-5b",
   "granite-speech-3-3-8b",

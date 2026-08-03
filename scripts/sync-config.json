@@ -13,6 +13,7 @@
     "^CohereLabs/cohere-transcribe",
     "^espnet/owsm",
     "^facebook/omniASR",
+    "^AutoArk-AI/ARK-ASR",
     "^assemblyai/",
     "^assembly/",
     "^elevenlabs/"

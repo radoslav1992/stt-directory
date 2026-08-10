@@ -14,6 +14,8 @@
     "^espnet/owsm",
     "^facebook/omniASR",
     "^AutoArk-AI/ARK-ASR",
+    "^HojoAI/Hojo-ASR",
+    "^bosonai/higgs-audio-v3",
     "^assemblyai/",
     "^assembly/",
     "^elevenlabs/"

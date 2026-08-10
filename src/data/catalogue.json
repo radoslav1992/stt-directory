@@ -1,4 +1,6 @@
 [
+  "hojo-asr-v1",
+  "higgs-audio-v3-stt",
   "ark-asr",
   "cohere-transcribe",
   "canary-qwen-2-5b",

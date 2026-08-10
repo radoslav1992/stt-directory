@@ -16,6 +16,7 @@
     "^AutoArk-AI/ARK-ASR",
     "^HojoAI/Hojo-ASR",
     "^bosonai/higgs-audio-v3",
+    "^google/chirp",
     "^assemblyai/",
     "^assembly/",
     "^elevenlabs/"

@@ -3,6 +3,7 @@
   "maxCandidates": 10,
   "ignorePatterns": [
     "^openai/whisper",
+    "^openai/gpt-4o-(transcribe|mini-transcribe)",
     "^distil-whisper/",
     "^usefulsensors/moonshine",
     "^nvidia/(canary|parakeet)",
@@ -14,6 +15,9 @@
     "^espnet/owsm",
     "^facebook/omniASR",
     "^AutoArk-AI/ARK-ASR",
+    "^HojoAI/Hojo-ASR",
+    "^bosonai/higgs-audio-v3",
+    "^google/chirp",
     "^assemblyai/",
     "^assembly/",
     "^elevenlabs/"

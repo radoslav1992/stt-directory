@@ -1,0 +1,42 @@
+{
+  "id": "hojo-asr-v1",
+  "hfId": "HojoAI/Hojo-ASR-V1",
+  "name": "Hojo-ASR V1",
+  "org": "HojoAI",
+  "year": 2026,
+  "added": "2026-08-10",
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "≈5.2B total",
+  "wer": 4.46,
+  "langs": "Mandarin, English + 2 dialects",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "A Chinese-English conversational ASR leader — Qwen3 decoding, code-switching, dialect support, and Apache 2.0 weights.",
+  "about": [
+    "Hojo-ASR V1 is a conversational speech-recognition model built around an encoder-adapter-LLM stack with a Qwen3 decoder and a custom multi-frame acoustic-fusion front end. Its current independent Open ASR Leaderboard result is 4.46% average cleaned WER, placing it among the strongest openly downloadable systems on the English short-form benchmark.",
+    "The model targets real-world Mandarin and English speech, including Chinese-English code-switching, noisy audio, informal pronunciation, oral corrections, Cantonese, and Sichuan dialect. HojoAI distributes the weights under Apache 2.0 and provides a `hojo-asr` Python package for inference, making it commercially usable while remaining focused on a narrower language set than broad multilingual families such as Qwen3-ASR."
+  ],
+  "install": "pip install -U hojo-asr huggingface_hub\n\nhf download HojoAI/Hojo-ASR-V1 --local-dir hojo-asr-v1\n# See the model card for HOJO_ASR.load_model() inference usage.",
+  "downloads": [
+    {
+      "label": "Weights on Hugging Face",
+      "url": "https://huggingface.co/HojoAI/Hojo-ASR-V1"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "Model card",
+      "url": "https://huggingface.co/HojoAI/Hojo-ASR-V1"
+    },
+    {
+      "label": "Open ASR result data",
+      "url": "https://huggingface.co/datasets/hf-audio/open-asr-leaderboard-results/blob/main/english_short_latest.csv"
+    }
+  ],
+  "demo": null
+}

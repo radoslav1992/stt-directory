@@ -1,0 +1,50 @@
+{
+  "id": "higgs-audio-v3-stt",
+  "hfId": "bosonai/higgs-audio-v3-stt",
+  "name": "Higgs Audio v3 STT",
+  "org": "Boson AI",
+  "year": 2026,
+  "added": "2026-08-10",
+  "kind": "model",
+  "status": "active",
+  "license": "Apache-2.0",
+  "licenseType": "permissive",
+  "params": "2.68B / 8.91B",
+  "wer": 4.62,
+  "langs": "English",
+  "runs": [
+    "GPU"
+  ],
+  "blurb": "Whisper-Large-v3 audio encoding with Qwen3 decoding — a compact Apache-2.0 family near the top of the Open ASR Leaderboard.",
+  "about": [
+    "Higgs Audio v3 STT combines a Whisper-Large-v3 encoder with a Qwen3 language-model decoder. The 2.68B checkpoint records 4.62% average cleaned WER in the current independent Open ASR Leaderboard results, while an 8.91B sibling reaches 4.73%; both sit among the strongest openly downloadable English ASR systems measured there.",
+    "Boson AI released the family under Apache 2.0 and provides custom Transformers-compatible model code, with the smaller checkpoint refreshed in June 2026. It is English-only and GPU-oriented rather than an edge model, but its strong accuracy-to-size trade-off makes it a practical alternative to larger speech-language-model systems when multilingual coverage is not required."
+  ],
+  "install": "pip install -U \"transformers>=4.51\" torch accelerate\n\npython -c \"\nfrom transformers import AutoModel, AutoTokenizer\nm = AutoModel.from_pretrained('bosonai/higgs-audio-v3-stt', trust_remote_code=True, device_map='auto')\nt = AutoTokenizer.from_pretrained('bosonai/higgs-audio-v3-stt')\"",
+  "downloads": [
+    {
+      "label": "2.68B weights on Hugging Face",
+      "url": "https://huggingface.co/bosonai/higgs-audio-v3-stt"
+    },
+    {
+      "label": "8.91B weights on Hugging Face",
+      "url": "https://huggingface.co/bosonai/higgs-audio-v3-8b-stt-v2"
+    }
+  ],
+  "hosted": [],
+  "links": [
+    {
+      "label": "2.68B model card",
+      "url": "https://huggingface.co/bosonai/higgs-audio-v3-stt"
+    },
+    {
+      "label": "8.91B model card",
+      "url": "https://huggingface.co/bosonai/higgs-audio-v3-8b-stt-v2"
+    },
+    {
+      "label": "Open ASR result data",
+      "url": "https://huggingface.co/datasets/hf-audio/open-asr-leaderboard-results/blob/main/english_short_latest.csv"
+    }
+  ],
+  "demo": null
+}

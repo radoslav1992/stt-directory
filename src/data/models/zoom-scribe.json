@@ -1,0 +1,47 @@
+{
+  "id": "zoom-scribe",
+  "hfId": "zoom/scribe_v1",
+  "name": "Zoom Scribe",
+  "org": "Zoom",
+  "year": 2026,
+  "added": "2026-08-17",
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": 5.47,
+  "langs": "English",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "Zoom’s Scribe transcription API — a high-ranking hosted model with fast, batch, speaker-separated transcription.",
+  "about": [
+    "Zoom Scribe is the transcription model behind Zoom AI Services, exposed as an API for synchronous and large-scale batch transcription. The current Open ASR result export records `zoom/scribe_v1` at 5.47% average cleaned WER, placing it near the top of the English short-form leaderboard among proprietary systems.",
+    "The API accepts common audio and video formats, supports word timestamps, punctuation, channel separation and speaker separation, and can process up to 1,000 files in a batch job. Zoom does not publish a simple public per-minute Scribe price on the current developer documentation, so pricing is listed as usage-based rather than guessed."
+  ],
+  "install": "# Synchronous Scribe API\ncurl -X POST https://api.zoom.us/v2/aiservices/scribe/transcribe \\\n  -H 'Authorization: Bearer $TOKEN' -H 'Content-Type: application/json' \\\n  -d '{\"file\":\"https://example.com/audio.wav\",\"config\":{\"language\":\"en-US\"}}'",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Zoom Scribe API",
+      "price": "usage-based",
+      "url": "https://developers.zoom.us/docs/ai-services/scribe/"
+    }
+  ],
+  "links": [
+    {
+      "label": "Scribe API documentation",
+      "url": "https://developers.zoom.us/docs/ai-services/scribe/"
+    },
+    {
+      "label": "Fast mode",
+      "url": "https://developers.zoom.us/docs/ai-services/scribe/fast-mode/"
+    },
+    {
+      "label": "Open ASR result data",
+      "url": "https://huggingface.co/datasets/hf-audio/open-asr-leaderboard-results/blob/main/english_short_latest.csv"
+    }
+  ],
+  "demo": null
+}

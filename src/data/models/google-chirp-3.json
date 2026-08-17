@@ -1,0 +1,43 @@
+{
+  "id": "google-chirp-3",
+  "hfId": null,
+  "name": "Google Chirp 3",
+  "org": "Google Cloud",
+  "year": 2025,
+  "added": "2026-08-10",
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": null,
+  "langs": "85+ languages/locales",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "Google Cloud’s latest multilingual STT model — streaming, batch, diarisation, language detection, and adaptation.",
+  "about": [
+    "Chirp 3 is Google Cloud’s latest multilingual ASR-specific generative model, available through Speech-to-Text API V2. It supports more than 85 languages and locales across streaming, short-form and batch recognition, with speaker diarisation, automatic language detection, speech adaptation for custom vocabulary, and built-in denoising.",
+    "The service is cloud-only and currently priced at $0.016 per audio minute for Speech-to-Text V2. Chirp 3 is not present in the current cleaned Open ASR result export, so no leaderboard WER is shown here. Prices and regional feature availability can change — check the Google Cloud documentation before deployment."
+  ],
+  "install": "pip install google-cloud-speech\n\n# Speech-to-Text V2 model identifier: chirp_3\n# See the official quickstart for recognizer and credentials setup.",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Google Cloud Speech-to-Text V2",
+      "price": "$0.016 / min",
+      "url": "https://cloud.google.com/speech-to-text"
+    }
+  ],
+  "links": [
+    {
+      "label": "Chirp 3 documentation",
+      "url": "https://cloud.google.com/speech-to-text/docs/models/chirp-3"
+    },
+    {
+      "label": "Speech-to-Text pricing",
+      "url": "https://cloud.google.com/speech-to-text"
+    }
+  ],
+  "demo": null
+}

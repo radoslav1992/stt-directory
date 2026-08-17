@@ -35,5 +35,9 @@
   "deepgram",
   "assemblyai",
   "elevenlabs-scribe-v2",
-  "google-chirp-3"
+  "google-chirp-3",
+  "openai-transcribe",
+  "soniox",
+  "smallest-pulse",
+  "zoom-scribe"
 ]

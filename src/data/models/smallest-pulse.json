@@ -1,0 +1,57 @@
+{
+  "id": "smallest-pulse",
+  "hfId": null,
+  "name": "Smallest AI Pulse",
+  "org": "Smallest AI",
+  "year": 2026,
+  "added": "2026-08-17",
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": null,
+  "langs": "35+ documented",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "Low-latency multilingual STT — Pulse handles streaming and batch transcription with sub-100ms first-token claims.",
+  "about": [
+    "Smallest AI Pulse is a proprietary speech-to-text model for real-time and pre-recorded transcription. The current documentation lists 35+ documented languages across streaming and batch modes, with speaker identification, timestamps, redaction, punctuation, keyword boosting and endpointing. Pulse Pro is a separate English-only batch model with a 5.42% average WER claim on the public Open ASR Leaderboard.",
+    "Pulse is designed for latency-sensitive voice applications and exposes both HTTP and WebSocket endpoints. Current pay-as-you-go pricing is approximately $0.003/min for pre-recorded Pulse, $0.004/min for realtime Pulse, and $0.0035–$0.004/min for Pulse Pro depending on the current pricing surface. Pulse is not present in the current Open ASR result export, so the catalogue leaves its WER unassigned."
+  ],
+  "install": "# API endpoint\ncurl -X POST 'https://api.smallest.ai/waves/v1/stt/?model=pulse&language=en' \\\n  -H 'Authorization: Bearer $SMALLEST_API_KEY' \\\n  -H 'Content-Type: application/octet-stream' --data-binary @audio.wav",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Pulse pre-recorded",
+      "price": "~$0.003 / min",
+      "url": "https://smallest.ai/pricing/models"
+    },
+    {
+      "name": "Pulse realtime",
+      "price": "~$0.004 / min",
+      "url": "https://smallest.ai/pricing/models"
+    },
+    {
+      "name": "Pulse Pro",
+      "price": "~$0.004 / min",
+      "url": "https://smallest.ai/pricing/models"
+    }
+  ],
+  "links": [
+    {
+      "label": "Pulse model card",
+      "url": "https://docs.smallest.ai/models/model-cards/speech-to-text/pulse"
+    },
+    {
+      "label": "Pulse Pro model card",
+      "url": "https://docs.smallest.ai/models/model-cards/speech-to-text/pulse-pro"
+    },
+    {
+      "label": "Pricing",
+      "url": "https://smallest.ai/pricing/models"
+    }
+  ],
+  "demo": null
+}

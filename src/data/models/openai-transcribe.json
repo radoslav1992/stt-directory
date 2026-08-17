@@ -1,0 +1,52 @@
+{
+  "id": "openai-transcribe",
+  "hfId": null,
+  "name": "OpenAI Transcribe",
+  "org": "OpenAI",
+  "year": 2025,
+  "added": "2026-08-17",
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": null,
+  "langs": "multilingual",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "OpenAI’s dedicated transcription family — GPT-4o Transcribe, mini, and diarization, with Realtime transcription support.",
+  "about": [
+    "OpenAI’s current transcription family includes GPT-4o Transcribe, GPT-4o mini Transcribe, and GPT-4o Transcribe Diarize. The models are designed specifically for speech-to-text, with improved recognition and language handling over the original Whisper models; the diarization variant identifies different speakers in a conversation.",
+    "The API is cloud-hosted and priced by audio tokens: GPT-4o Transcribe uses $2.50 per 1M input audio tokens plus $10 per 1M output tokens, while mini uses $1.25 and $5 respectively. OpenAI also lists GPT-Realtime-Whisper for streaming transcription. These models are not present in the current Open ASR result export, so this catalogue does not assign a WER. Prices and model availability can change — check the OpenAI documentation before deployment."
+  ],
+  "install": "pip install -U openai\n\npython -c \"from openai import OpenAI; c=OpenAI(); print(c.audio.transcriptions.create(model='gpt-4o-transcribe', file=open('audio.wav','rb')).text)\"",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "GPT-4o Transcribe",
+      "price": "$2.50 / 1M input audio tokens + $10 / 1M output tokens",
+      "url": "https://developers.openai.com/api/docs/models/gpt-4o-transcribe"
+    },
+    {
+      "name": "GPT-4o mini Transcribe",
+      "price": "$1.25 / 1M input audio tokens + $5 / 1M output tokens",
+      "url": "https://developers.openai.com/api/docs/models/gpt-4o-mini-transcribe"
+    }
+  ],
+  "links": [
+    {
+      "label": "GPT-4o Transcribe",
+      "url": "https://developers.openai.com/api/docs/models/gpt-4o-transcribe"
+    },
+    {
+      "label": "GPT-4o Transcribe Diarize",
+      "url": "https://developers.openai.com/api/docs/models/gpt-4o-transcribe-diarize"
+    },
+    {
+      "label": "OpenAI model catalogue",
+      "url": "https://developers.openai.com/api/docs/models"
+    }
+  ],
+  "demo": null
+}

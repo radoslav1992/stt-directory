@@ -1,0 +1,52 @@
+{
+  "id": "soniox",
+  "hfId": null,
+  "name": "Soniox STT",
+  "org": "Soniox",
+  "year": 2026,
+  "added": "2026-08-17",
+  "kind": "api",
+  "status": "active",
+  "license": "Proprietary",
+  "licenseType": "proprietary",
+  "params": "— (hosted)",
+  "wer": null,
+  "langs": "60+",
+  "runs": [
+    "Cloud API"
+  ],
+  "blurb": "Multilingual real-time and async STT — Soniox v5 adds stronger speaker separation, endpointing, and structured speech recognition.",
+  "about": [
+    "Soniox STT currently offers stt-rt-v5 for real-time transcription and stt-async-v5 for recorded audio. The June 2026 v5 releases improve accuracy across more than 60 languages, speaker separation, spoken-language identification, semantic endpointing, context handling, and recognition of structured speech such as numbers, dates, emails, names and codes.",
+    "The service is cloud-hosted with WebSocket real-time and asynchronous APIs, and includes multilingual transcription, speaker separation and translation capabilities. Public pricing is approximately $0.12/hour for real-time and $0.10/hour for async transcription under the standard usage assumptions. Soniox is not present in the current Open ASR result export, so no WER is assigned here."
+  ],
+  "install": "pip install -U soniox\n\n# Set SONIOX_API_KEY, then use the SDK's real-time or async STT client.\n# Current real-time model: stt-rt-v5",
+  "downloads": [],
+  "hosted": [
+    {
+      "name": "Soniox real-time STT",
+      "price": "~$0.12 / hr",
+      "url": "https://soniox.com/pricing"
+    },
+    {
+      "name": "Soniox async STT",
+      "price": "~$0.10 / hr",
+      "url": "https://soniox.com/pricing"
+    }
+  ],
+  "links": [
+    {
+      "label": "STT models",
+      "url": "https://soniox.com/docs/stt/models"
+    },
+    {
+      "label": "Real-time transcription",
+      "url": "https://soniox.com/docs/stt/rt/real-time-transcription"
+    },
+    {
+      "label": "Pricing",
+      "url": "https://soniox.com/pricing"
+    }
+  ],
+  "demo": null
+}

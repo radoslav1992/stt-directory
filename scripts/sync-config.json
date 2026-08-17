@@ -3,6 +3,7 @@
   "maxCandidates": 10,
   "ignorePatterns": [
     "^openai/whisper",
+    "^openai/gpt-4o-(transcribe|mini-transcribe)",
     "^distil-whisper/",
     "^usefulsensors/moonshine",
     "^nvidia/(canary|parakeet)",
@@ -19,6 +20,7 @@
     "^google/chirp",
     "^assemblyai/",
     "^assembly/",
-    "^elevenlabs/"
+    "^elevenlabs/",
+    "^speechmatics/"
   ]
 }

@@ -1,0 +1,32 @@
+---
+import { KIND_LABELS, modelPath, type ModelEntry } from '../data/models';
+import { pct } from '../data/seo';
+
+interface Props {
+  model: ModelEntry;
+  /** Optional rank badge (e.g. position in a guide). */
+  rank?: number;
+  headingLevel?: 'h2' | 'h3';
+}
+
+const { model: m, rank, headingLevel = 'h3' } = Astro.props;
+const H = headingLevel;
+const licenceTone = m.licenseType === 'permissive' ? 'pill--good' : m.licenseType === 'non-commercial' ? 'pill--warn' : '';
+---
+
+<a href={modelPath(m)} class="mcard spot">
+  <div class="mcard-top">
+    <span class="mcard-num">{rank != null ? `#${rank}` : `No. ${m.num}`}</span>
+    <span class="pill">{KIND_LABELS[m.kind]}</span>
+  </div>
+  <div>
+    <H class="mcard-name">{m.name}</H>
+    <div class="mcard-org">{m.org} · {m.year}</div>
+  </div>
+  <p class="mcard-blurb">{m.blurb}</p>
+  <div class="mcard-specs">
+    {m.wer != null && <span class="pill wer-chip"><b>{pct(m.wer)}</b>&nbsp;WER</span>}
+    <span class:list={['pill', licenceTone]}>{m.license}</span>
+    {!m.params.startsWith('—') && <span class="pill">{m.params}</span>}
+  </div>
+</a>

@@ -5,8 +5,8 @@ An open, static directory of speech-to-text models — specs, licences, benchmar
 ## Stack
 
 - **Astro 5** — fully static output; every model, legal, and index page is prerendered HTML for SEO (canonical URLs, Open Graph tags, JSON-LD structured data, sitemap, robots.txt).
-- **Vanilla JS islands** — client-side search/filtering on the library page, and an in-browser transcription demo (Whisper tiny.en / Moonshine tiny via [transformers.js](https://huggingface.co/docs/transformers.js), loaded on demand from the jsDelivr CDN; audio never leaves the device).
-- **Cloudflare Workers static assets** — no server code; `wrangler.jsonc` serves `dist/` with `404.html` handling. `public/_headers` sets immutable caching for hashed assets.
+- **Vanilla JS islands** — a ⌘K search palette, client-side search/filter/sort on the library page, a light/dark theme toggle, and an in-browser transcription demo (Whisper, Moonshine and others via [transformers.js](https://huggingface.co/docs/transformers.js), loaded on demand from the jsDelivr CDN; audio never leaves the device).
+- **Cloudflare Workers static assets** — no server code; `wrangler.jsonc` serves `dist/` with `404.html` handling. `public/_headers` sets immutable caching for hashed assets; `public/_redirects` maps legacy URLs from the domain's previous site to live pages.
 
 ## Develop
 
@@ -34,22 +34,31 @@ src/
   data/catalogue.json  # display order (entry numbers derive from position)
   data/models.ts       # zod schema + loader (invalid data fails the build)
   data/legal.ts        # legal page copy
-  layouts/Base.astro   # head/SEO, header, footer
-  components/Demo.astro# in-browser transcription demo island
+  data/seo.ts          # generated titles, descriptions, FAQs, rankings, pricing maths
+  data/collections.ts  # /best/ guide definitions (filter + sort + intro)
+  data/comparisons.ts  # curated /compare/ pairs + generated comparison copy
+  layouts/Base.astro   # head/SEO, header (nav, ⌘K palette, theme toggle), footer
+  components/          # Demo, ModelCard, Faq, PageHead, Icon, BrandMark
   pages/
     index.astro        # home
-    library.astro      # searchable/filterable table
+    library.astro      # searchable/filterable/sortable table
+    leaderboard.astro  # entries ranked by Open ASR Leaderboard WER
+    pricing.astro      # every hosted plan, normalised to $/audio hour
+    best/              # use-case guides (index + one page per collection)
+    compare/           # head-to-head pages (index + one page per pair)
     model/[id].astro   # one prerendered page per entry
     legal/[doc].astro  # privacy / terms / licences
     404.astro
     robots.txt.ts
-  styles/global.css    # design system (IBM Plex + Instrument Serif, cream/ink/orange)
+  styles/global.css    # design system (Geist + Instrument Serif accents; dark-first with a light theme)
 scripts/
   sync-leaderboard.mjs # WER drift + new-model detection vs the Open ASR Leaderboard
   sync-config.json     # candidate threshold + ignore patterns (covered families)
 ```
 
-Adding a model = one JSON file in `src/data/models/` plus its id in `src/data/catalogue.json`; the page, library row, sitemap entry, entry number, and structured data are generated at build time. Editorial rules live in `CLAUDE.md`.
+Adding a model = one JSON file in `src/data/models/` plus its id in `src/data/catalogue.json`; the page, library row, leaderboard/pricing/guide placement, FAQs, sitemap entry, entry number, and structured data are generated at build time. Editorial rules live in `CLAUDE.md`.
+
+`public/og.png` (social card) and `public/apple-touch-icon.png` are static renders of the brand mark — regenerate them if the branding changes.
 
 ## Automated catalogue updates
 

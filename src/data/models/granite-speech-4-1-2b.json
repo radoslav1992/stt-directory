@@ -16,6 +16,8 @@
     "GPU"
   ],
   "blurb": "Compact multilingual speech model — ASR, translation, keyword biasing, timestamps, and faster NAR variants.",
+  "seoTitle": "IBM Granite Speech 4.1 2B (granite-speech-4.1-2b): ASR & translation",
+  "seoDescription": "IBM granite-speech-4.1-2b: Apache-2.0 multilingual ASR and speech translation for 6 languages, with keyword biasing, timestamps, Plus and NAR variants.",
   "about": [
     "Granite Speech 4.1 is IBM’s compact speech-language family for multilingual ASR and bidirectional speech translation. The 2B line aligns a speech encoder with Granite 4.0 1B, adding punctuation, truecasing and keyword-list biasing for English, French, German, Spanish, Portuguese and Japanese.",
     "Standard, Plus and NAR variants cover general transcription, speaker-attributed output with word timestamps, and higher-throughput non-autoregressive inference. The model remains Apache 2.0 and runs through Transformers, vLLM, llama.cpp and MLX; its previous 5.33% result is no longer present in the leaderboard’s current published CSV, so this catalogue does not display a WER."

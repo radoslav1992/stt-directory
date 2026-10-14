@@ -16,6 +16,8 @@
     "Cloud API"
   ],
   "blurb": "High-accuracy STT across 90+ languages — batch and realtime APIs with diarisation, timestamps, and prompting.",
+  "seoTitle": "ElevenLabs Scribe v2: pricing, WER & realtime STT API",
+  "seoDescription": "ElevenLabs Scribe v2: {wer} WER, 90+ languages, diarisation and word timestamps. $0.22/hr batch, $0.39/hr Scribe v2 Realtime. Pricing & quickstart.",
   "about": [
     "Scribe v2 is ElevenLabs’ batch speech-to-text model for transcription, subtitling and captioning, with keyterm prompting, entity detection, speaker diarisation, word-level timestamps and automatic language detection across 90+ languages. It records 5.83% average WER on the Open ASR Leaderboard.",
     "Scribe v2 Realtime covers the same broad language set with roughly 150 ms model latency for live agents and captions. API pricing is $0.22 per audio hour for Scribe and $0.39 per audio hour for Scribe v2 Realtime; entity detection and keyterm prompting cost extra. Prices change — check the pricing page."

@@ -1,0 +1,25 @@
+---
+interface Props {
+  class?: string;
+  /** Unique gradient id — required when the mark appears more than once on a page. */
+  gid?: string;
+}
+const { class: cls, gid = 'bm-grad' } = Astro.props;
+---
+
+<svg class={cls} viewBox="0 0 32 32" aria-hidden="true">
+  <defs>
+    <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff7a3d"></stop>
+      <stop offset="0.52" stop-color="#ff3d8b"></stop>
+      <stop offset="1" stop-color="#8b6cff"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="9" fill={`url(#${gid})`}></rect>
+  <g fill="#fff">
+    <rect x="7.6" y="13" width="2.8" height="6" rx="1.4"></rect>
+    <rect x="12" y="9" width="2.8" height="14" rx="1.4"></rect>
+    <rect x="16.4" y="6.5" width="2.8" height="19" rx="1.4"></rect>
+    <rect x="20.8" y="11" width="2.8" height="10" rx="1.4"></rect>
+  </g>
+</svg>

@@ -17,6 +17,8 @@
     "CPU"
   ],
   "blurb": "The PyTorch speech toolkit — 200+ training recipes and 100+ pre-trained models for every speech task.",
+  "seoTitle": "SpeechBrain: PyTorch speech toolkit — pretrained ASR & install",
+  "seoDescription": "SpeechBrain: Apache-2.0 PyTorch toolkit with 200+ recipes and 100+ pretrained models for ASR, diarisation and TTS. EncoderDecoderASR transcribe_file example.",
   "about": [
     "SpeechBrain is not one model but a full PyTorch toolkit: 200+ training recipes and 100+ pre-trained models spanning ASR, speaker diarisation, enhancement, separation, and TTS. If you need to train or fine-tune a speech pipeline rather than just run one, start here.",
     "v1.1 (2026) added HuggingFace-LLM integration, mixed-precision multi-GPU training, and new augmentation techniques."

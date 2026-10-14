@@ -1,21 +1,32 @@
 ---
 import Base from '../layouts/Base.astro';
+import { COLLECTIONS, collectionPath } from '../data/collections';
 ---
 
 <Base
-  title="Page not found · STT Index"
+  title="Page not found | STT Index"
   description="This page isn't in the index. Browse the library of speech-to-text models instead."
+  noindex
 >
-  <div class="notfound">
-    <div class="notfound-code">ERROR 404 — NOT IN THE INDEX</div>
-    <h1 class="notfound-title">This page doesn't exist.</h1>
-    <p class="notfound-sub">
-      The entry you're looking for may have moved, or the address was mistyped. Everything we've
-      catalogued lives in the library.
-    </p>
-    <div class="hero-ctas">
-      <a href="/library/" class="btn-primary">Browse the library →</a>
-      <a href="/" class="btn-secondary">Back to home</a>
+  <section class="hero" style="border-bottom: 0">
+    <div class="hero-bg" aria-hidden="true"><span class="glow glow-a"></span><span class="glow glow-b"></span></div>
+    <div class="container notfound" style="padding-top: 0; padding-bottom: 0">
+      <div class="notfound-code gradient-text">404</div>
+      <h1>This page isn’t in the index.</h1>
+      <p>
+        The address may be mistyped, or it belonged to an older site on this domain. Everything we’ve
+        catalogued is one search away.
+      </p>
+      <div class="entry-actions">
+        <button class="btn btn-primary" type="button" data-cmdk-open>Search the index</button>
+        <a href="/library/" class="btn">Browse the library</a>
+        <a href="/" class="btn btn-ghost">Home</a>
+      </div>
+      <div class="vs-links" style="justify-content: center; margin-top: 40px">
+        <a href="/leaderboard/">WER leaderboard</a>
+        <a href="/pricing/">API pricing</a>
+        {COLLECTIONS.slice(0, 3).map((c) => <a href={collectionPath(c)}>{c.label}</a>)}
+      </div>
     </div>
-  </div>
+  </section>
 </Base>

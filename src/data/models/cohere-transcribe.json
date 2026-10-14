@@ -16,6 +16,8 @@
     "GPU"
   ],
   "blurb": "Cohere’s first speech model — debuted at #1 on the leaderboard, open weights across 14 languages.",
+  "seoTitle": "Cohere Transcribe: open-weight ASR for 14 languages — WER & install",
+  "seoDescription": "Cohere Transcribe: Apache-2.0, 2B Conformer ASR for 14 languages including Arabic, Mandarin, Japanese, Korean and Vietnamese — {wer} WER. Install & API.",
   "about": [
     "Cohere Transcribe is a 2B Conformer encoder + Transformer decoder that debuted at #1 on the Open ASR Leaderboard (5.42% average WER, March 2026) with roughly 525× realtime throughput. It covers 14 languages including Arabic, Mandarin, Japanese, Korean, and Vietnamese.",
     "Unlike many lab releases, the weights are Apache 2.0 — commercial use from day one — and it is small enough to run on consumer GPUs. Hosted access is available through Cohere’s API and Azure AI Foundry."

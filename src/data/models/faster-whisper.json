@@ -17,6 +17,8 @@
     "CPU"
   ],
   "blurb": "The same Whisper weights, re-implemented in CTranslate2 — up to 4× faster on the same hardware.",
+  "seoTitle": "faster-whisper: up to 4× faster Whisper — install & usage",
+  "seoDescription": "faster-whisper runs OpenAI Whisper on CTranslate2: same weights and accuracy, up to 4× faster with less memory; int8 runs large-v3 on CPU. MIT. Install & usage.",
   "about": [
     "faster-whisper is not a new model but a reimplementation of Whisper inference on the CTranslate2 engine. Same weights, same accuracy, up to 4× faster and with markedly lower memory use — with int8 quantisation it runs large-v3 comfortably on CPU.",
     "It is the engine behind many popular tools (WhisperX, wyoming-faster-whisper for Home Assistant, and countless transcription apps). If you self-host Whisper in production, you probably want this."

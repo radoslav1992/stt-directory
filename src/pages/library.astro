@@ -1,98 +1,131 @@
 ---
 import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHead from '../components/PageHead.astro';
 import { MODELS, KIND_LABELS, werLabel, modelPath } from '../data/models';
+import { breadcrumbJsonLd, itemListJsonLd, withSiteName } from '../data/seo';
 
-const description =
-  'Browse every indexed speech-to-text model and toolkit — filter by licence, accuracy, language coverage, and whether it runs on-device or in a browser.';
+const count = MODELS.length;
+const title = withSiteName(`STT Library — ${count} Speech-to-Text Models & APIs`);
+const description = `Search and filter all ${count} speech-to-text models, runtimes and APIs by licence, word error rate, size, languages and where they run — CPU, mobile, browser or cloud.`;
 
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  name: 'The STT Index library',
-  description,
-  numberOfItems: MODELS.length,
-  itemListElement: MODELS.map((m, i) => ({
-    '@type': 'ListItem',
-    position: i + 1,
-    name: m.name,
-    url: new URL(modelPath(m), Astro.site).href,
-  })),
-};
+const jsonLd = [
+  itemListJsonLd(Astro.site, 'The STT Index library', MODELS),
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Library', path: '/library/' },
+  ]),
+];
 ---
 
-<Base title={`The library — all ${MODELS.length} entries · STT Index`} {description} {jsonLd}>
-  <div class="page">
-    <div class="lib-head">
-      <h1 class="page-title">The library</h1>
-      <div class="count-label" data-count>{MODELS.length} of {MODELS.length} entries</div>
-    </div>
+<Base {title} {description} {jsonLd}>
+  <PageHead
+    kicker="The library"
+    title={`All ${count} speech-to-text <span class="serif-accent gradient-text">entries</span>`}
+    lead="Every model, runtime, toolkit and API in the index. Sort by accuracy, filter by licence or hardware, and click through for install commands, downloads and benchmarks."
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'Library' }]}
+  />
 
-    <div class="lib-controls">
-      <input
-        type="search"
-        class="search-input"
-        data-search-input
-        placeholder="Search models, orgs, licences, languages…"
-        aria-label="Search models, orgs, licences, languages"
-      />
-      <div class="chips">
-        <button class="chip" data-filter="browser" aria-pressed="false">Runs in browser</button>
-        <button class="chip" data-filter="ondevice" aria-pressed="false">On-device / CPU</button>
-        <button class="chip" data-filter="permissive" aria-pressed="false">Permissive licence</button>
-        <button class="chip" data-filter="active" aria-pressed="false">Actively maintained</button>
+  <div class="container page" style="padding-top: 0">
+    <div class="toolbar">
+      <label class="search-field">
+        <Icon name="search" />
+        <span class="visually-hidden">Search the library</span>
+        <input
+          type="search"
+          class="search-input"
+          data-search-input
+          placeholder="Search models, orgs, licences, languages…"
+        />
+      </label>
+      <div class="seg" role="group" aria-label="Entry type">
+        <button type="button" data-kind="" aria-pressed="true">All</button>
+        <button type="button" data-kind="model" aria-pressed="false">Models</button>
+        <button type="button" data-kind="runtime" aria-pressed="false">Runtimes</button>
+        <button type="button" data-kind="toolkit" aria-pressed="false">Toolkits</button>
+        <button type="button" data-kind="api" aria-pressed="false">APIs</button>
       </div>
     </div>
-
-    <div class="lib-scroll">
-      <div class="lib-table">
-        <div class="lib-cols" aria-hidden="true">
-          <div>NO.</div>
-          <div>MODEL</div>
-          <div>TYPE</div>
-          <div>LICENCE</div>
-          <div>PARAMS</div>
-          <div>WER*</div>
-          <div>RUNS ON</div>
-          <div></div>
-        </div>
-
-        {
-          MODELS.map((m) => (
-            <a
-              href={modelPath(m)}
-              class="lib-row"
-              data-row
-              data-search={`${m.name} ${m.org} ${m.license} ${m.langs} ${m.kind}`.toLowerCase()}
-              data-runs={m.runs.join('|')}
-              data-license-type={m.licenseType}
-              data-status={m.status}
-            >
-              <div class="row-num">{m.num}</div>
-              <div>
-                <div class="row-name">{m.name}</div>
-                <div class="row-org">
-                  {m.org} · {m.year}
-                </div>
-              </div>
-              <div class="row-cell">{KIND_LABELS[m.kind]}</div>
-              <div class="row-cell">{m.license}</div>
-              <div class="row-cell">{m.params}</div>
-              <div class:list={['row-cell', m.wer == null ? 'row-wer--none' : 'row-wer--val']}>
-                {werLabel(m.wer)}
-              </div>
-              <div class="row-runs">{m.runs.join(' · ')}</div>
-              <div class="row-arrow">→</div>
-            </a>
-          ))
-        }
-
-        <div class="lib-empty" data-empty hidden>No entries match — try clearing a filter or the search.</div>
+    <div class="toolbar" style="margin-top: 0">
+      <div class="chips" role="group" aria-label="Filters">
+        <button class="chip" type="button" data-filter="browser" aria-pressed="false">Runs in browser</button>
+        <button class="chip" type="button" data-filter="ondevice" aria-pressed="false">On-device / CPU</button>
+        <button class="chip" type="button" data-filter="permissive" aria-pressed="false">Permissive licence</button>
+        <button class="chip" type="button" data-filter="benchmarked" aria-pressed="false">Has WER</button>
+        <button class="chip" type="button" data-filter="active" aria-pressed="false">Actively maintained</button>
       </div>
+      <div class="count-label" data-count aria-live="polite">{count} of {count} entries</div>
     </div>
 
-    <p class="lib-note">
+    <div class="table-wrap">
+      <table class="data stack" data-table>
+        <thead>
+          <tr>
+            <th scope="col" aria-sort="ascending"><button type="button" data-sort="num">No.</button></th>
+            <th scope="col"><button type="button" data-sort="name">Model</button></th>
+            <th scope="col">Type</th>
+            <th scope="col">Licence</th>
+            <th scope="col">Params</th>
+            <th scope="col" class="num"><button type="button" data-sort="wer">WER*</button></th>
+            <th scope="col">Runs on</th>
+            <th scope="col" class="num"><button type="button" data-sort="year">Year</button></th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            MODELS.map((m) => (
+              <tr
+                data-href={modelPath(m)}
+                data-search={`${m.name} ${m.org} ${m.license} ${m.langs} ${m.kind} ${m.runs.join(' ')}`.toLowerCase()}
+                data-runs={m.runs.join('|')}
+                data-kind={m.kind}
+                data-license-type={m.licenseType}
+                data-status={m.status}
+                data-num={m.num}
+                data-name={m.name.toLowerCase()}
+                data-wer={m.wer ?? ''}
+                data-year={m.year}
+              >
+                <td class="t-num c-hide">{m.num}</td>
+                <td class="c-main">
+                  <a href={modelPath(m)} class="t-name">
+                    {m.name}
+                  </a>
+                  <span class="t-sub">
+                    {m.org}
+                    {m.status !== 'active' && ` · ${m.status}`}
+                  </span>
+                </td>
+                <td class="c-hide">
+                  <span class="pill">{KIND_LABELS[m.kind]}</span>
+                </td>
+                <td class="t-mono" data-label="Licence">
+                  {m.license}
+                </td>
+                <td class="t-mono" data-label="Params">
+                  {m.params}
+                </td>
+                <td class:list={['num', 'c-right', 't-wer', { none: m.wer == null }]}>{werLabel(m.wer)}</td>
+                <td class="c-full">
+                  <div class="t-runs">
+                    {m.runs.map((r) => (
+                      <span>{r}</span>
+                    ))}
+                  </div>
+                </td>
+                <td class="num t-mono c-hide">{m.year}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <div class="empty-state" data-empty hidden>No entries match — try clearing a filter or the search.</div>
+    </div>
+
+    <p class="footnote">
       * Average word error rate on the Hugging Face Open ASR Leaderboard, where reported. Lower is
-      better. Blank means not benchmarked there.
+      better; a dash means the entry isn’t benchmarked there. Runtimes inherit the WER of the Whisper
+      weights they execute. See the <a href="/leaderboard/">full leaderboard</a>.
     </p>
   </div>
 </Base>
@@ -100,37 +133,90 @@ const jsonLd = {
 <script>
   const input = document.querySelector<HTMLInputElement>('[data-search-input]')!;
   const chips = Array.from(document.querySelectorAll<HTMLButtonElement>('.chip[data-filter]'));
-  const rows = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-row]'));
+  const kinds = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-kind]'));
+  const tbody = document.querySelector<HTMLTableSectionElement>('[data-table] tbody')!;
+  const rows = Array.from(tbody.querySelectorAll<HTMLTableRowElement>('tr'));
+  const heads = Array.from(document.querySelectorAll<HTMLTableCellElement>('[data-table] th'));
   const count = document.querySelector<HTMLElement>('[data-count]')!;
   const empty = document.querySelector<HTMLElement>('[data-empty]')!;
 
+  let kind = '';
+  let sortKey = 'num';
+  let sortDir: 1 | -1 = 1;
+
   function apply() {
     const q = input.value.trim().toLowerCase();
-    const on = new Set(chips.filter((c) => c.classList.contains('on')).map((c) => c.dataset.filter));
+    const on = new Set(chips.filter((c) => c.getAttribute('aria-pressed') === 'true').map((c) => c.dataset.filter));
     let shown = 0;
-
     for (const row of rows) {
-      const runs = (row.dataset.runs ?? '').split('|');
+      const d = row.dataset;
+      const runs = (d.runs ?? '').split('|');
       let show = true;
-      if (q && !(row.dataset.search ?? '').includes(q)) show = false;
+      if (q && !q.split(/\s+/).every((t) => (d.search ?? '').includes(t))) show = false;
+      if (kind && d.kind !== kind) show = false;
       if (on.has('browser') && !runs.includes('Browser')) show = false;
       if (on.has('ondevice') && !(runs.includes('CPU') || runs.includes('Mobile'))) show = false;
-      if (on.has('permissive') && row.dataset.licenseType !== 'permissive') show = false;
-      if (on.has('active') && row.dataset.status !== 'active') show = false;
-      row.style.display = show ? '' : 'none';
+      if (on.has('permissive') && d.licenseType !== 'permissive') show = false;
+      if (on.has('benchmarked') && !d.wer) show = false;
+      if (on.has('active') && d.status !== 'active') show = false;
+      row.hidden = !show;
       if (show) shown++;
     }
-
     count.textContent = `${shown} of ${rows.length} entries`;
     empty.hidden = shown > 0;
+
+    const url = new URL(location.href);
+    if (q) url.searchParams.set('q', q);
+    else url.searchParams.delete('q');
+    history.replaceState(null, '', url);
+  }
+
+  function sort() {
+    const val = (r: HTMLTableRowElement) => {
+      const v = r.dataset[sortKey] ?? '';
+      if (sortKey === 'name') return v;
+      return v === '' ? Infinity * sortDir : Number(v);
+    };
+    rows.sort((a, b) => {
+      const x = val(a);
+      const y = val(b);
+      return (x < y ? -1 : x > y ? 1 : 0) * sortDir;
+    });
+    tbody.append(...rows);
+    for (const th of heads) {
+      const key = th.querySelector<HTMLButtonElement>('[data-sort]')?.dataset.sort;
+      if (key === sortKey) th.setAttribute('aria-sort', sortDir === 1 ? 'ascending' : 'descending');
+      else th.removeAttribute('aria-sort');
+    }
+  }
+
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-sort]')) {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.sort!;
+      sortDir = key === sortKey ? (sortDir === 1 ? -1 : 1) : key === 'year' ? -1 : 1;
+      sortKey = key;
+      sort();
+    });
   }
 
   input.addEventListener('input', apply);
   for (const chip of chips) {
     chip.addEventListener('click', () => {
-      chip.classList.toggle('on');
-      chip.setAttribute('aria-pressed', String(chip.classList.contains('on')));
+      chip.setAttribute('aria-pressed', String(chip.getAttribute('aria-pressed') !== 'true'));
       apply();
     });
+  }
+  for (const k of kinds) {
+    k.addEventListener('click', () => {
+      kind = k.dataset.kind ?? '';
+      kinds.forEach((b) => b.setAttribute('aria-pressed', String(b === k)));
+      apply();
+    });
+  }
+
+  const initial = new URLSearchParams(location.search).get('q');
+  if (initial) {
+    input.value = initial;
+    apply();
   }
 </script>

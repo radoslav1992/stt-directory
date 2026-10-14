@@ -18,6 +18,8 @@
     "Browser"
   ],
   "blurb": "Whisper distilled to half the size and several times the speed — v3.5 now beats its teacher on the leaderboard.",
+  "seoTitle": "Distil-Whisper large-v3.5 (distil-large-v3.5): faster Whisper",
+  "seoDescription": "distil-large-v3.5: Whisper distilled to about half the size and roughly 3× faster, at {wer} WER — ahead of full large-v3. English-only, MIT. Install & demo.",
   "about": [
     "Distil-Whisper is a knowledge-distilled version of Whisper large-v3: about half the parameters and several times faster. The current v3.5 release scores 7.21% average WER on the Open ASR Leaderboard — actually beating full large-v3’s 7.44% while running roughly 3× faster. English-only.",
     "It drops into any Hugging Face Transformers pipeline as a straight replacement, and pairs well with speculative decoding — using it as a draft model to speed up full Whisper with zero accuracy loss."

@@ -16,6 +16,8 @@
     "GPU"
   ],
   "blurb": "Held #1 on the Open ASR Leaderboard through 2025 — a FastConformer encoder paired with a Qwen3 LLM decoder.",
+  "seoTitle": "NVIDIA Canary-Qwen 2.5B: speech recognition with an LLM decoder",
+  "seoDescription": "NVIDIA canary-qwen-2.5b pairs a FastConformer encoder with a Qwen3-1.7B LLM decoder: {wer} WER, #1 on the Open ASR Leaderboard through 2025. CC-BY-4.0.",
   "about": [
     "Canary-Qwen pairs a FastConformer speech encoder with an unmodified Qwen3-1.7B language-model decoder (a \"SALM\" architecture). It held the #1 spot on the Hugging Face Open ASR Leaderboard at 5.63% average WER through 2025 — ahead of every commercial API measured there at the time — and remains within a few tenths of the 2026 leaders.",
     "It has a dual mode: pure transcription, or an analysis mode where you can ask the model questions about the audio it just heard. English-only for now, and it wants a GPU — this is not an edge model."

@@ -16,6 +16,8 @@
     "Cloud API"
   ],
   "blurb": "AssemblyAI’s current flagship — contextual prompting, native code-switching, and diarisation for real conversations.",
+  "seoTitle": "AssemblyAI Universal-3.5 Pro: pricing, WER & realtime API",
+  "seoDescription": "AssemblyAI Universal-3.5 Pro: {wer} WER on the Open ASR Leaderboard, code-switching and diarisation. $0.21/hr async, $0.45/hr Realtime. Pricing & quickstart.",
   "about": [
     "Universal-3.5 Pro (July 2026) is AssemblyAI’s current pre-recorded flagship. It adds native mid-sentence code-switching across 18 languages, contextual prompting, and the company’s most accurate speaker diarisation. It records 5.03% average cleaned WER in the current Open ASR Leaderboard evaluation.",
     "Universal-3.5 Pro Realtime carries conversation context between turns and accepts agent context for live voice applications. Pre-recorded usage is $0.21/hr and Realtime is $0.45/hr; Universal-2 remains the 99-language fallback. Cloud-only — prices change, so check the pricing page."

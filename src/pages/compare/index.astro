@@ -2,10 +2,14 @@
 import Base from '../../layouts/Base.astro';
 import PageHead from '../../components/PageHead.astro';
 import { COMPARISONS, comparisonPath } from '../../data/comparisons';
-import { breadcrumbJsonLd, pct, withSiteName } from '../../data/seo';
+import { breadcrumbJsonLd, fitNames, pct, withSiteName } from '../../data/seo';
 
 const title = withSiteName('Speech-to-Text Comparisons — Head-to-Head Model Matchups');
-const description = `${COMPARISONS.length} head-to-head speech-to-text comparisons — faster-whisper vs whisper.cpp, Deepgram vs AssemblyAI, Moonshine vs Parakeet and more.`;
+const description = fitNames(
+  COMPARISONS.map((c) => `${c.a.name} vs ${c.b.name}`),
+  (shown) =>
+    `${COMPARISONS.length} head-to-head speech-to-text comparisons on accuracy, licence, hardware and price${shown.length ? `: ${shown.join(', ')} and more` : ''}.`
+);
 
 const jsonLd = [
   {

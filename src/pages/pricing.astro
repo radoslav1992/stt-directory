@@ -5,11 +5,11 @@ import Faq from '../components/Faq.astro';
 import Icon from '../components/Icon.astro';
 import { MODELS, modelPath } from '../data/models';
 import {
-  BUILD_YEAR,
   PRICE_ROWS,
   breadcrumbJsonLd,
   byWer,
   faqJsonLd,
+  humanList,
   pct,
   runsLocally,
   usd,
@@ -25,8 +25,9 @@ const maxHour = Math.max(...priced.map((r) => r.perHour!));
 const apis = MODELS.filter((m) => m.kind === 'api');
 const selfHost = byWer(MODELS.filter((m) => runsLocally(m) && m.licenseType === 'permissive' && m.status === 'active')).slice(0, 3);
 
-const title = withSiteName(`Speech-to-Text API Pricing Compared (${BUILD_YEAR}) — Cost per Hour`);
-const description = `Speech-to-text API pricing side by side: ${apis.map((m) => m.org).join(', ')} and hosted Whisper, Voxtral and more — list prices normalised to cost per audio hour.`;
+const hostedOpen = new Set(PRICE_ROWS.filter((r) => r.model.kind !== 'api').map((r) => r.model.id)).size;
+const title = withSiteName('Speech-to-Text API Pricing Compared — Cost per Audio Hour');
+const description = `Speech-to-text API pricing side by side: ${humanList(apis.map((m) => m.org))} plus ${hostedOpen} hosted open models — list prices normalised to cost per audio hour.`;
 
 const faqs: FaqItem[] = [
   ...(priced[0]

@@ -19,7 +19,7 @@
   ],
   "blurb": "Tiny models built for edge devices — beats Whisper tiny/base at a fraction of the compute.",
   "seoTitle": "Moonshine STT: tiny speech-to-text for edge devices",
-  "seoDescription": "Moonshine by Useful Sensors: MIT-licensed STT from 27M params that beats Whisper tiny/base at a fraction of the compute — {wer} WER. Browser demo & install.",
+  "seoDescription": "Moonshine by Useful Sensors: MIT-licensed edge STT (27M–245M params) that beats Whisper tiny/base; the streaming line scores {wer} WER. Demo & install.",
   "about": [
     "Moonshine was designed from scratch for edge hardware: variable-length windows instead of Whisper’s fixed 30-second chunks mean short utterances transcribe several times faster. The tiny model is 27M parameters — small enough for microcontroller-class devices and instant browser loading.",
     "It beats Whisper tiny and base on accuracy at a fraction of the compute, which has made it the default for live captions, voice interfaces, and wearables. A 2026 streaming line (up to 245M parameters) reaches 6.66% average WER on the Open ASR Leaderboard. Runs natively, via ONNX, or in-browser through transformers.js — try it below."

@@ -9,6 +9,7 @@ import {
   PRICE_ROWS,
   byWer,
   faqJsonLd,
+  fitNames,
   langCount,
   pct,
   runsLocally,
@@ -32,7 +33,9 @@ const bestOpen = byWer(MODELS.filter((m) => m.kind === 'model' && m.licenseType 
 const bestLocal = byWer(MODELS.filter((m) => runsLocally(m) && m.kind === 'model' && m.status === 'active'))[0]!;
 const localCount = MODELS.filter((m) => runsLocally(m) && m.status === 'active').length;
 const priced = PRICE_ROWS.filter((r) => r.perHour != null);
-const latestAdded = [...MODELS].sort((a, b) => b.added.localeCompare(a.added))[0]!.added;
+const latestAdded = new Date(
+  `${[...MODELS].sort((a, b) => b.added.localeCompare(a.added))[0]!.added}T00:00:00Z`
+).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 const tickerModels = MODELS;
 
 const GUIDE_ICONS: Record<string, 'open' | 'chip' | 'browser' | 'layers' | 'globe'> = {
@@ -44,7 +47,11 @@ const GUIDE_ICONS: Record<string, 'open' | 'chip' | 'browser' | 'layers' | 'glob
 };
 
 const title = withSiteName('Speech-to-Text Models Compared — Open-Source STT & APIs');
-const description = `Compare ${entryCount} speech-to-text models, runtimes and APIs — Whisper, Parakeet, Moonshine, Vosk, Deepgram and more. WER benchmarks, licences, pricing and install commands.`;
+const description = fitNames(
+  featured.map((m) => m.name),
+  (shown) =>
+    `Compare ${entryCount} speech-to-text models, runtimes and APIs${shown.length ? ` — ${shown.join(', ')} and more` : ''}. WER, licences, pricing & install commands.`
+);
 
 const faqs: FaqItem[] = [
   {
@@ -100,7 +107,7 @@ const jsonLd = [
     <div class="hero-bg" aria-hidden="true"><span class="glow glow-a"></span><span class="glow glow-b"></span></div>
     <div class="container hero-inner">
       <div>
-        <div class="kicker">Open directory · {entryCount} entries · updated {latestAdded}</div>
+        <div class="kicker">Open directory · {entryCount} entries · newest added {latestAdded}</div>
         <h1 class="hero-title">
           Every speech-to-text model, <span class="serif-accent gradient-text">catalogued.</span>
         </h1>
@@ -168,7 +175,7 @@ const jsonLd = [
         </div>
         <div class="stat">
           <div class="stat-value">{openCount}</div>
-          <div class="stat-label">with downloadable weights</div>
+          <div class="stat-label">free to download &amp; self-host</div>
         </div>
         <div class="stat">
           <div class="stat-value gradient-text">{bestOpenWer()}</div>

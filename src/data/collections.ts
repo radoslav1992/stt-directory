@@ -1,5 +1,5 @@
 import { MODELS, type ModelEntry } from './models';
-import { BUILD_YEAR, byWer, langCount, pct, runsLocally, type Faq } from './seo';
+import { byWer, fitNames, humanList, langCount, pct, runsLocally, type Faq } from './seo';
 
 // Curated "best of" guides at /best/<slug>/. Membership and ranking are
 // computed from entry data at build time; only the editorial framing is
@@ -20,11 +20,22 @@ export interface Collection {
   filter: (m: ModelEntry) => boolean;
 }
 
+// Names in the Whisper guide's title and description come from the data, so
+// adding or retiring a runtime can't leave them stale.
+const isWhisper = (m: ModelEntry) => m.id.includes('whisper');
+const whisperRuntimes = MODELS.filter((m) => isWhisper(m) && m.kind === 'runtime').map((m) => m.name);
+// Runtimes first: they're what people search for, and the list is trimmed from the end.
+const whisperNames = [
+  ...whisperRuntimes,
+  ...MODELS.filter((m) => isWhisper(m) && m.kind !== 'runtime').map((m) => m.name),
+];
+const whisperTitle = `Whisper Runtimes Compared: ${whisperRuntimes.join(' vs ')}`;
+
 export const COLLECTIONS: Collection[] = [
   {
     slug: 'open-source-speech-to-text-models',
     label: 'Open-source models',
-    title: `Best Open-Source Speech-to-Text Models (${BUILD_YEAR}) — Ranked by WER`,
+    title: 'Best Open-Source Speech-to-Text Models — Ranked by WER',
     h1: 'The best open-source speech-to-text models',
     description:
       'Actively maintained open-weight STT models with permissive licences, ranked by word error rate on the Open ASR Leaderboard — with sizes and install commands.',
@@ -39,7 +50,7 @@ export const COLLECTIONS: Collection[] = [
   {
     slug: 'offline-speech-to-text',
     label: 'Offline & on-device',
-    title: `Best Offline Speech-to-Text Models (${BUILD_YEAR}) — Local, On-Device STT`,
+    title: 'Best Offline Speech-to-Text Models — Local, On-Device STT',
     h1: 'Offline & on-device speech-to-text',
     description:
       'Speech-to-text models and runtimes that run locally on a CPU, phone or browser — no cloud, no per-minute bill. Ranked by WER with licences and install commands.',
@@ -69,17 +80,23 @@ export const COLLECTIONS: Collection[] = [
   {
     slug: 'whisper-implementations',
     label: 'Whisper ecosystem',
-    title: 'Whisper Runtimes Compared: faster-whisper vs whisper.cpp vs WhisperX',
+    title:
+      whisperRuntimes.length >= 2 && whisperTitle.length <= 70
+        ? whisperTitle
+        : 'Whisper Models & Runtimes Compared',
     h1: 'Whisper models & runtimes compared',
-    description:
-      'OpenAI Whisper checkpoints and the runtimes that execute them — large-v3, turbo, Distil-Whisper, faster-whisper, whisper.cpp and WhisperX side by side.',
+    description: fitNames(
+      whisperNames,
+      (shown) =>
+        `OpenAI Whisper checkpoints and the runtimes that execute them${shown.length ? ` — ${humanList(shown)}` : ''}, side by side.`
+    ),
     intro: [
       'OpenAI’s Whisper is the most widely deployed open speech model, and an ecosystem has grown around it: distilled and pruned checkpoints that trade a little accuracy for speed, and runtimes that execute the same weights faster or on smaller hardware.',
       'Runtimes don’t change accuracy — they run the original checkpoints, so their WER mirrors the Whisper weights you load. Pick a checkpoint for accuracy and languages, then a runtime for your hardware: faster-whisper for Python servers, whisper.cpp for laptops, phones and the browser, WhisperX when you need word timestamps and speaker labels.',
     ],
     criteria: 'Whisper checkpoints and the runtimes built to execute them · catalogue order.',
     sort: 'catalogue',
-    filter: (m) => m.id.includes('whisper'),
+    filter: isWhisper,
   },
   {
     slug: 'multilingual-speech-to-text',

@@ -50,6 +50,7 @@ src/
     legal/[doc].astro  # privacy / terms / licences
     404.astro
     robots.txt.ts
+    search.json.ts     # ⌘K palette index, fetched on first use (not inlined per page)
   styles/global.css    # design system (Geist + Instrument Serif accents; dark-first with a light theme)
 scripts/
   sync-leaderboard.mjs # WER drift + new-model detection vs the Open ASR Leaderboard

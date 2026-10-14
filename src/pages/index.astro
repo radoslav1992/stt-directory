@@ -9,6 +9,7 @@ import {
   PRICE_ROWS,
   byWer,
   faqJsonLd,
+  fitNames,
   langCount,
   pct,
   runsLocally,
@@ -46,7 +47,11 @@ const GUIDE_ICONS: Record<string, 'open' | 'chip' | 'browser' | 'layers' | 'glob
 };
 
 const title = withSiteName('Speech-to-Text Models Compared — Open-Source STT & APIs');
-const description = `Compare ${entryCount} speech-to-text models, runtimes and APIs — Whisper, Parakeet, Moonshine, Vosk, Deepgram and more. WER benchmarks, licences, pricing and install commands.`;
+const description = fitNames(
+  featured.map((m) => m.name),
+  (shown) =>
+    `Compare ${entryCount} speech-to-text models, runtimes and APIs${shown.length ? ` — ${shown.join(', ')} and more` : ''}. WER, licences, pricing & install commands.`
+);
 
 const faqs: FaqItem[] = [
   {

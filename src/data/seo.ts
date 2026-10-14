@@ -5,7 +5,6 @@ import { MODELS, modelPath, type Kind, type ModelEntry } from './models';
 // at build time, so a WER refresh or a new entry updates them all.
 
 export const SITE_NAME = 'STT Index';
-export const BUILD_YEAR = new Date().getFullYear();
 
 // ---------------------------------------------------------------- formatting
 
@@ -21,6 +20,17 @@ export function humanList(items: string[], conj = 'and'): string {
 export function withSiteName(title: string): string {
   const full = `${title} | ${SITE_NAME}`;
   return full.length <= 68 ? full : title;
+}
+
+/** Fills `template` with as many of `names` as fit in `max` characters, dropping
+ *  from the end. `template([])` is the fallback, so it must read well with none.
+ *  Keeps copy that names entries in sync with the data instead of hard-coding. */
+export function fitNames(names: string[], template: (shown: string[]) => string, max = 160): string {
+  for (let k = names.length; k > 0; k--) {
+    const text = template(names.slice(0, k));
+    if (text.length <= max) return text;
+  }
+  return template([]);
 }
 
 function fit(candidates: string[], max = 165): string {

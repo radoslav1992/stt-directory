@@ -5,7 +5,6 @@ import Faq from '../components/Faq.astro';
 import { MODELS, KIND_LABELS, modelPath } from '../data/models';
 import {
   BENCHMARKED,
-  BUILD_YEAR,
   breadcrumbJsonLd,
   faqJsonLd,
   itemListJsonLd,
@@ -30,7 +29,7 @@ const highlights = [
   { m: BENCHMARKED.find((m) => runsLocally(m) && m.id !== top.id), s: 'Best on CPU, mobile or browser' },
 ].filter((h): h is { m: (typeof BENCHMARKED)[number]; s: string } => h.m != null);
 
-const title = withSiteName(`Speech-to-Text Leaderboard ${BUILD_YEAR} — STT Models Ranked by WER`);
+const title = withSiteName('Speech-to-Text Leaderboard — STT Models Ranked by WER');
 const description = `${BENCHMARKED.length} speech-to-text models and APIs ranked by average word error rate on the Hugging Face Open ASR Leaderboard. ${top.name} leads at ${pct(top.wer!)}.`;
 
 const faqs: FaqItem[] = [

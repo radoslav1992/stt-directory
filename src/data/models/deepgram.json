@@ -17,6 +17,8 @@
     "Self-hosted"
   ],
   "blurb": "Real-time STT API built for voice agents — multilingual code-switching, keyterm prompting, optional self-hosting.",
+  "seoTitle": "Deepgram Nova-3 API: pricing, languages & self-hosting",
+  "seoDescription": "Deepgram Nova-3 speech-to-text API: real-time streaming, 36+ languages with code-switching, keyterm prompting and self-hosting. Batch from $0.0043/min.",
   "about": [
     "Nova-3 is Deepgram’s flagship transcription model: sub-300 ms streaming, real-time code-switching across 36+ languages, and \"keyterm prompting\" — pass up to ~100 domain terms at request time to adapt vocabulary without retraining. The newer Flux model adds native end-of-turn detection (~260 ms) for voice agents. Deepgram does not appear on the Open ASR Leaderboard, so no independent WER figure is listed here.",
     "Unusually for a hosted API, Deepgram also sells self-hosted deployment (Docker/Kubernetes, Enterprise plan) for audio that can’t leave your infrastructure. Pay-as-you-go starts around $0.0043/min for batch and $0.0077/min for streaming English, with a $200 signup credit. Prices change — check the pricing page."

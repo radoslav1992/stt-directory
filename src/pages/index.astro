@@ -1,65 +1,183 @@
 ---
 import Base from '../layouts/Base.astro';
-import { MODELS, FEATURED_IDS, getModel, specline, modelPath, bestOpenWer } from '../data/models';
+import Icon from '../components/Icon.astro';
+import ModelCard from '../components/ModelCard.astro';
+import Faq from '../components/Faq.astro';
+import { MODELS, FEATURED_IDS, getModel, modelPath, bestOpenWer } from '../data/models';
+import {
+  BENCHMARKED,
+  PRICE_ROWS,
+  byWer,
+  faqJsonLd,
+  langCount,
+  pct,
+  runsLocally,
+  usd,
+  withSiteName,
+  type Faq as FaqItem,
+} from '../data/seo';
+import { COLLECTIONS, collectionEntries, collectionPath } from '../data/collections';
+import { COMPARISONS } from '../data/comparisons';
 
 const featured = FEATURED_IDS.map((id) => getModel(id)!);
-const tickerText = MODELS.map((m) => m.name.toUpperCase()).join('  ✳  ') + '  ✳  ';
-const entryCount = String(MODELS.length);
+const entryCount = MODELS.length;
+const openCount = MODELS.filter((m) => m.licenseType !== 'proprietary').length;
+const maxLangs = Math.max(...MODELS.map((m) => langCount(m.langs) ?? 0));
+const browserCount = MODELS.filter((m) => m.runs.includes('Browser')).length;
+const demos = MODELS.filter((m) => m.demo);
+const top = BENCHMARKED.slice(0, 6);
+const topWer = BENCHMARKED[0]!;
+const maxBar = Math.max(...top.map((m) => m.wer!));
+const bestOpen = byWer(MODELS.filter((m) => m.kind === 'model' && m.licenseType === 'permissive'))[0]!;
+const bestLocal = byWer(MODELS.filter((m) => runsLocally(m) && m.kind === 'model' && m.status === 'active'))[0]!;
+const localCount = MODELS.filter((m) => runsLocally(m) && m.status === 'active').length;
+const priced = PRICE_ROWS.filter((r) => r.perHour != null);
+const latestAdded = [...MODELS].sort((a, b) => b.added.localeCompare(a.added))[0]!.added;
+const tickerModels = MODELS;
 
-const description =
-  'An open directory of speech-to-text models. Specs, licences, benchmarks, and exactly where to get each model — download it, run it locally, or transcribe right in your browser.';
-
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: 'STT—INDEX',
-  alternateName: 'STT Index',
-  description,
-  url: Astro.site?.href,
-  publisher: {
-    '@type': 'Organization',
-    name: 'STT—INDEX',
-    email: 'info@speechtotext.dev',
-    url: Astro.site?.href,
-  },
+const GUIDE_ICONS: Record<string, 'open' | 'chip' | 'browser' | 'layers' | 'globe'> = {
+  'open-source-speech-to-text-models': 'open',
+  'offline-speech-to-text': 'chip',
+  'browser-speech-to-text': 'browser',
+  'whisper-implementations': 'layers',
+  'multilingual-speech-to-text': 'globe',
 };
+
+const title = withSiteName('Speech-to-Text Models Compared — Open-Source STT & APIs');
+const description = `Compare ${entryCount} speech-to-text models, runtimes and APIs — Whisper, Parakeet, Moonshine, Vosk, Deepgram and more. WER benchmarks, licences, pricing and install commands.`;
+
+const faqs: FaqItem[] = [
+  {
+    q: 'What is the most accurate speech-to-text model?',
+    a: `On the Hugging Face Open ASR Leaderboard, the most accurate entry in this index is ${topWer.name} from ${topWer.org} at ${pct(topWer.wer!)} average word error rate. See the full leaderboard for the rest of the ranking.`,
+  },
+  {
+    q: 'What is the best open-source speech-to-text model?',
+    a: `By leaderboard WER, ${bestOpen.name} (${bestOpen.license}) leads the permissively licensed open models at ${pct(bestOpen.wer!)}. If it has to run on a CPU, phone or in the browser, the most accurate option is ${bestLocal.name} at ${pct(bestLocal.wer!)}.`,
+  },
+  {
+    q: 'Which speech-to-text models run offline?',
+    a: `${localCount} actively maintained entries in the index run locally on a CPU, phone or in the browser — including ${byWer(MODELS.filter((m) => runsLocally(m) && m.status === 'active')).slice(0, 4).map((m) => m.name).join(', ')}. Audio never leaves the device.`,
+  },
+  {
+    q: 'How much does a speech-to-text API cost?',
+    a: priced.length
+      ? `List prices tracked in this index range from about ${usd(priced[0]!.perHour!)} to ${usd(priced[priced.length - 1]!.perHour!)} per audio hour, depending on the provider, model and whether you need real-time streaming. Prices change — always confirm on the provider’s pricing page.`
+      : 'Pricing varies by provider and is usage-based.',
+  },
+  {
+    q: 'What does WER mean?',
+    a: 'Word error rate: the share of words a model gets wrong (substituted, deleted or inserted) against a human reference transcript. Lower is better. This index only shows WER from the Hugging Face Open ASR Leaderboard, so every figure is measured the same way.',
+  },
+  {
+    q: 'Can I try a model without installing anything?',
+    a: `Yes. ${demos.length} entries — ${demos.map((m) => m.name).join(', ')} — have live demos that download the model into your browser tab and transcribe your microphone or a file locally.`,
+  },
+];
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'STT Index',
+    alternateName: ['STT—INDEX', 'speechtotext.dev'],
+    description,
+    url: Astro.site?.href,
+    publisher: {
+      '@type': 'Organization',
+      name: 'STT Index',
+      email: 'info@speechtotext.dev',
+      url: Astro.site?.href,
+      logo: new URL('/apple-touch-icon.png', Astro.site).href,
+    },
+  },
+  faqJsonLd(faqs),
+];
 ---
 
-<Base title="STT Index — every speech-to-text model, catalogued" {description} {jsonLd}>
+<Base {title} {description} {jsonLd}>
   <section class="hero">
-    <div class="container">
-      <div class="hero-kicker">AN OPEN DIRECTORY OF SPEECH-TO-TEXT MODELS</div>
-      <h1 class="hero-title">Every speech-to-text model, <em>catalogued.</em></h1>
-      <p class="hero-sub">
-        Specs, licences, benchmarks, and exactly where to get each model — download it, run it
-        locally, or transcribe right here in your browser. No account, no sign-up.
-      </p>
-      <div class="hero-ctas">
-        <a href="/library/" class="btn-primary">Browse the library →</a>
-        <a href="/model/whisper-large-v3/" class="btn-secondary">● Run Whisper in this tab</a>
+    <div class="hero-bg" aria-hidden="true"><span class="glow glow-a"></span><span class="glow glow-b"></span></div>
+    <div class="container hero-inner">
+      <div>
+        <div class="kicker">Open directory · {entryCount} entries · updated {latestAdded}</div>
+        <h1 class="hero-title">
+          Every speech-to-text model, <span class="serif-accent gradient-text">catalogued.</span>
+        </h1>
+        <p class="hero-sub">
+          Compare open-source STT models, runtimes and APIs by accuracy, licence, size and price — then
+          download, self-host, or transcribe right here in your browser. No account, no sign-up.
+        </p>
+        <button class="hero-search" type="button" data-cmdk-open>
+          <Icon name="search" />
+          <span class="label">Search Whisper, Parakeet, Vosk…</span>
+          <kbd data-mod>⌘</kbd><kbd>K</kbd>
+        </button>
+        <div class="hero-quick">
+          <a href="/leaderboard/"><Icon name="trophy" size={14} /> Leaderboard</a>
+          <a href={collectionPath(COLLECTIONS[0]!)}>Open-source</a>
+          <a href={collectionPath(COLLECTIONS[1]!)}>Offline</a>
+          <a href={collectionPath(COLLECTIONS[2]!)}>In-browser</a>
+          <a href="/pricing/">API pricing</a>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-hidden="true">
+        <div class="live-card">
+          <div class="live-top">
+            <span class="pill pill--good pill-dot">REC 00:07</span>
+            <span>16 kHz · mono · on-device</span>
+          </div>
+          <div class="wave">
+            {
+              Array.from({ length: 36 }, (_, i) => (
+                <span
+                  style={`animation-delay: ${-((i * 137) % 1300)}ms; animation-duration: ${900 + ((i * 53) % 700)}ms; background-position: ${(i / 35) * 100}% 0;`}
+                />
+              ))
+            }
+          </div>
+          <div class="live-text" data-typer>
+            <span data-typer-text>Every speech-to-text model, catalogued.</span><span class="cursor"></span>
+          </div>
+          <div class="live-meta">
+            <span class="pill">{topWer.name}</span>
+            <span class="pill wer-chip"><b>{pct(topWer.wer!)}</b>&nbsp;WER</span>
+            <span class="pill">{topWer.license}</span>
+          </div>
+        </div>
+        <div class="float-chip float-chip--a">🏆 <b>#1</b> {topWer.name} · {pct(topWer.wer!)}</div>
+        <div class="float-chip float-chip--b">⚡ {browserCount} run in your browser</div>
       </div>
     </div>
   </section>
 
-  <div class="ticker-band" aria-hidden="true">
-    <div class="ticker-track">
-      <span>{tickerText}</span><span>{tickerText}</span>
+  <nav class="marquee" aria-label="All entries">
+    <div class="marquee-track">
+      {tickerModels.map((m) => <a href={modelPath(m)}>{m.name}</a>)}
+      {tickerModels.map((m) => <a href={modelPath(m)} aria-hidden="true" tabindex="-1">{m.name}</a>)}
     </div>
-  </div>
+  </nav>
 
-  <section class="stats-band">
-    <div class="stats-grid container">
-      <div class="stat">
-        <div class="stat-value">{entryCount}</div>
-        <div class="stat-label">MODELS &amp; TOOLKITS INDEXED</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value">1,100+</div>
-        <div class="stat-label">LANGUAGES COVERED</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value">{bestOpenWer()}</div>
-        <div class="stat-label">BEST OPEN WER ON RECORD</div>
+  <section class="section section--tight">
+    <div class="container">
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-value">{entryCount}</div>
+          <div class="stat-label">models, runtimes &amp; APIs</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">{openCount}</div>
+          <div class="stat-label">with downloadable weights</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value gradient-text">{bestOpenWer()}</div>
+          <div class="stat-label">best open WER on record</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">{maxLangs.toLocaleString('en-US')}+</div>
+          <div class="stat-label">languages in the widest model</div>
+        </div>
       </div>
     </div>
   </section>
@@ -67,20 +185,31 @@ const jsonLd = {
   <section class="section">
     <div class="container">
       <div class="section-head">
-        <h2 class="section-title">Selected entries</h2>
-        <a href="/library/" class="view-all">View all {entryCount} →</a>
+        <div>
+          <div class="kicker">Open ASR Leaderboard</div>
+          <h2 class="section-title">Most accurate right now</h2>
+          <p class="section-sub">
+            Average word error rate across the leaderboard’s English test sets. Lower is better — and
+            every figure is measured the same way.
+          </p>
+        </div>
+        <a href="/leaderboard/" class="link-arrow">Full leaderboard</a>
       </div>
-      <div class="featured-grid">
+      <div class="board">
         {
-          featured.map((f) => (
-            <a href={modelPath(f)} class="card">
-              <div class="card-num">{f.num}</div>
-              <div>
-                <div class="card-name">{f.name}</div>
-                <div class="card-org">{f.org}</div>
-              </div>
-              <p class="card-blurb">{f.blurb}</p>
-              <div class="card-spec">{specline(f)}</div>
+          top.map((m, i) => (
+            <a href={modelPath(m)} class="board-row">
+              <span class="board-rank">{String(i + 1).padStart(2, '0')}</span>
+              <span class="board-name">
+                {m.name}
+                <small>
+                  {m.org} · {m.license}
+                </small>
+              </span>
+              <span class="meter">
+                <i style={`width: ${Math.round((m.wer! / maxBar) * 100)}%`} />
+              </span>
+              <span class="board-val">{pct(m.wer!)}</span>
             </a>
           ))
         }
@@ -90,30 +219,132 @@ const jsonLd = {
 
   <section class="section">
     <div class="container">
-      <h2 class="how-title">How the index works</h2>
-      <div class="how-grid">
-        <div class="how-step">
-          <div class="how-num">01 — FIND</div>
-          <p class="how-text">
-            Search and filter the library by licence, accuracy, language coverage, and whether it
-            runs on-device or in a browser.
+      <div class="section-head">
+        <div>
+          <div class="kicker">Editor’s picks</div>
+          <h2 class="section-title">Start with these</h2>
+        </div>
+        <a href="/library/" class="link-arrow">All {entryCount} entries</a>
+      </div>
+      <div class="card-grid">
+        {featured.map((f) => <ModelCard model={f} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Guides</div>
+          <h2 class="section-title">Find the right model for the job</h2>
+        </div>
+        <a href="/best/" class="link-arrow">All guides</a>
+      </div>
+      <div class="guide-grid">
+        {
+          COLLECTIONS.map((c) => (
+            <a href={collectionPath(c)} class="gcard spot">
+              <span class="gcard-ico">
+                <Icon name={GUIDE_ICONS[c.slug] ?? 'layers'} />
+              </span>
+              <span class="gcard-t">{c.h1}</span>
+              <span class="gcard-d">{c.description.split(' — ')[0]}</span>
+              <span class="gcard-n">{collectionEntries(c).length} entries →</span>
+            </a>
+          ))
+        }
+        <a href="/pricing/" class="gcard spot">
+          <span class="gcard-ico"><Icon name="tag" /></span>
+          <span class="gcard-t">Speech-to-text API pricing</span>
+          <span class="gcard-d">Every hosted plan in the index, normalised to cost per audio hour</span>
+          <span class="gcard-n">{PRICE_ROWS.length} plans →</span>
+        </a>
+        <a href="/compare/" class="gcard spot">
+          <span class="gcard-ico"><Icon name="scale" /></span>
+          <span class="gcard-t">Head-to-head comparisons</span>
+          <span class="gcard-d">Accuracy, licence, hardware and price, side by side</span>
+          <span class="gcard-n">{COMPARISONS.length} matchups →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <div class="kicker">How it works</div>
+          <h2 class="section-title">Find it. Get it. Run it.</h2>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <span class="step-n">01</span>
+          <h3>Find</h3>
+          <p>
+            Search and filter the library by licence, accuracy, language coverage, and whether it runs
+            on-device or in a browser.
           </p>
         </div>
-        <div class="how-step">
-          <div class="how-num">02 — GET</div>
-          <p class="how-text">
-            Every entry links straight to the weights, the repo, and any hosted APIs — with install
+        <div class="step">
+          <span class="step-n">02</span>
+          <h3>Get</h3>
+          <p>
+            Every entry links straight to the weights, the repo and any hosted APIs — with install
             commands you can paste into a terminal.
           </p>
         </div>
-        <div class="how-step">
-          <div class="how-num">03 — RUN</div>
-          <p class="how-text">
-            Where a model has a browser build, you can load it and transcribe your own voice on the
-            model's page — audio never leaves your machine.
+        <div class="step">
+          <span class="step-n">03</span>
+          <h3>Run</h3>
+          <p>
+            Where a model has a browser build, load it on its page and transcribe your own voice —
+            audio never leaves your machine.
           </p>
         </div>
       </div>
     </div>
   </section>
+
+  <section class="section">
+    <div class="container" style="max-width: 880px">
+      <div class="section-head">
+        <div>
+          <div class="kicker">FAQ</div>
+          <h2 class="section-title">Speech-to-text, answered</h2>
+        </div>
+      </div>
+      <Faq {faqs} />
+    </div>
+  </section>
 </Base>
+
+<script>
+  // Decorative "live transcript" in the hero card: types a few lines in a loop.
+  const el = document.querySelector<HTMLElement>('[data-typer-text]');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (el && !reduce) {
+    const lines = [
+      'Every speech-to-text model, catalogued.',
+      'Compare accuracy, licences and price per hour.',
+      'Run Whisper or Moonshine right in this tab.',
+      'Audio never leaves your device.',
+    ];
+    let li = 0;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    (async () => {
+      await sleep(2200);
+      for (;;) {
+        li = (li + 1) % lines.length;
+        const text = lines[li]!;
+        el.textContent = '';
+        for (const word of text.split(' ')) {
+          el.textContent += (el.textContent ? ' ' : '') + word;
+          await sleep(110 + Math.random() * 120);
+        }
+        await sleep(2400);
+      }
+    })();
+  }
+</script>

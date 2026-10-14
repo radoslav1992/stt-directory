@@ -17,6 +17,8 @@
     "CPU"
   ],
   "blurb": "Whisper with accurate word-level timestamps and speaker diarisation — ~70× realtime batched inference.",
+  "seoTitle": "WhisperX: word-level timestamps & speaker diarisation for Whisper",
+  "seoDescription": "WhisperX adds accurate word-level timestamps (wav2vec2 alignment) and pyannote speaker diarisation to Whisper, at ~70× realtime. BSD-2-Clause.",
   "about": [
     "WhisperX wraps Whisper (via faster-whisper) in a production pipeline: VAD preprocessing, batched inference at roughly 70× realtime on a GPU, forced phoneme alignment with wav2vec2 for accurate word-level timestamps, and speaker diarisation through pyannote-audio.",
     "Whisper’s own timestamps are utterance-level and drift-prone — WhisperX is what most people reach for when they need subtitles, word highlighting, or who-said-what. The pyannote diarisation models require a (free) Hugging Face token."

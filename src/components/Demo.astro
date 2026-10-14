@@ -11,8 +11,8 @@ const demo = model.demo!;
 
 <div class="demo" data-demo>
   <div class="demo-head">
-    <h2 class="demo-title">Run it in your browser</h2>
-    <span class="demo-live">● LIVE — 100% LOCAL</span>
+    <h2 class="demo-title">Run {model.name} in your browser</h2>
+    <span class="pill pill--good pill-dot">100% local</span>
   </div>
   <p class="demo-note">
     {demo.note} Your audio is processed on your device and never uploaded anywhere.
@@ -33,9 +33,9 @@ const demo = model.demo!;
         ))
       }
     </select>
-    <button class="demo-btn" data-load>Load model</button>
-    <button class="demo-btn" data-record hidden>● Record from mic</button>
-    <label class="demo-upload" hidden>
+    <button class="btn btn-primary demo-btn" type="button" data-load>Load model</button>
+    <button class="btn btn-primary demo-btn" type="button" data-record hidden>● Record from mic</button>
+    <label class="btn demo-upload" hidden>
       Upload an audio file
       <input type="file" accept="audio/*" data-file />
     </label>

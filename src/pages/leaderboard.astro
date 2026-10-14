@@ -1,0 +1,199 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Faq from '../components/Faq.astro';
+import { MODELS, KIND_LABELS, modelPath } from '../data/models';
+import {
+  BENCHMARKED,
+  BUILD_YEAR,
+  breadcrumbJsonLd,
+  faqJsonLd,
+  itemListJsonLd,
+  pct,
+  withSiteName,
+  type Faq as FaqItem,
+} from '../data/seo';
+
+const maxWer = Math.max(...BENCHMARKED.map((m) => m.wer!));
+const open = BENCHMARKED.filter((m) => m.kind !== 'api');
+const apis = BENCHMARKED.filter((m) => m.kind === 'api');
+const runtimes = MODELS.filter((m) => m.kind === 'runtime' && m.wer != null);
+const unbenchmarked = MODELS.filter((m) => m.wer == null);
+const top = BENCHMARKED[0]!;
+
+const title = withSiteName(`Speech-to-Text Leaderboard ${BUILD_YEAR} — STT Models Ranked by WER`);
+const description = `${BENCHMARKED.length} speech-to-text models and APIs ranked by average word error rate on the Hugging Face Open ASR Leaderboard. ${top.name} leads at ${pct(top.wer!)}.`;
+
+const faqs: FaqItem[] = [
+  {
+    q: 'Which speech-to-text model has the lowest WER?',
+    a: `${top.name} from ${top.org}, at ${pct(top.wer!)} average word error rate, followed by ${BENCHMARKED[1]!.name} (${pct(BENCHMARKED[1]!.wer!)}) and ${BENCHMARKED[2]!.name} (${pct(BENCHMARKED[2]!.wer!)}).`,
+  },
+  ...(open[0]
+    ? [
+        {
+          q: 'What is the most accurate open-weight speech-to-text model?',
+          a: `${open[0].name} (${open[0].license}) at ${pct(open[0].wer!)} average WER — the best result among entries whose weights you can download.`,
+        },
+      ]
+    : []),
+  ...(apis[0]
+    ? [
+        {
+          q: 'Which speech-to-text API is the most accurate?',
+          a: `Among hosted APIs measured on the leaderboard, ${apis[0].name} has the lowest average WER at ${pct(apis[0].wer!)}${apis[1] ? `, ahead of ${apis[1].name} (${pct(apis[1].wer!)})` : ''}. Some APIs, such as ${unbenchmarked.find((m) => m.kind === 'api')?.name ?? 'several vendors'}, aren’t listed there at all.`,
+        },
+      ]
+    : []),
+  {
+    q: 'What is word error rate (WER)?',
+    a: 'The percentage of words a model gets wrong — substitutions, deletions and insertions — compared with a human reference transcript. The leaderboard averages it across several English test sets, from read audiobooks to meetings and earnings calls.',
+  },
+  {
+    q: 'Why is a model missing from the ranking?',
+    a: `Only results published by the Hugging Face Open ASR Leaderboard are shown — never vendor-claimed figures. ${unbenchmarked.length} entries in the index, including ${unbenchmarked.slice(0, 3).map((m) => m.name).join(', ')}, aren’t benchmarked there.`,
+  },
+];
+
+const jsonLd = [
+  itemListJsonLd(Astro.site, 'Speech-to-text models ranked by word error rate', BENCHMARKED),
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Leaderboard', path: '/leaderboard/' },
+  ]),
+  faqJsonLd(faqs),
+];
+---
+
+<Base {title} {description} {jsonLd}>
+  <PageHead
+    kicker="Open ASR Leaderboard"
+    title={`Speech-to-text <span class="serif-accent gradient-text">leaderboard</span>`}
+    lead="Every entry in the index with an independent result on the Hugging Face Open ASR Leaderboard, ranked by average word error rate across its English test sets. Lower is better — and every number is measured the same way."
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'Leaderboard' }]}
+  >
+    <div class="highlight-grid">
+      <a class="highlight" href={modelPath(top)}>
+        <div class="v gradient-text">{pct(top.wer!)}</div>
+        <div class="l">{top.name}</div>
+        <div class="s">Lowest WER overall</div>
+      </a>
+      {
+        open[0] && (
+          <a class="highlight" href={modelPath(open[0])}>
+            <div class="v">{pct(open[0].wer!)}</div>
+            <div class="l">{open[0].name}</div>
+            <div class="s">Best open weights</div>
+          </a>
+        )
+      }
+      {
+        apis[0] && (
+          <a class="highlight" href={modelPath(apis[0])}>
+            <div class="v">{pct(apis[0].wer!)}</div>
+            <div class="l">{apis[0].name}</div>
+            <div class="s">Best hosted API</div>
+          </a>
+        )
+      }
+    </div>
+  </PageHead>
+
+  <div class="container page stack-lg">
+    <section>
+      <div class="toolbar" style="margin-top: 0">
+        <div class="seg" role="group" aria-label="Show">
+          <button type="button" data-lb="" aria-pressed="true">All ({BENCHMARKED.length})</button>
+          <button type="button" data-lb="open" aria-pressed="false">Open weights ({open.length})</button>
+          <button type="button" data-lb="api" aria-pressed="false">APIs ({apis.length})</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table class="data stack">
+          <thead>
+            <tr>
+              <th scope="col">Rank</th>
+              <th scope="col">Model</th>
+              <th scope="col">Type</th>
+              <th scope="col">Licence</th>
+              <th scope="col">Params</th>
+              <th scope="col">Avg. WER</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              BENCHMARKED.map((m, i) => (
+                <tr data-href={modelPath(m)} data-group={m.kind === 'api' ? 'api' : 'open'}>
+                  <td class="t-num c-hide">#{i + 1}</td>
+                  <td class="c-main">
+                    <a class="t-name" href={modelPath(m)}>
+                      {m.name}
+                    </a>
+                    <span class="t-sub">
+                      <span class="m-only">#{i + 1} · </span>
+                      {m.org} · {m.year}
+                    </span>
+                  </td>
+                  <td class="c-hide">
+                    <span class="pill">{KIND_LABELS[m.kind]}</span>
+                  </td>
+                  <td class="t-mono" data-label="Licence">
+                    {m.license}
+                  </td>
+                  <td class="t-mono c-hide">{m.params}</td>
+                  <td class="c-full">
+                    <div class="t-bar">
+                      <span class="meter">
+                        <i style={`width: ${Math.round((m.wer! / maxWer) * 100)}%`} />
+                      </span>
+                      <span class="t-wer">{pct(m.wer!)}</span>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">
+        Source: the Hugging Face Open ASR Leaderboard’s English short-form results, synced into the
+        index automatically. Runtimes aren’t ranked separately — {runtimes.map((r) => r.name).join(', ')} execute
+        Whisper weights and inherit their accuracy.
+      </p>
+    </section>
+
+    <section>
+      <div class="sec-h">Not ranked</div>
+      <h2 class="sec-title">Entries without a leaderboard result</h2>
+      <p class="section-sub" style="margin: -4px 0 18px">
+        No independent figure exists for these, so none is shown. Test them on your own audio.
+      </p>
+      <div class="pill-cloud">
+        {
+          unbenchmarked.map((m) => (
+            <a href={modelPath(m)}>
+              <span class="pill">{m.name}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section style="max-width: 880px">
+      <div class="sec-h">FAQ</div>
+      <h2 class="sec-title">About the leaderboard</h2>
+      <Faq {faqs} />
+    </section>
+  </div>
+</Base>
+
+<script>
+  const btns = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-lb]'));
+  const rows = Array.from(document.querySelectorAll<HTMLTableRowElement>('tr[data-group]'));
+  for (const b of btns) {
+    b.addEventListener('click', () => {
+      btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      for (const r of rows) r.hidden = !!b.dataset.lb && r.dataset.group !== b.dataset.lb;
+    });
+  }
+</script>

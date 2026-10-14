@@ -1,35 +1,53 @@
 ---
 import Base from '../../layouts/Base.astro';
 import Demo from '../../components/Demo.astro';
+import Icon from '../../components/Icon.astro';
+import Faq from '../../components/Faq.astro';
+import { MODELS, KIND_LABELS, STATUS_MAP, licenseUrl, modelPath, type ModelEntry } from '../../data/models';
 import {
-  MODELS,
-  KIND_LABELS,
-  STATUS_MAP,
-  licenseUrl,
-  werLabel,
-  modelPath,
-} from '../../data/models';
+  BENCHMARKED,
+  breadcrumbJsonLd,
+  entryDescription,
+  entryFaqs,
+  entryTitle,
+  faqJsonLd,
+  pct,
+  relatedModels,
+  werRank,
+} from '../../data/seo';
+import { collectionsFor, collectionPath } from '../../data/collections';
+import { comparisonsFor, comparisonPath } from '../../data/comparisons';
 
 export function getStaticPaths() {
   return MODELS.map((m) => ({ params: { id: m.id }, props: { model: m } }));
 }
 
-const { model: m } = Astro.props;
+const { model: m } = Astro.props as { model: ModelEntry };
 const status = STATUS_MAP[m.status];
-const entryCount = String(MODELS.length);
+const entryCount = MODELS.length;
+const rank = werRank(m);
+const url = new URL(modelPath(m), Astro.site).href;
 
-const withWer = MODELS.filter((x) => x.wer != null).sort((a, b) => a.wer! - b.wer!);
-const maxWer = Math.max(...withWer.map((x) => x.wer!));
-const werBars = withWer.map((x) => ({
-  id: x.id,
-  name: x.name,
-  werLabel: werLabel(x.wer),
-  pct: Math.round((x.wer! / maxWer) * 100),
-  current: x.id === m.id,
-}));
+// Benchmark context: every entry with its own leaderboard result, plus this
+// runtime (which inherits Whisper's figure) when relevant.
+const barList = [...BENCHMARKED, ...(m.kind === 'runtime' && m.wer != null ? [m] : [])].sort(
+  (a, b) => a.wer! - b.wer!
+);
+const maxWer = Math.max(...barList.map((x) => x.wer!));
 
-const title = `${m.name} — specs, licence, downloads · STT Index`;
-const description = m.blurb;
+const faqs = entryFaqs(m);
+const related = relatedModels(m, 4);
+const guides = collectionsFor(m);
+const matchups = comparisonsFor(m);
+
+const isApi = m.kind === 'api';
+const primary = isApi ? m.hosted[0] && { label: 'Pricing & sign-up', url: m.hosted[0].url } : m.downloads[0];
+const docs = m.links.find((l) => /doc/i.test(l.label)) ?? m.links[0];
+const licenceTone =
+  m.licenseType === 'permissive' ? 'pill--good' : m.licenseType === 'non-commercial' ? 'pill--warn' : '';
+
+const title = entryTitle(m);
+const description = entryDescription(m);
 
 const jsonLd: object[] = [
   {
@@ -43,108 +61,221 @@ const jsonLd: object[] = [
     datePublished: String(m.year),
     author: { '@type': 'Organization', name: m.org },
     license: licenseUrl(m.license) ?? m.license,
-    url: new URL(modelPath(m), Astro.site).href,
+    url,
     ...(m.downloads[0] ? { downloadUrl: m.downloads[0].url } : {}),
-    ...(m.kind !== 'api' ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
+    ...(m.links.length ? { sameAs: m.links.map((l) => l.url) } : {}),
+    ...(!isApi ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
   },
-  {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Library', item: new URL('/library/', Astro.site).href },
-      { '@type': 'ListItem', position: 2, name: m.name, item: new URL(modelPath(m), Astro.site).href },
-    ],
-  },
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Library', path: '/library/' },
+    { name: m.name, path: modelPath(m) },
+  ]),
+  faqJsonLd(faqs),
 ];
 ---
 
 <Base {title} {description} ogType="article" {jsonLd}>
-  <div class="model-page">
-    <a href="/library/" class="back-link">← Back to library</a>
+  <section class="entry-hero">
+    <div class="hero-bg" aria-hidden="true"><span class="glow glow-a"></span><span class="glow glow-b"></span></div>
+    <div class="container">
+      <nav aria-label="Breadcrumb">
+        <ol class="crumbs">
+          <li><a href="/">Home</a></li>
+          <li><a href="/library/">Library</a></li>
+          <li><span aria-current="page">{m.name}</span></li>
+        </ol>
+      </nav>
 
-    <div class="model-head">
-      <div>
-        <div class="entry-num">ENTRY {m.num} / {entryCount}</div>
-        <h1 class="model-title">{m.name}</h1>
-        <div class="model-org">{m.org} · {m.year}</div>
-      </div>
-      <div class="status-badge" style={`color: ${status.color};`}>{status.label}</div>
-    </div>
-
-    <div class="spec-grid">
-      <div class="spec">
-        <div class="spec-label">LICENCE</div>
-        <div class="spec-value">{m.license}</div>
-      </div>
-      <div class="spec">
-        <div class="spec-label">PARAMETERS</div>
-        <div class="spec-value">{m.params}</div>
-      </div>
-      <div class="spec">
-        <div class="spec-label">WER (OPEN ASR)</div>
-        <div class:list={['spec-value', { 'spec-value--none': m.wer == null }]}>
-          {werLabel(m.wer)}
+      <div class="entry-top">
+        <div class="entry-badges">
+          <span class:list={['pill', 'pill-dot', `pill--${status.tone}`]}>{status.label}</span>
+          <span class="pill">{KIND_LABELS[m.kind]}</span>
+          <span class:list={['pill', licenceTone]}>{m.license}</span>
+          {m.demo && <span class="pill pill--accent">Live demo</span>}
         </div>
+        <div class="entry-num">Entry {m.num} / {entryCount}</div>
       </div>
-      <div class="spec">
-        <div class="spec-label">LANGUAGES</div>
-        <div class="spec-value">{m.langs}</div>
-      </div>
-      <div class="spec">
-        <div class="spec-label">TYPE</div>
-        <div class="spec-value">{KIND_LABELS[m.kind]}</div>
-      </div>
-      <div class="spec">
-        <div class="spec-label">RUNS ON</div>
-        <div class="spec-value">{m.runs.join(' · ')}</div>
-      </div>
-    </div>
 
-    <div class="model-body">
-      <div class="model-main">
-        <div class="about">
-          <h2 class="sec-label">ABOUT</h2>
-          {m.about.map((para) => <p>{para}</p>)}
-        </div>
+      <h1 class="entry-title">{m.name}</h1>
+      <div class="entry-org">
+        by <b>{m.org}</b> · released {m.year}
+      </div>
+      <p class="entry-lead">{m.blurb}</p>
 
-        <div>
-          <h2 class="sec-label">{m.kind === 'api' ? 'QUICKSTART' : 'INSTALL & RUN LOCALLY'}</h2>
-          <pre class="install-block">{m.install}</pre>
-        </div>
-
+      <div class="entry-actions">
         {
-          m.wer != null && (
-            <div class="bench">
-              <h2 class="sec-label">BENCHMARK — WORD ERROR RATE</h2>
-              <div class="bench-sub">Open ASR Leaderboard average · shorter bar is better</div>
-              <div class="bars">
-                {werBars.map((b) => (
-                  <div class:list={['bar-row', { current: b.current }]}>
-                    <div class="bar-name">{b.name}</div>
-                    <div class="bar-track">
-                      <div class="bar-fill" style={`width: ${b.pct}%;`} />
-                    </div>
-                    <div class="bar-val">{b.werLabel}</div>
-                  </div>
-                ))}
-              </div>
+          primary && (
+            <a href={primary.url} class="btn btn-primary" target="_blank" rel="noopener">
+              <Icon name={isApi ? 'external' : 'download'} class="ico" />
+              {isApi ? primary.label : 'Download'}
+            </a>
+          )
+        }
+        {
+          m.demo && (
+            <a href="#demo" class="btn">
+              <Icon name="mic" class="ico" /> Try it in your browser
+            </a>
+          )
+        }
+        <a href="#install" class="btn">{isApi ? 'Quickstart' : 'Install'}</a>
+        {
+          docs && (
+            <a href={docs.url} class="btn btn-ghost" target="_blank" rel="noopener">
+              {docs.label} <Icon name="external" class="ico" />
+            </a>
+          )
+        }
+      </div>
+
+      <dl class="tiles">
+        <div class="tile">
+          <dt>Licence</dt>
+          <dd>{m.license}</dd>
+        </div>
+        <div class="tile">
+          <dt>Parameters</dt>
+          <dd>{m.params}</dd>
+        </div>
+        <div class="tile">
+          <dt>WER · Open ASR</dt>
+          {
+            m.wer != null ? (
+              <dd>
+                <span class="wer-big">{pct(m.wer)}</span>
+                <small>{rank ? `rank #${rank.rank} of ${rank.of}` : 'Whisper weights'}</small>
+              </dd>
+            ) : (
+              <dd class="dim">not benchmarked</dd>
+            )
+          }
+        </div>
+        <div class="tile">
+          <dt>Languages</dt>
+          <dd>{m.langs}</dd>
+        </div>
+        <div class="tile">
+          <dt>Type</dt>
+          <dd>{KIND_LABELS[m.kind]}</dd>
+        </div>
+        <div class="tile">
+          <dt>Runs on</dt>
+          <dd>{m.runs.join(' · ')}</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <div class="container entry-layout">
+    <div class="entry-main">
+      <section class="prose" aria-labelledby="about">
+        <div class="sec-h">Overview</div>
+        <h2 class="sec-title" id="about">About {m.name}</h2>
+        {m.about.map((para) => <p>{para}</p>)}
+      </section>
+
+      <section id="install" aria-labelledby="install-h">
+        <div class="sec-h">{isApi ? 'Quickstart' : 'Install & run locally'}</div>
+        <h2 class="sec-title" id="install-h">{isApi ? `Call the ${m.name} API` : `How to install ${m.name}`}</h2>
+        <div class="code">
+          <div class="code-bar">
+            <i></i><i></i><i></i>
+            <span class="lbl">terminal</span>
+            <button class="copy-btn" type="button" data-copy={`code-${m.id}`}>
+              <Icon name="copy" size={14} /><span>Copy</span>
+            </button>
+          </div>
+          <pre id={`code-${m.id}`}>{m.install}</pre>
+        </div>
+      </section>
+
+      {
+        m.wer != null && (
+          <section aria-labelledby="bench-h">
+            <div class="sec-h">Benchmark</div>
+            <h2 class="sec-title" id="bench-h">
+              {m.name} accuracy vs other models
+            </h2>
+            <p class="bench-sub">
+              Average word error rate on the Open ASR Leaderboard · shorter bar is better
+              {m.kind === 'runtime' && ' · runtimes inherit the WER of the Whisper weights they run'}
+            </p>
+            <div class="bars">
+              {barList.map((b) => (
+                <a href={modelPath(b)} class:list={['bar-row', { current: b.id === m.id }]}>
+                  <span class="bar-name">{b.name}</span>
+                  <span class="meter">
+                    <i style={`width: ${Math.round((b.wer! / maxWer) * 100)}%`} />
+                  </span>
+                  <span class="bar-val">{pct(b.wer!)}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      {
+        m.demo && (
+          <section id="demo">
+            <Demo model={m} />
+          </section>
+        )
+      }
+
+      <section aria-labelledby="faq-h">
+        <div class="sec-h">FAQ</div>
+        <h2 class="sec-title" id="faq-h">{m.name}: common questions</h2>
+        <Faq {faqs} />
+      </section>
+
+      <section aria-labelledby="alt-h">
+        <div class="sec-h">Alternatives</div>
+        <h2 class="sec-title" id="alt-h">Alternatives to {m.name}</h2>
+        <div class="mini-grid">
+          {
+            related.map((r) => (
+              <a href={modelPath(r)} class="mini spot">
+                <span class="mini-n">{r.name}</span>
+                <span class="mini-o">
+                  {r.org} · {KIND_LABELS[r.kind]}
+                </span>
+                <span class="mini-s">
+                  {r.license} · {r.wer != null ? `${pct(r.wer)} WER` : 'no WER'}
+                </span>
+              </a>
+            ))
+          }
+        </div>
+        {
+          matchups.length > 0 && (
+            <div class="vs-links" style="margin-top: 16px">
+              {matchups.map((c) => {
+                const other = c.a.id === m.id ? c.b : c.a;
+                return (
+                  <a href={comparisonPath(c)}>
+                    <b>vs</b> {m.name} vs {other.name}
+                  </a>
+                );
+              })}
             </div>
           )
         }
+      </section>
+    </div>
 
-        {m.demo && <Demo model={m} />}
-      </div>
-
-      <aside class="model-aside">
+    <aside class="entry-aside">
+      <div class="entry-aside-inner">
         {
           m.downloads.length > 0 && (
-            <div>
-              <h2 class="sec-label">GET IT — FREE</h2>
-              <div class="dl-list">
+            <div class="panel">
+              <h2 class="sec-h">Get it — free</h2>
+              <div class="link-list">
                 {m.downloads.map((d) => (
-                  <a href={d.url} target="_blank" rel="noopener" class="dl-link">
-                    <span class="dl-label">{d.label}</span>
-                    <span class="dl-arrow">↓</span>
+                  <a href={d.url} target="_blank" rel="noopener" class="link-item">
+                    <span>{d.label}</span>
+                    <Icon name="download" size={16} class="r" />
                   </a>
                 ))}
               </div>
@@ -154,33 +285,62 @@ const jsonLd: object[] = [
 
         {
           m.hosted.length > 0 && (
-            <div>
-              <h2 class="sec-label">{m.kind === 'api' ? 'ACCESS — PRICING' : 'HOSTED / PAID ACCESS'}</h2>
-              <div class="hosted-list">
+            <div class="panel">
+              <h2 class="sec-h">{isApi ? 'Pricing' : 'Hosted / paid access'}</h2>
+              <div class="link-list">
                 {m.hosted.map((h) => (
-                  <a href={h.url} target="_blank" rel="noopener" class="hosted-link">
-                    <span class="hosted-name">{h.name}</span>
-                    <span class="hosted-price">{h.price}</span>
+                  <a href={h.url} target="_blank" rel="noopener" class="link-item">
+                    <span>{h.name}</span>
+                    <span class="r price">{h.price}</span>
                   </a>
                 ))}
               </div>
+              <p class="panel-note">
+                Prices change — check the provider. <a href="/pricing/">Compare all API pricing →</a>
+              </p>
             </div>
           )
         }
 
-        <div>
-          <h2 class="sec-label">LINKS</h2>
-          <div class="links-list">
+        <div class="panel">
+          <h2 class="sec-h">Links</h2>
+          <div class="link-list">
             {
               m.links.map((l) => (
-                <a href={l.url} target="_blank" rel="noopener" class="ext-link">
-                  {l.label} ↗
+                <a href={l.url} target="_blank" rel="noopener" class="link-item">
+                  <span>{l.label}</span>
+                  <Icon name="external" size={16} class="r" />
                 </a>
               ))
             }
           </div>
         </div>
-      </aside>
-    </div>
+
+        {
+          guides.length > 0 && (
+            <div class="panel">
+              <h2 class="sec-h">Featured in</h2>
+              <div class="tag-list">
+                {guides.map((g) => (
+                  <a href={collectionPath(g)}>
+                    <span class="pill">{g.label}</span>
+                  </a>
+                ))}
+                {m.wer != null && (
+                  <a href="/leaderboard/">
+                    <span class="pill">WER leaderboard</span>
+                  </a>
+                )}
+                {m.hosted.length > 0 && (
+                  <a href="/pricing/">
+                    <span class="pill">API pricing</span>
+                  </a>
+                )}
+              </div>
+            </div>
+          )
+        }
+      </div>
+    </aside>
   </div>
 </Base>

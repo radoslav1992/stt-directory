@@ -1,0 +1,9 @@
+# Legacy URLs from the domain's previous site that still receive search
+# impressions (Google Search Console). Map them to the closest live page;
+# URLs with no equivalent (old blog, refund policy, DPA) are left to 404.
+/privacy /legal/privacy/ 301
+/privacy/ /legal/privacy/ 301
+/terms /legal/terms/ 301
+/terms/ /legal/terms/ 301
+/legal /legal/licences/ 301
+/legal/ /legal/licences/ 301

@@ -1,0 +1,250 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Faq from '../../components/Faq.astro';
+import Icon from '../../components/Icon.astro';
+import { KIND_LABELS, STATUS_MAP, modelPath, type ModelEntry } from '../../data/models';
+import {
+  COMPARISONS,
+  advantages,
+  comparisonFacts,
+  comparisonPath,
+  comparisonsFor,
+  type Comparison,
+} from '../../data/comparisons';
+import {
+  breadcrumbJsonLd,
+  cheapestPerHour,
+  faqJsonLd,
+  pct,
+  usd,
+  withSiteName,
+  type Faq as FaqItem,
+} from '../../data/seo';
+
+export function getStaticPaths() {
+  return COMPARISONS.map((c) => ({ params: { slug: c.slug }, props: { comparison: c } }));
+}
+
+const { comparison: c } = Astro.props as { comparison: Comparison };
+const { a, b } = c;
+const facts = comparisonFacts(a, b);
+const advA = advantages(a, b);
+const advB = advantages(b, a);
+const accuracy = facts.find((f) => f.label === 'Accuracy')!.text;
+const related = [...new Map([...comparisonsFor(a), ...comparisonsFor(b)].map((x) => [x.slug, x])).values()].filter(
+  (x) => x.slug !== c.slug
+);
+
+const priceCell = (m: ModelEntry) => {
+  const p = cheapestPerHour(m);
+  if (p != null) return `≈ ${usd(p)} / hr`;
+  return m.kind === 'api' ? 'usage-based' : 'free (self-host)';
+};
+
+const rows: { label: string; a: string; b: string }[] = [
+  { label: 'Made by', a: a.org, b: b.org },
+  { label: 'Type', a: KIND_LABELS[a.kind], b: KIND_LABELS[b.kind] },
+  { label: 'Released', a: String(a.year), b: String(b.year) },
+  { label: 'Licence', a: a.license, b: b.license },
+  { label: 'Parameters', a: a.params, b: b.params },
+  { label: 'Avg. WER', a: a.wer != null ? pct(a.wer) : 'not benchmarked', b: b.wer != null ? pct(b.wer) : 'not benchmarked' },
+  { label: 'Languages', a: a.langs, b: b.langs },
+  { label: 'Runs on', a: a.runs.join(', '), b: b.runs.join(', ') },
+  { label: 'Lowest list price', a: priceCell(a), b: priceCell(b) },
+  { label: 'Status', a: STATUS_MAP[a.status].label, b: STATUS_MAP[b.status].label },
+];
+
+const vs = `${a.name} vs ${b.name}`;
+const title = withSiteName(
+  [`${vs}: accuracy, licence & hardware compared`, `${vs}: which STT is better?`, `${vs} compared`, vs].find(
+    (t) => t.length <= 62
+  ) ?? vs
+);
+const description =
+  [
+    `${vs} compared. ${accuracy} Plus licences, languages, hardware and pricing side by side.`,
+    `${vs} compared. ${accuracy} Plus licences, hardware and pricing.`,
+    `${vs} compared. ${accuracy}`,
+  ].find((d) => d.length <= 160) ?? `${vs} compared on accuracy, licence, hardware, languages and price.`;
+
+const faqs: FaqItem[] = [
+  { q: `Which is more accurate, ${a.name} or ${b.name}?`, a: accuracy },
+  { q: `What licences do ${a.name} and ${b.name} use?`, a: facts.find((f) => f.label === 'Licence')!.text },
+  { q: `Where do ${a.name} and ${b.name} run?`, a: `${a.name}: ${a.runs.join(', ')}. ${b.name}: ${b.runs.join(', ')}.` },
+];
+
+const jsonLd = [
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Compare', path: '/compare/' },
+    { name: `${a.name} vs ${b.name}`, path: comparisonPath(c) },
+  ]),
+  faqJsonLd(faqs),
+];
+
+const esc = (s: string) => s.replace(/[&<>]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[ch]!);
+---
+
+<Base {title} {description} ogType="article" {jsonLd}>
+  <PageHead
+    kicker="Head-to-head"
+    title={`${esc(a.name)} <span class="serif-accent gradient-text">vs</span> ${esc(b.name)}`}
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'Compare', href: '/compare/' }, { name: `${a.name} vs ${b.name}` }]}
+  >
+    <div class="vs-hero">
+      {
+        [a, b].map((m, i) => (
+          <>
+            {i === 1 && <div class="vs-badge">VS</div>}
+            <div class="vs-side">
+              <div class="mcard-specs">
+                <span class="pill">{KIND_LABELS[m.kind]}</span>
+                <span class:list={['pill', { 'pill--good': m.licenseType === 'permissive', 'pill--warn': m.licenseType === 'non-commercial' }]}>
+                  {m.license}
+                </span>
+                {m.wer != null && (
+                  <span class="pill wer-chip">
+                    <b>{pct(m.wer)}</b>&nbsp;WER
+                  </span>
+                )}
+              </div>
+              <h2>
+                <a href={modelPath(m)}>{m.name}</a>
+              </h2>
+              <div class="mcard-org">
+                {m.org} · {m.year}
+              </div>
+              <p>{m.blurb}</p>
+            </div>
+          </>
+        ))
+      }
+    </div>
+  </PageHead>
+
+  <div class="container page stack-lg">
+    <section>
+      <div class="sec-h">Key differences</div>
+      <h2 class="sec-title">How {a.name} and {b.name} differ</h2>
+      <dl class="facts">
+        {
+          facts.map((f) => (
+            <div class="fact">
+              <dt>{f.label}</dt>
+              <dd>{f.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </section>
+
+    <section>
+      <div class="sec-h">Verdict</div>
+      <h2 class="sec-title">Which should you choose?</h2>
+      <div class="choose">
+        {
+          [
+            [a, advA],
+            [b, advB],
+          ].map(([m, adv]) => (
+            <div class="choose-card">
+              <h3>Choose {(m as ModelEntry).name} if you want…</h3>
+              {(adv as string[]).length ? (
+                <ul>
+                  {(adv as string[]).map((x) => (
+                    <li>{x}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p style="margin: 0; color: var(--text-2)">
+                  It fits your existing stack — on the data in this index it has no clear edge over the other.
+                </p>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-h">At a glance</div>
+      <h2 class="sec-title">Spec sheet</h2>
+      <div class="table-wrap">
+        <table class="data">
+          <thead>
+            <tr>
+              <th scope="col"><span class="visually-hidden">Spec</span></th>
+              <th scope="col">{a.name}</th>
+              <th scope="col">{b.name}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              rows.map((r) => (
+                <tr>
+                  <th scope="row" style="position: static; text-transform: none; letter-spacing: 0; font: 500 13.5px var(--sans); background: transparent">
+                    {r.label}
+                  </th>
+                  <td>{r.a}</td>
+                  <td>{r.b}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-h">Get started</div>
+      <h2 class="sec-title">Install both</h2>
+      <div class="split">
+        {
+          [a, b].map((m) => (
+            <div>
+              <h3>
+                <a href={modelPath(m)}>{m.name}</a>
+              </h3>
+              <div class="code">
+                <div class="code-bar">
+                  <i />
+                  <i />
+                  <i />
+                  <span class="lbl">{m.id}</span>
+                  <button class="copy-btn" type="button" data-copy={`code-${m.id}`}>
+                    <Icon name="copy" size={14} />
+                    <span>Copy</span>
+                  </button>
+                </div>
+                <pre id={`code-${m.id}`}>{m.install}</pre>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section style="max-width: 880px">
+      <div class="sec-h">FAQ</div>
+      <h2 class="sec-title">{a.name} vs {b.name}: quick answers</h2>
+      <Faq {faqs} />
+    </section>
+
+    {
+      related.length > 0 && (
+        <section>
+          <div class="sec-h">Related comparisons</div>
+          <div class="vs-links">
+            {related.map((r) => (
+              <a href={comparisonPath(r)}>
+                <b>vs</b> {r.a.name} vs {r.b.name}
+              </a>
+            ))}
+            <a href="/compare/">All comparisons →</a>
+          </div>
+        </section>
+      )
+    }
+  </div>
+</Base>

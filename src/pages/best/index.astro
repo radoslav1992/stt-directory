@@ -1,0 +1,67 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { COLLECTIONS, collectionEntries, collectionPath } from '../../data/collections';
+import { breadcrumbJsonLd, withSiteName } from '../../data/seo';
+
+const title = withSiteName('Best Speech-to-Text Models — Guides by Use Case');
+const description =
+  'Data-driven speech-to-text guides: the best open-source models, offline and on-device STT, in-browser recognition, Whisper runtimes and multilingual models.';
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Speech-to-text guides',
+    description,
+    hasPart: COLLECTIONS.map((c) => ({
+      '@type': 'WebPage',
+      name: c.h1,
+      url: new URL(collectionPath(c), Astro.site).href,
+    })),
+  },
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Guides', path: '/best/' },
+  ]),
+];
+---
+
+<Base {title} {description} {jsonLd}>
+  <PageHead
+    kicker="Guides"
+    title={`The best speech-to-text, <span class="serif-accent gradient-text">by use case</span>`}
+    lead="Each guide is generated from the index data — membership and ranking update automatically when an entry or its benchmark changes."
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'Guides' }]}
+  />
+  <div class="container page">
+    <ul class="ranked">
+      {
+        COLLECTIONS.map((c, i) => {
+          const list = collectionEntries(c);
+          return (
+            <li>
+              <a class="rank-item" href={collectionPath(c)}>
+                <span class="rank-n">{String(i + 1).padStart(2, '0')}</span>
+                <div class="rank-body">
+                  <h2>{c.h1}</h2>
+                  <p>{c.description}</p>
+                  <span class="mcard-specs">
+                    {list.slice(0, 4).map((m) => (
+                      <span class="pill">{m.name}</span>
+                    ))}
+                    {list.length > 4 && <span class="pill">+{list.length - 4} more</span>}
+                  </span>
+                </div>
+                <span class="rank-wer">
+                  {list.length}
+                  <small>entries</small>
+                </span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</Base>

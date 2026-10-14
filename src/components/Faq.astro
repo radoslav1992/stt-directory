@@ -1,0 +1,27 @@
+---
+import type { Faq } from '../data/seo';
+
+interface Props {
+  faqs: Faq[];
+  /** Open the first item by default. */
+  openFirst?: boolean;
+}
+
+const { faqs, openFirst = true } = Astro.props;
+// `code` spans in answers render as <code>; everything else is escaped text.
+const esc = (s: string) => s.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]!);
+const render = (s: string) => esc(s).replace(/`([^`]+)`/g, '<code>$1</code>');
+---
+
+<div class="faq">
+  {
+    faqs.map((f, i) => (
+      <details open={openFirst && i === 0}>
+        <summary>{f.q}</summary>
+        <div class="a">
+          <p set:html={render(f.a)} />
+        </div>
+      </details>
+    ))
+  }
+</div>

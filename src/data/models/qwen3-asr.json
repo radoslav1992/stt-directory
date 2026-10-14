@@ -16,6 +16,8 @@
     "GPU"
   ],
   "blurb": "Alibaba’s multilingual ASR from the Qwen family — strong on Chinese, English, and code-switching.",
+  "seoTitle": "Qwen3-ASR: Alibaba’s open speech recognition (1.7B / 0.6B)",
+  "seoDescription": "Qwen3-ASR from Alibaba: Apache-2.0 ASR for 11 languages, strong on Mandarin, English and code-switching, with contextual biasing. {wer} WER. Install & API.",
   "about": [
     "Qwen3-ASR brings the Qwen LLM family’s multilingual strength to speech: 11 languages with particularly strong Mandarin and English, robust handling of accents, code-switching, and noisy audio, plus contextual biasing — you can feed it a vocabulary list to steer transcription.",
     "The 1.7B checkpoint scores 5.76% average WER on the Open ASR Leaderboard — top-five territory — with a 0.6B sibling for lighter deployments. A good pick when Chinese-language accuracy matters, where Whisper is comparatively weak."

@@ -19,6 +19,8 @@
     "Mobile"
   ],
   "blurb": "large-v3 with the decoder pruned from 32 layers to 4 — near-identical accuracy at several times the speed.",
+  "seoTitle": "Whisper large-v3-turbo: speed, accuracy & VRAM vs large-v3",
+  "seoDescription": "Whisper large-v3-turbo cuts the decoder from 32 layers to 4: 809M params, ~6 GB VRAM, {wer} WER — a modest cost vs large-v3. 99 languages, MIT. Install & demo.",
   "about": [
     "Turbo is Whisper large-v3 with its decoder pruned from 32 layers to four, then fine-tuned: about half the parameters, several times the decode speed, and only a modest accuracy cost (7.83% vs 7.44% average WER). The ~1.6 GB checkpoint runs in about 6 GB of VRAM — or on a laptop via whisper.cpp.",
     "For most self-hosted transcription it has replaced large-v3 as the default: same 99 languages, same MIT licence, same ecosystem (faster-whisper, whisper.cpp, MLX, transformers.js). One trade-off: turbo is transcription-only — it was not trained for Whisper’s translation task."

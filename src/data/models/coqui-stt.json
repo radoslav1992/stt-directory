@@ -17,6 +17,8 @@
     "Mobile"
   ],
   "blurb": "The successor to Mozilla DeepSpeech — archived, but its small on-device models still circulate.",
+  "seoTitle": "Coqui STT: the Mozilla DeepSpeech successor (archived)",
+  "seoDescription": "Coqui STT carried on Mozilla DeepSpeech: small streaming on-device models (MPL-2.0) for Python, Node, Android and iOS. Archived, but downloads still work.",
   "about": [
     "Coqui STT carried on Mozilla’s DeepSpeech after that project wound down: small, streaming, on-device models with bindings for Python, Node, Android, and iOS. The company pivoted to TTS and the STT project is now archived.",
     "Listed for completeness — the repos and model files remain available and functional, but there is no maintenance. For new on-device work, look at Moonshine, Vosk, or whisper.cpp instead."

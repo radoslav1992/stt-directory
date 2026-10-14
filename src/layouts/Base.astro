@@ -1,6 +1,11 @@
 ---
 import '../styles/global.css';
-import { MODELS } from '../data/models';
+import Icon from '../components/Icon.astro';
+import BrandMark from '../components/BrandMark.astro';
+import { MODELS, KIND_LABELS, modelPath } from '../data/models';
+import { COLLECTIONS, collectionPath } from '../data/collections';
+import { COMPARISONS, comparisonPath } from '../data/comparisons';
+import { werLabel } from '../data/models';
 import { LISTMONK_URL, LISTMONK_LIST_UUID, GA_MEASUREMENT_ID } from '../config';
 
 interface Props {
@@ -8,40 +13,93 @@ interface Props {
   description: string;
   ogType?: string;
   jsonLd?: object | object[];
+  /** Keep the page out of search results (e.g. the 404 page). */
+  noindex?: boolean;
 }
 
-const { title, description, ogType = 'website', jsonLd } = Astro.props;
+const { title, description, ogType = 'website', jsonLd, noindex = false } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const entryCount = String(MODELS.length);
+const ogImage = new URL('/og.png', Astro.site);
+const entryCount = MODELS.length;
+const path = Astro.url.pathname;
+
+const NAV = [
+  { href: '/library/', label: 'Library' },
+  { href: '/leaderboard/', label: 'Leaderboard' },
+  { href: '/pricing/', label: 'API pricing' },
+  { href: '/best/', label: 'Guides' },
+  { href: '/compare/', label: 'Compare' },
+];
+const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
+
+// Command-palette index: every entry plus the hub pages.
+const searchIndex = {
+  models: MODELS.map((m) => ({
+    n: m.name,
+    o: m.org,
+    k: KIND_LABELS[m.kind],
+    w: m.wer == null ? '' : werLabel(m.wer),
+    u: modelPath(m),
+    h: `${m.name} ${m.org} ${m.kind} ${m.license} ${m.langs} ${m.runs.join(' ')} ${m.id}`.toLowerCase(),
+  })),
+  pages: [
+    { n: 'Library — all entries', u: '/library/', h: 'library all models table filter' },
+    { n: 'WER leaderboard', u: '/leaderboard/', h: 'leaderboard ranking benchmark wer accuracy best' },
+    { n: 'Speech-to-text API pricing', u: '/pricing/', h: 'pricing price cost api per hour minute cheap' },
+    ...COLLECTIONS.map((c) => ({ n: c.h1, u: collectionPath(c), h: `${c.label} ${c.h1} best guide`.toLowerCase() })),
+    ...COMPARISONS.map((c) => ({
+      n: `${c.a.name} vs ${c.b.name}`,
+      u: comparisonPath(c),
+      h: `${c.a.name} ${c.b.name} vs compare ${c.a.id} ${c.b.id}`.toLowerCase(),
+    })),
+  ],
+};
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical.href} />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem('theme');
+          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="theme-color" content="#07080b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
     <link rel="alternate" type="application/rss+xml" title="STT Index — new in the index" href="/rss.xml" />
     <meta name="generator" content={Astro.generator} />
     <meta property="og:type" content={ogType} />
-    <meta property="og:site_name" content="STT—INDEX" />
+    <meta property="og:site_name" content="STT Index" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical.href} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="STT Index — every speech-to-text model, catalogued" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage.href} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&family=Instrument+Serif:ital@1&display=swap"
       rel="stylesheet"
     />
-    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
     {
       GA_MEASUREMENT_ID && (
         <>
@@ -63,47 +121,94 @@ const entryCount = String(MODELS.length);
     }
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header class="site-header">
-      <a href="/" class="brand">
-        <span class="brand-name">STT—INDEX</span>
-        <span class="brand-vol">VOL. 1 / 2026</span>
-      </a>
-      <nav class="site-nav">
-        <a href="/">Home</a>
-        <a href="/library/">Library</a>
-        <a href="/legal/licences/">Legal</a>
-        <a href="/model/whisper-large-v3/" class="nav-cta">Try one in-browser ↗</a>
+      <div class="container header-inner">
+        <a href="/" class="brand" aria-label="STT Index — home">
+          <BrandMark class="brand-mark" gid="bm-head" />
+          <span class="brand-name">STT Index <span>/ speechtotext.dev</span></span>
+        </a>
+        <nav class="nav" aria-label="Primary">
+          {
+            NAV.map((n) => (
+              <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>
+                {n.label}
+              </a>
+            ))
+          }
+        </nav>
+        <div class="header-actions">
+          <button class="search-trigger" type="button" data-cmdk-open aria-label="Search models">
+            <Icon name="search" />
+            <span class="label">Search {entryCount} entries…</span>
+            <kbd data-mod>⌘</kbd><kbd>K</kbd>
+          </button>
+          <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Toggle colour theme">
+            <Icon name="moon" class="moon" />
+            <Icon name="sun" class="sun" />
+          </button>
+          <button
+            class="icon-btn menu-toggle"
+            type="button"
+            data-menu-toggle
+            aria-label="Open menu"
+            aria-expanded="false"
+            aria-controls="mobile-menu"
+          >
+            <Icon name="menu" />
+          </button>
+        </div>
+      </div>
+      <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile">
+        <a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a>
+        {
+          NAV.map((n) => (
+            <a href={n.href} aria-current={isCurrent(n.href) ? 'page' : undefined}>
+              {n.label}
+            </a>
+          ))
+        }
       </nav>
     </header>
 
-    <main>
+    <main id="main">
       <slot />
     </main>
 
     <footer class="site-footer">
-      <div class="footer-grid container">
+      <div class="container footer-grid">
         <div>
-          <div class="footer-brand">STT—INDEX</div>
+          <a href="/" class="brand" aria-label="STT Index — home">
+            <BrandMark class="brand-mark" gid="bm-foot" />
+            <span class="brand-name">STT Index</span>
+          </a>
           <p class="footer-about">
-            An independent, open catalogue of speech-to-text models. Not affiliated with any vendor.
-            Figures are drawn from public leaderboards and model cards — always check the source.
+            An independent, open catalogue of speech-to-text models, runtimes and APIs. Not affiliated
+            with any vendor. Benchmarks come only from the Open ASR Leaderboard — always check the
+            source.
           </p>
           <a class="footer-contact" href="mailto:info@speechtotext.dev">info@speechtotext.dev</a>
         </div>
         <div class="footer-col">
-          <div class="footer-col-label">INDEX</div>
+          <div class="footer-col-label">Explore</div>
           <a href="/library/">Library</a>
+          <a href="/leaderboard/">WER leaderboard</a>
+          <a href="/pricing/">API pricing</a>
+          <a href="/compare/">Comparisons</a>
           <a href="/model/whisper-large-v3/">Run Whisper in-browser</a>
-          <a href="/model/granite-speech-4-1-2b/">Most accurate entry</a>
         </div>
         <div class="footer-col">
-          <div class="footer-col-label">LEGAL</div>
+          <div class="footer-col-label">Guides</div>
+          {COLLECTIONS.map((c) => <a href={collectionPath(c)}>{c.label}</a>)}
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-label">Legal</div>
           <a href="/legal/privacy/">Privacy policy</a>
           <a href="/legal/terms/">Terms of use</a>
-          <a href="/legal/licences/">Model licences &amp; data</a>
+          <a href="/legal/licences/">Licences &amp; data</a>
         </div>
         <div class="footer-col">
-          <div class="footer-col-label">FOLLOW</div>
+          <div class="footer-col-label">Follow</div>
           <a href="/rss.xml">RSS feed ↗</a>
           {
             LISTMONK_URL && LISTMONK_LIST_UUID && (
@@ -119,10 +224,192 @@ const entryCount = String(MODELS.length);
           }
         </div>
       </div>
-      <div class="footer-bottom">
-        <span>© 2026 STT—INDEX</span>
-        <span>VOL. 1 — {entryCount} ENTRIES</span>
+      <div class="container footer-bottom">
+        <span>© {new Date().getFullYear()} STT Index · speechtotext.dev</span>
+        <span>{entryCount} entries indexed</span>
       </div>
     </footer>
+
+    <dialog class="cmdk" data-cmdk aria-label="Search the index">
+      <div class="cmdk-head">
+        <Icon name="search" />
+        <input
+          class="cmdk-input"
+          data-cmdk-input
+          type="text"
+          placeholder="Search models, orgs, licences, languages…"
+          aria-label="Search"
+          autocomplete="off"
+          spellcheck="false"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="cmdk-list"
+        />
+        <kbd>esc</kbd>
+      </div>
+      <ul class="cmdk-list" id="cmdk-list" role="listbox" data-cmdk-list></ul>
+      <div class="cmdk-foot">
+        <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+        <span><kbd>↵</kbd> open</span>
+      </div>
+    </dialog>
+    <script is:inline type="application/json" id="cmdk-data" set:html={JSON.stringify(searchIndex)} />
   </body>
 </html>
+
+<script>
+  // ---- theme toggle -------------------------------------------------------
+  const root = document.documentElement;
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', () => {
+    const current =
+      root.dataset.theme ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    const next = current === 'light' ? 'dark' : 'light';
+    root.dataset.theme = next;
+    try {
+      localStorage.setItem('theme', next);
+    } catch {}
+  });
+
+  // ---- mobile menu --------------------------------------------------------
+  const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.getElementById('mobile-menu');
+  menuBtn?.addEventListener('click', () => {
+    const open = menu!.toggleAttribute('data-open');
+    menuBtn.setAttribute('aria-expanded', String(open));
+  });
+
+  // ---- card spotlight -----------------------------------------------------
+  document.addEventListener('pointermove', (e) => {
+    const el = (e.target as HTMLElement | null)?.closest<HTMLElement>('.spot');
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    el.style.setProperty('--my', `${e.clientY - r.top}px`);
+  });
+
+  // ---- clickable table rows ----------------------------------------------
+  document.addEventListener('click', (e) => {
+    const t = e.target as HTMLElement;
+    if (t.closest('a, button, input, select, summary')) return;
+    const row = t.closest<HTMLElement>('tr[data-href]');
+    if (row?.dataset.href) location.href = row.dataset.href;
+  });
+
+  // ---- copy buttons -------------------------------------------------------
+  document.addEventListener('click', async (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-copy]');
+    if (!btn) return;
+    const src = document.getElementById(btn.dataset.copy!);
+    if (!src) return;
+    try {
+      await navigator.clipboard.writeText(src.textContent ?? '');
+      const label = btn.querySelector('span');
+      btn.setAttribute('data-copied', '');
+      if (label) label.textContent = 'Copied';
+      setTimeout(() => {
+        btn.removeAttribute('data-copied');
+        if (label) label.textContent = 'Copy';
+      }, 1600);
+    } catch {}
+  });
+
+  // ---- command palette ----------------------------------------------------
+  type Item = { n: string; u: string; h: string; o?: string; k?: string; w?: string };
+  const dialog = document.querySelector<HTMLDialogElement>('[data-cmdk]')!;
+  const input = dialog.querySelector<HTMLInputElement>('[data-cmdk-input]')!;
+  const list = dialog.querySelector<HTMLUListElement>('[data-cmdk-list]')!;
+  const data = JSON.parse(document.getElementById('cmdk-data')!.textContent!) as {
+    models: Item[];
+    pages: Item[];
+  };
+  const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
+  if (!isMac) document.querySelectorAll('[data-mod]').forEach((k) => (k.textContent = 'Ctrl'));
+
+  let results: Item[] = [];
+  let active = 0;
+
+  const esc = (s: string) =>
+    s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
+
+  function score(it: Item, q: string, terms: string[]): number {
+    if (!terms.every((t) => it.h.includes(t) || it.n.toLowerCase().includes(t))) return -1;
+    const name = it.n.toLowerCase();
+    if (name.startsWith(q)) return 3;
+    if (name.includes(q)) return 2;
+    return 1;
+  }
+
+  function search(q: string) {
+    q = q.trim().toLowerCase();
+    const terms = q.split(/\s+/).filter(Boolean);
+    const rank = (items: Item[]) =>
+      items
+        .map((it) => ({ it, s: q ? score(it, q, terms) : 0 }))
+        .filter((x) => x.s >= 0)
+        .sort((a, b) => b.s - a.s)
+        .map((x) => x.it);
+    const models = rank(data.models).slice(0, q ? 12 : 6);
+    const pages = rank(data.pages).slice(0, q ? 6 : 4);
+    results = [...models, ...pages];
+    active = 0;
+    if (!results.length) {
+      list.innerHTML = `<li class="cmdk-empty">No matches for “${esc(q)}”</li>`;
+      return;
+    }
+    const row = (it: Item, i: number) =>
+      `<li class="cmdk-item" role="option" id="cmdk-${i}" aria-selected="${i === 0}"><a href="${it.u}"><span class="t"><span class="n">${esc(it.n)}</span>${it.o ? `<span class="s">${esc(it.o)} · ${esc(it.k ?? '')}</span>` : ''}</span>${it.w ? `<span class="k">${esc(it.w)} WER</span>` : ''}</a></li>`;
+    let html = '';
+    if (models.length) html += `<li class="cmdk-group" role="presentation">Entries</li>` + models.map(row).join('');
+    if (pages.length)
+      html +=
+        `<li class="cmdk-group" role="presentation">Pages</li>` +
+        pages.map((p, i) => row(p, i + models.length)).join('');
+    list.innerHTML = html;
+    input.setAttribute('aria-activedescendant', 'cmdk-0');
+  }
+
+  function setActive(i: number) {
+    if (!results.length) return;
+    active = (i + results.length) % results.length;
+    list.querySelectorAll('.cmdk-item').forEach((el, j) => el.setAttribute('aria-selected', String(j === active)));
+    const el = document.getElementById(`cmdk-${active}`);
+    el?.scrollIntoView({ block: 'nearest' });
+    input.setAttribute('aria-activedescendant', `cmdk-${active}`);
+  }
+
+  function open() {
+    if (dialog.open) return;
+    input.value = '';
+    search('');
+    dialog.showModal();
+    input.focus();
+  }
+
+  document.querySelectorAll('[data-cmdk-open]').forEach((b) => b.addEventListener('click', open));
+  input.addEventListener('input', () => search(input.value));
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setActive(active + 1);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setActive(active - 1);
+    } else if (e.key === 'Enter' && results[active]) {
+      e.preventDefault();
+      location.href = results[active]!.u;
+    }
+  });
+  dialog.addEventListener('click', (e) => {
+    if (e.target === dialog) dialog.close();
+  });
+  document.addEventListener('keydown', (e) => {
+    const typing = (e.target as HTMLElement).closest('input, textarea, select, [contenteditable]');
+    if ((e.key === 'k' || e.key === 'K') && (e.metaKey || e.ctrlKey)) {
+      e.preventDefault();
+      dialog.open ? dialog.close() : open();
+    } else if (e.key === '/' && !typing && !dialog.open) {
+      e.preventDefault();
+      open();
+    }
+  });
+</script>

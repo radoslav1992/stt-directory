@@ -29,6 +29,13 @@ export const modelSchema = z.object({
   langs: z.string(),
   runs: z.array(z.string()).min(1),
   blurb: z.string(),
+  /** Optional hand-tuned <title> for the entry page (≤ 60 chars, no site
+   *  suffix). Omit to use the generated default — see src/data/seo.ts. */
+  seoTitle: z.string().max(70).optional(),
+  /** Optional hand-tuned meta description (≤ 160 chars). Only facts that
+   *  already appear elsewhere in the entry; write the entry's own WER as
+   *  `{wer}` so leaderboard syncs keep it current. Omit to use the generated one. */
+  seoDescription: z.string().max(160).optional(),
   about: z.array(z.string()).min(1),
   install: z.string(),
   downloads: z.array(z.object({ label: z.string(), url: z.string().url() })),
@@ -108,10 +115,10 @@ export const KIND_LABELS: Record<Kind, string> = {
   api: 'API',
 };
 
-export const STATUS_MAP: Record<Status, { label: string; color: string }> = {
-  active: { label: '● ACTIVE', color: '#1F7A3D' },
-  legacy: { label: '◐ LEGACY', color: '#8A6D1B' },
-  discontinued: { label: '○ DISCONTINUED', color: '#9A3B1E' },
+export const STATUS_MAP: Record<Status, { label: string; tone: 'good' | 'warn' | 'bad' }> = {
+  active: { label: 'Active', tone: 'good' },
+  legacy: { label: 'Legacy', tone: 'warn' },
+  discontinued: { label: 'Discontinued', tone: 'bad' },
 };
 
 const SPDX_URLS: Record<string, string> = {

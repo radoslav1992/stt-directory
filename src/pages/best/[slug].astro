@@ -1,0 +1,110 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import Faq from '../../components/Faq.astro';
+import { KIND_LABELS, modelPath } from '../../data/models';
+import {
+  COLLECTIONS,
+  collectionEntries,
+  collectionFaqs,
+  collectionPath,
+  type Collection,
+} from '../../data/collections';
+import { breadcrumbJsonLd, faqJsonLd, itemListJsonLd, langCount, pct, withSiteName } from '../../data/seo';
+
+export function getStaticPaths() {
+  return COLLECTIONS.map((c) => ({ params: { slug: c.slug }, props: { collection: c } }));
+}
+
+const { collection: c } = Astro.props as { collection: Collection };
+const list = collectionEntries(c);
+const faqs = collectionFaqs(c);
+const others = COLLECTIONS.filter((x) => x.slug !== c.slug);
+const langBadge = (langs: string) => {
+  const n = langCount(langs);
+  if (n == null) return langs;
+  const shown = n.toLocaleString('en-US');
+  return langs.replace(/,/g, '').includes(`${n}+`) ? `${shown}+` : shown;
+};
+
+const jsonLd = [
+  itemListJsonLd(Astro.site, c.h1, list),
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Guides', path: '/best/' },
+    { name: c.label, path: collectionPath(c) },
+  ]),
+  faqJsonLd(faqs),
+];
+---
+
+<Base title={withSiteName(c.title)} description={c.description} {jsonLd}>
+  <PageHead
+    kicker={`Guide · ${list.length} entries`}
+    title={c.h1}
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'Guides', href: '/best/' }, { name: c.label }]}
+  >
+    <div class="prose-narrow" style="margin-top: 18px">
+      {c.intro.map((p) => <p>{p}</p>)}
+    </div>
+  </PageHead>
+
+  <div class="container page stack-lg">
+    <section>
+      <div class="sec-h">{c.criteria}</div>
+      <ol class="ranked">
+        {
+          list.map((m, i) => (
+            <li>
+              <a class="rank-item" href={modelPath(m)}>
+                <span class="rank-n">{i + 1}</span>
+                <div class="rank-body">
+                  <h3>
+                    {m.name}
+                    <small>{m.org}</small>
+                  </h3>
+                  <p>{m.blurb}</p>
+                  <span class="mcard-specs">
+                    <span class="pill">{KIND_LABELS[m.kind]}</span>
+                    <span class:list={['pill', { 'pill--good': m.licenseType === 'permissive', 'pill--warn': m.licenseType === 'non-commercial' }]}>
+                      {m.license}
+                    </span>
+                    {!m.params.startsWith('—') && <span class="pill">{m.params}</span>}
+                    <span class="pill">{m.langs}</span>
+                    <span class="pill">{m.runs.join(' · ')}</span>
+                  </span>
+                </div>
+                {c.sort === 'langs' ? (
+                  <span class="rank-wer">
+                    {langBadge(m.langs)}
+                    <small>languages</small>
+                  </span>
+                ) : (
+                  <span class:list={['rank-wer', { none: m.wer == null }]}>
+                    {m.wer != null ? pct(m.wer) : 'no WER'}
+                    {m.wer != null && <small>avg WER</small>}
+                  </span>
+                )}
+              </a>
+            </li>
+          ))
+        }
+      </ol>
+    </section>
+
+    <section style="max-width: 880px">
+      <div class="sec-h">FAQ</div>
+      <h2 class="sec-title">Questions about this guide</h2>
+      <Faq {faqs} />
+    </section>
+
+    <section>
+      <div class="sec-h">More guides</div>
+      <div class="vs-links">
+        {others.map((o) => <a href={collectionPath(o)}>{o.h1} →</a>)}
+        <a href="/leaderboard/">Full WER leaderboard →</a>
+        <a href="/pricing/">API pricing →</a>
+      </div>
+    </section>
+  </div>
+</Base>

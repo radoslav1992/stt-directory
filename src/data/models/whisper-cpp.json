@@ -18,6 +18,8 @@
     "Browser"
   ],
   "blurb": "Whisper in plain C/C++ — runs on a laptop, a phone, a Raspberry Pi, or as WebAssembly in a browser.",
+  "seoTitle": "whisper.cpp: run Whisper offline in C/C++ — install & models",
+  "seoDescription": "whisper.cpp runs OpenAI Whisper in dependency-free C/C++ with quantised GGML weights — on Apple Silicon, Windows, Linux, iOS, Android, Raspberry Pi and WASM.",
   "about": [
     "whisper.cpp ports Whisper to dependency-free C/C++ with quantised GGML weights. It runs on anything: Apple Silicon (with Metal and Core ML acceleration), Windows, Linux, iOS, Android, Raspberry Pi, and even WebAssembly in the browser.",
     "This is the easiest way to run Whisper fully offline on a normal computer — one small binary, one model file, no Python. It powers most on-device dictation apps built on Whisper."

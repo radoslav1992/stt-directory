@@ -17,6 +17,8 @@
     "Mobile"
   ],
   "blurb": "Lightweight offline recognition for 20+ languages — models start at 50 MB and run on a Raspberry Pi.",
+  "seoTitle": "Vosk: offline speech recognition — models, licence & install",
+  "seoDescription": "Vosk: Alpha Cephei’s free, Apache-2.0 offline speech recogniser — streaming models for 20+ languages from 50 MB, for Raspberry Pi and phones. Install guide.",
   "about": [
     "Vosk is a Kaldi-based offline recogniser with ready-made models for 20+ languages, starting at 50 MB — small enough for phones, Raspberry Pi, and embedded devices. It streams: you get words as they are spoken, with a zero-latency feel that batch models can’t match.",
     "Bindings exist for Python, Java, Node, C#, Go, and more. Accuracy trails the transformer generation, but for wake words, commands, and live captioning on weak hardware it remains the pragmatic choice."

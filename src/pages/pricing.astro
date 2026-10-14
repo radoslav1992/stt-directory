@@ -1,0 +1,217 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHead from '../components/PageHead.astro';
+import Faq from '../components/Faq.astro';
+import Icon from '../components/Icon.astro';
+import { MODELS, modelPath } from '../data/models';
+import {
+  BUILD_YEAR,
+  PRICE_ROWS,
+  breadcrumbJsonLd,
+  byWer,
+  faqJsonLd,
+  pct,
+  runsLocally,
+  usd,
+  withSiteName,
+  type Faq as FaqItem,
+} from '../data/seo';
+import { COLLECTIONS, collectionPath } from '../data/collections';
+
+const priced = PRICE_ROWS.filter((r) => r.perHour != null);
+const unpriced = PRICE_ROWS.filter((r) => r.perHour == null);
+const cheapest = priced.slice(0, 3);
+const maxHour = Math.max(...priced.map((r) => r.perHour!));
+const apis = MODELS.filter((m) => m.kind === 'api');
+const selfHost = byWer(MODELS.filter((m) => runsLocally(m) && m.licenseType === 'permissive' && m.status === 'active')).slice(0, 3);
+
+const title = withSiteName(`Speech-to-Text API Pricing Compared (${BUILD_YEAR}) — Cost per Hour`);
+const description = `Speech-to-text API pricing side by side: ${apis.map((m) => m.org).join(', ')} and hosted Whisper, Voxtral and more — list prices normalised to cost per audio hour.`;
+
+const faqs: FaqItem[] = [
+  ...(priced[0]
+    ? [
+        {
+          q: 'What is the cheapest speech-to-text API?',
+          a: `By published list price, the cheapest plan tracked here is ${priced[0].plan} for ${priced[0].model.name} at ${priced[0].price} — about ${usd(priced[0].perHour!)} per audio hour. Cheaper isn’t always better: check accuracy, languages and real-time support too.`,
+        },
+      ]
+    : []),
+  {
+    q: 'How much does speech-to-text cost per hour?',
+    a: `List prices in this index range from about ${usd(priced[0]!.perHour!)} to ${usd(priced[priced.length - 1]!.perHour!)} per audio hour. Real-time streaming plans usually cost more than batch transcription of the same model.`,
+  },
+  {
+    q: 'How are prices normalised?',
+    a: 'Per-minute prices are multiplied by 60 to give a cost per audio hour; per-hour prices are shown as published. “From” and “~” prices are entry-level figures. Plans billed per GPU, per token or under enterprise contracts can’t be normalised and are listed separately.',
+  },
+  {
+    q: 'Is there a free alternative to paid speech-to-text APIs?',
+    a: `Yes — self-host an open model. ${selfHost.map((m) => `${m.name} (${m.license})`).join(', ')} are permissively licensed and run locally on your own hardware, so the only cost is compute.`,
+  },
+];
+
+const jsonLd = [
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'API pricing', path: '/pricing/' },
+  ]),
+  faqJsonLd(faqs),
+];
+---
+
+<Base {title} {description} {jsonLd}>
+  <PageHead
+    kicker="Pricing"
+    title={`Speech-to-text API <span class="serif-accent gradient-text">pricing</span>, compared`}
+    lead="Every hosted plan tracked in the index — commercial STT APIs and hosted versions of open models — with list prices normalised to US dollars per audio hour. Prices change: always confirm on the provider’s pricing page."
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'API pricing' }]}
+  >
+    <div class="highlight-grid">
+      {
+        cheapest.map((r) => (
+          <a class="highlight" href={modelPath(r.model)}>
+            <div class="v">
+              {usd(r.perHour!)}
+              <span style="font-size: 15px; font-weight: 450; color: var(--muted)">/hr</span>
+            </div>
+            <div class="l">{r.plan}</div>
+            <div class="s">
+              {r.model.name} · {r.price}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </PageHead>
+
+  <div class="container page stack-lg">
+    <section>
+      <div class="sec-h">List prices</div>
+      <h2 class="sec-title">Cost per audio hour</h2>
+      <div class="table-wrap">
+        <table class="data stack">
+          <thead>
+            <tr>
+              <th scope="col">Plan</th>
+              <th scope="col">Model</th>
+              <th scope="col">WER</th>
+              <th scope="col">List price</th>
+              <th scope="col">≈ per hour</th>
+              <th scope="col"><span class="visually-hidden">Source</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              priced.map((r) => (
+                <tr data-href={modelPath(r.model)}>
+                  <td class="c-main">
+                    <span class="t-name">{r.plan}</span>
+                    <span class="t-sub">{r.model.kind === 'api' ? 'Commercial API' : 'Hosted open model'}</span>
+                  </td>
+                  <td data-label="Model">
+                    <a href={modelPath(r.model)}>{r.model.name}</a>
+                  </td>
+                  <td class:list={['t-wer', 'c-hide', { none: r.model.wer == null }]}>
+                    {r.model.wer != null ? pct(r.model.wer) : '—'}
+                  </td>
+                  <td class="t-mono" data-label="List">
+                    {r.price}
+                  </td>
+                  <td class="c-full">
+                    <div class="t-bar">
+                      <span class="meter">
+                        <i style={`width: ${Math.max(3, Math.round((r.perHour! / maxHour) * 100))}%`} />
+                      </span>
+                      <span class="t-wer">{usd(r.perHour!)}</span>
+                    </div>
+                  </td>
+                  <td class="c-right">
+                    <a href={r.url} target="_blank" rel="noopener nofollow" class="icon-btn" aria-label={`${r.plan} pricing page`}>
+                      <Icon name="external" />
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <div class="sec-h">Other billing</div>
+      <h2 class="sec-title">Usage-based, per-GPU and enterprise plans</h2>
+      <div class="table-wrap">
+        <table class="data stack">
+          <thead>
+            <tr>
+              <th scope="col">Plan</th>
+              <th scope="col">Model</th>
+              <th scope="col">Billing</th>
+              <th scope="col"><span class="visually-hidden">Source</span></th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              unpriced.map((r) => (
+                <tr data-href={modelPath(r.model)}>
+                  <td class="c-main">
+                    <span class="t-name">{r.plan}</span>
+                  </td>
+                  <td data-label="Model" class="c-full">
+                    <a href={modelPath(r.model)}>{r.model.name}</a>
+                  </td>
+                  <td class="t-mono c-full" data-label="Billing">
+                    {r.price}
+                  </td>
+                  <td class="c-right">
+                    <a href={r.url} target="_blank" rel="noopener nofollow" class="icon-btn" aria-label={`${r.plan} pricing page`}>
+                      <Icon name="external" />
+                    </a>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="footnote">
+        Prices are copied from each provider’s pricing page and change without notice — check the
+        source before you commit. Per-minute prices are converted to per-hour (× 60).
+      </p>
+    </section>
+
+    <section>
+      <div class="sec-h">Self-host instead</div>
+      <h2 class="sec-title">Skip the per-minute bill</h2>
+      <p class="section-sub" style="margin: -4px 0 18px">
+        Permissively licensed models you can run on your own hardware — the only cost is compute.
+      </p>
+      <div class="mini-grid" style="grid-template-columns: repeat(auto-fill, minmax(240px, 1fr))">
+        {
+          selfHost.map((m) => (
+            <a href={modelPath(m)} class="mini spot">
+              <span class="mini-n">{m.name}</span>
+              <span class="mini-o">
+                {m.org} · {m.runs.join(', ')}
+              </span>
+              <span class="mini-s">
+                {m.license} · {m.wer != null ? `${pct(m.wer)} WER` : 'no WER'}
+              </span>
+            </a>
+          ))
+        }
+      </div>
+      <div class="vs-links" style="margin-top: 16px">
+        {COLLECTIONS.slice(0, 3).map((c) => <a href={collectionPath(c)}>{c.h1} →</a>)}
+      </div>
+    </section>
+
+    <section style="max-width: 880px">
+      <div class="sec-h">FAQ</div>
+      <h2 class="sec-title">Speech-to-text pricing questions</h2>
+      <Faq {faqs} />
+    </section>
+  </div>
+</Base>

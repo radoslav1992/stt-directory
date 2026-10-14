@@ -1,0 +1,42 @@
+---
+interface Crumb {
+  name: string;
+  href?: string;
+}
+
+interface Props {
+  kicker?: string;
+  title: string;
+  lead?: string;
+  crumbs?: Crumb[];
+}
+
+const { kicker, title, lead, crumbs } = Astro.props;
+---
+
+<section class="page-head">
+  <div class="hero-bg" aria-hidden="true"><span class="glow glow-a"></span><span class="glow glow-b"></span></div>
+  <div class="container">
+    {
+      crumbs && (
+        <nav aria-label="Breadcrumb">
+          <ol class="crumbs">
+            {crumbs.map((c, i) => (
+              <li>
+                {c.href && i < crumbs.length - 1 ? (
+                  <a href={c.href}>{c.name}</a>
+                ) : (
+                  <span aria-current="page">{c.name}</span>
+                )}
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+    {kicker && <div class="kicker" style={crumbs ? 'margin-top: 22px' : undefined}>{kicker}</div>}
+    <h1 class="page-title" set:html={title} />
+    {lead && <p class="page-lead">{lead}</p>}
+    <slot />
+  </div>
+</section>

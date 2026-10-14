@@ -1,0 +1,55 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHead from '../../components/PageHead.astro';
+import { COMPARISONS, comparisonPath } from '../../data/comparisons';
+import { breadcrumbJsonLd, pct, withSiteName } from '../../data/seo';
+
+const title = withSiteName('Speech-to-Text Comparisons — Head-to-Head Model Matchups');
+const description = `${COMPARISONS.length} head-to-head speech-to-text comparisons — faster-whisper vs whisper.cpp, Deepgram vs AssemblyAI, Moonshine vs Parakeet and more.`;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'Speech-to-text comparisons',
+    description,
+    hasPart: COMPARISONS.map((c) => ({
+      '@type': 'WebPage',
+      name: `${c.a.name} vs ${c.b.name}`,
+      url: new URL(comparisonPath(c), Astro.site).href,
+    })),
+  },
+  breadcrumbJsonLd(Astro.site, [
+    { name: 'Home', path: '/' },
+    { name: 'Compare', path: '/compare/' },
+  ]),
+];
+---
+
+<Base {title} {description} {jsonLd}>
+  <PageHead
+    kicker="Compare"
+    title={`Head-to-head <span class="serif-accent gradient-text">matchups</span>`}
+    lead="The comparisons people search for most, generated from the index data: accuracy on the Open ASR Leaderboard, licence, hardware targets, language coverage and list price."
+    crumbs={[{ name: 'Home', href: '/' }, { name: 'Compare' }]}
+  />
+  <div class="container page">
+    <div class="guide-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr))">
+      {
+        COMPARISONS.map((c) => (
+          <a href={comparisonPath(c)} class="gcard spot">
+            <span class="gcard-t">
+              {c.a.name} <span class="gradient-text" style="font-family: var(--mono); font-size: 13px">VS</span> {c.b.name}
+            </span>
+            <span class="gcard-d">
+              {c.a.org} · {c.b.org}
+            </span>
+            <span class="gcard-n">
+              WER {c.a.wer != null ? pct(c.a.wer) : '—'} vs {c.b.wer != null ? pct(c.b.wer) : '—'} →
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</Base>

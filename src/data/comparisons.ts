@@ -46,11 +46,19 @@ export function comparisonsFor(m: ModelEntry): Comparison[] {
 const sameWeights = (a: ModelEntry, b: ModelEntry) =>
   a.hfId != null && a.hfId === b.hfId && (a.kind === 'runtime' || b.kind === 'runtime');
 
+/** Cost summary: open entries are free to self-host, so a hosted price is the
+ *  optional managed route, never "the" price. */
+export function costText(m: ModelEntry): string {
+  const p = cheapestPerHour(m);
+  if (m.kind === 'api') return p != null ? `from ≈ ${usd(p)} per audio hour` : 'usage-based';
+  return p != null ? `free to self-host; hosted from ≈ ${usd(p)} per audio hour` : 'free to self-host';
+}
+
 /** Factual one-liners on how the two entries differ. */
 export function comparisonFacts(a: ModelEntry, b: ModelEntry): { label: string; text: string }[] {
   const out: { label: string; text: string }[] = [];
 
-  if (sameWeights(a, b)) {
+  if (sameWeights(a, b) && a.wer != null) {
     out.push({
       label: 'Accuracy',
       text: `Both execute the same Whisper weights, so accuracy is identical — ${pct(a.wer!)} average WER on the Open ASR Leaderboard. The difference is speed, hardware and features.`,
@@ -105,15 +113,10 @@ export function comparisonFacts(a: ModelEntry, b: ModelEntry): { label: string; 
   if (!(a.params.startsWith('—') && b.params.startsWith('—')))
     out.push({ label: 'Size', text: `${a.name}: ${a.params}. ${b.name}: ${b.params}.` });
 
-  const pa = cheapestPerHour(a);
-  const pb = cheapestPerHour(b);
-  if (pa != null || pb != null) {
+  if (cheapestPerHour(a) != null || cheapestPerHour(b) != null) {
     out.push({
-      label: 'Lowest list price',
-      text: [
-        `${a.name}: ${pa != null ? `≈ ${usd(pa)} per audio hour` : a.kind === 'api' ? 'usage-based' : 'free to self-host'}`,
-        `${b.name}: ${pb != null ? `≈ ${usd(pb)} per audio hour` : b.kind === 'api' ? 'usage-based' : 'free to self-host'}`,
-      ].join('. ') + '. Prices change — check the provider.',
+      label: 'Cost',
+      text: `${a.name}: ${costText(a)}. ${b.name}: ${costText(b)}. Prices change — check the provider.`,
     });
   }
 
@@ -140,10 +143,11 @@ export function advantages(a: ModelEntry, b: ModelEntry): string[] {
   if (a.licenseType === 'permissive' && b.licenseType !== 'permissive') out.push('a permissive licence');
   const la = langCount(a.langs);
   const lb = langCount(b.langs);
-  if (la != null && lb != null && la >= lb * 1.5) out.push(`broader language coverage (${a.langs})`);
+  if (la != null && lb != null && la >= lb * 1.5) out.push(`broader language coverage — ${a.langs}`);
   const pa = cheapestPerHour(a);
   const pb = cheapestPerHour(b);
-  if (pa != null && pb != null && pa < pb) out.push('a lower list price');
+  if (pa != null && pb != null && pa < pb)
+    out.push(a.kind === 'api' && b.kind === 'api' ? 'a lower list price' : 'a cheaper hosted option');
   if (a.status === 'active' && b.status !== 'active') out.push('an actively maintained project');
   if (a.demo && !b.demo) out.push('to try it in your browser on this site first');
   return out;

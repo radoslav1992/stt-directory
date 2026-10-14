@@ -63,7 +63,6 @@ const jsonLd: object[] = [
     license: licenseUrl(m.license) ?? m.license,
     url,
     ...(m.downloads[0] ? { downloadUrl: m.downloads[0].url } : {}),
-    ...(m.links.length ? { sameAs: m.links.map((l) => l.url) } : {}),
     ...(!isApi ? { offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' } } : {}),
   },
   breadcrumbJsonLd(Astro.site, [

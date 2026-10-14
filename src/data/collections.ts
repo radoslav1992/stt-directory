@@ -98,10 +98,6 @@ export const COLLECTIONS: Collection[] = [
   },
 ];
 
-export function getCollection(slug: string): Collection | undefined {
-  return COLLECTIONS.find((c) => c.slug === slug);
-}
-
 export function collectionPath(c: Collection): string {
   return `/best/${c.slug}/`;
 }
@@ -127,7 +123,7 @@ export function collectionFaqs(c: Collection): Faq[] {
     if (ranked[0]) {
       const r = ranked[0];
       faqs.push({
-        q: `Which is the most accurate entry in “${c.label.toLowerCase()}”?`,
+        q: 'Which entry in this guide is the most accurate?',
         a: `${r.name} from ${r.org}, at ${pct(r.wer!)} average WER on the Hugging Face Open ASR Leaderboard${ranked[1] ? `, followed by ${ranked[1].name} (${pct(ranked[1].wer!)})` : ''}.`,
       });
     }

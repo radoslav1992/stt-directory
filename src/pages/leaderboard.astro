@@ -10,6 +10,7 @@ import {
   faqJsonLd,
   itemListJsonLd,
   pct,
+  runsLocally,
   withSiteName,
   type Faq as FaqItem,
 } from '../data/seo';
@@ -20,6 +21,14 @@ const apis = BENCHMARKED.filter((m) => m.kind === 'api');
 const runtimes = MODELS.filter((m) => m.kind === 'runtime' && m.wer != null);
 const unbenchmarked = MODELS.filter((m) => m.wer == null);
 const top = BENCHMARKED[0]!;
+
+// Three distinct headline picks: the overall leader, the best of the other
+// camp (open vs API), and the best that runs without a datacentre GPU.
+const highlights = [
+  { m: top, s: 'Lowest WER overall' },
+  top.kind === 'api' ? { m: open[0], s: 'Best open weights' } : { m: apis[0], s: 'Best hosted API' },
+  { m: BENCHMARKED.find((m) => runsLocally(m) && m.id !== top.id), s: 'Best on CPU, mobile or browser' },
+].filter((h): h is { m: (typeof BENCHMARKED)[number]; s: string } => h.m != null);
 
 const title = withSiteName(`Speech-to-Text Leaderboard ${BUILD_YEAR} — STT Models Ranked by WER`);
 const description = `${BENCHMARKED.length} speech-to-text models and APIs ranked by average word error rate on the Hugging Face Open ASR Leaderboard. ${top.name} leads at ${pct(top.wer!)}.`;
@@ -73,28 +82,14 @@ const jsonLd = [
     crumbs={[{ name: 'Home', href: '/' }, { name: 'Leaderboard' }]}
   >
     <div class="highlight-grid">
-      <a class="highlight" href={modelPath(top)}>
-        <div class="v gradient-text">{pct(top.wer!)}</div>
-        <div class="l">{top.name}</div>
-        <div class="s">Lowest WER overall</div>
-      </a>
       {
-        open[0] && (
-          <a class="highlight" href={modelPath(open[0])}>
-            <div class="v">{pct(open[0].wer!)}</div>
-            <div class="l">{open[0].name}</div>
-            <div class="s">Best open weights</div>
+        highlights.map((h, i) => (
+          <a class="highlight" href={modelPath(h.m)}>
+            <div class:list={['v', { 'gradient-text': i === 0 }]}>{pct(h.m.wer!)}</div>
+            <div class="l">{h.m.name}</div>
+            <div class="s">{h.s}</div>
           </a>
-        )
-      }
-      {
-        apis[0] && (
-          <a class="highlight" href={modelPath(apis[0])}>
-            <div class="v">{pct(apis[0].wer!)}</div>
-            <div class="l">{apis[0].name}</div>
-            <div class="s">Best hosted API</div>
-          </a>
-        )
+        ))
       }
     </div>
   </PageHead>

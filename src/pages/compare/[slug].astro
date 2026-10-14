@@ -10,14 +10,13 @@ import {
   comparisonFacts,
   comparisonPath,
   comparisonsFor,
+  costText,
   type Comparison,
 } from '../../data/comparisons';
 import {
   breadcrumbJsonLd,
-  cheapestPerHour,
   faqJsonLd,
   pct,
-  usd,
   withSiteName,
   type Faq as FaqItem,
 } from '../../data/seo';
@@ -36,12 +35,6 @@ const related = [...new Map([...comparisonsFor(a), ...comparisonsFor(b)].map((x)
   (x) => x.slug !== c.slug
 );
 
-const priceCell = (m: ModelEntry) => {
-  const p = cheapestPerHour(m);
-  if (p != null) return `≈ ${usd(p)} / hr`;
-  return m.kind === 'api' ? 'usage-based' : 'free (self-host)';
-};
-
 const rows: { label: string; a: string; b: string }[] = [
   { label: 'Made by', a: a.org, b: b.org },
   { label: 'Type', a: KIND_LABELS[a.kind], b: KIND_LABELS[b.kind] },
@@ -51,7 +44,7 @@ const rows: { label: string; a: string; b: string }[] = [
   { label: 'Avg. WER', a: a.wer != null ? pct(a.wer) : 'not benchmarked', b: b.wer != null ? pct(b.wer) : 'not benchmarked' },
   { label: 'Languages', a: a.langs, b: b.langs },
   { label: 'Runs on', a: a.runs.join(', '), b: b.runs.join(', ') },
-  { label: 'Lowest list price', a: priceCell(a), b: priceCell(b) },
+  { label: 'Cost', a: costText(a), b: costText(b) },
   { label: 'Status', a: STATUS_MAP[a.status].label, b: STATUS_MAP[b.status].label },
 ];
 

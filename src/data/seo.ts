@@ -1,4 +1,4 @@
-import { MODELS, KIND_LABELS, modelPath, type Kind, type ModelEntry } from './models';
+import { MODELS, modelPath, type Kind, type ModelEntry } from './models';
 
 // Everything in this file is derived from the validated entry data — no new
 // facts. Titles, descriptions, FAQs, rankings and comparisons are generated
@@ -103,7 +103,6 @@ export function byWer(list: ModelEntry[]): ModelEntry[] {
   });
 }
 
-export const isOpen = (m: ModelEntry) => m.kind !== 'api' && m.licenseType !== 'proprietary';
 export const runsLocally = (m: ModelEntry) =>
   m.kind !== 'api' && m.runs.some((r) => r === 'CPU' || r === 'Mobile' || r === 'Browser');
 
@@ -149,7 +148,8 @@ function firstCommand(install: string): string | null {
     .split('\n')
     .map((l) => l.trim())
     .find((l) => l && !l.startsWith('#'));
-  return line ?? null;
+  // Drop a trailing shell line-continuation so the inline snippet reads cleanly.
+  return line ? line.replace(/\s*\\$/, '') : null;
 }
 
 export function entryFaqs(m: ModelEntry): Faq[] {
@@ -166,6 +166,11 @@ export function entryFaqs(m: ModelEntry): Faq[] {
     faqs.push({
       q: `Is ${m.name} free?`,
       a: `No. ${m.name} is a proprietary hosted API billed by usage — see the pricing tiers on this page, and check ${m.org}'s pricing page because prices change.`,
+    });
+  } else if (m.licenseType === 'proprietary') {
+    faqs.push({
+      q: `Is ${m.name} free?`,
+      a: `No. ${m.name} is proprietary (${m.license}) — check ${m.org}'s terms for pricing and permitted use.`,
     });
   } else if (m.licenseType === 'non-commercial') {
     faqs.push({
@@ -293,7 +298,7 @@ export const PRICE_ROWS: PriceRow[] = MODELS.flatMap((m) =>
   return a.perHour - b.perHour;
 });
 
-/** "$0.04", "$0.258", "$0.36" — up to three decimals for sub-dime prices, never fewer than two. */
+/** "$0.04", "$0.045", "$0.36" — three decimals below a dime (trailing zero dropped), otherwise two. */
 export const usd = (n: number) => `$${n < 0.1 ? n.toFixed(3).replace(/0$/, '') : n.toFixed(2)}`;
 
 export function cheapestPerHour(m: ModelEntry): number | null {
@@ -301,11 +306,3 @@ export function cheapestPerHour(m: ModelEntry): number | null {
   return xs.length ? Math.min(...xs) : null;
 }
 
-export const KIND_PLURAL: Record<Kind, string> = {
-  model: 'models',
-  runtime: 'runtimes',
-  toolkit: 'toolkits',
-  api: 'APIs',
-};
-
-export { KIND_LABELS };

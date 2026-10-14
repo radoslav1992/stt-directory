@@ -30,6 +30,9 @@ const NAV = [
   { href: '/best/', label: 'Guides' },
   { href: '/compare/', label: 'Compare' },
 ];
+// JSON embedded in a <script> element: escape "<" so no string can close the tag.
+const safeJson = (data: unknown) => JSON.stringify(data).replace(/</g, '\\u003c');
+
 const isCurrent = (href: string) => path === href || (href !== '/' && path.startsWith(href));
 
 // Command-palette index: every entry plus the hub pages.
@@ -65,16 +68,21 @@ const searchIndex = {
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, follow" />}
     <link rel="canonical" href={canonical.href} />
+    <meta name="theme-color" content="#07080b" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)" />
     <script is:inline>
+      // Apply a saved theme before first paint; the browser chrome colour follows it.
       (function () {
         try {
           var t = localStorage.getItem('theme');
-          if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t;
+          if (t !== 'light' && t !== 'dark') return;
+          document.documentElement.dataset.theme = t;
+          document.querySelectorAll('meta[name="theme-color"]').forEach(function (m) {
+            m.setAttribute('content', t === 'light' ? '#f6f6f8' : '#07080b');
+          });
         } catch (e) {}
       })();
     </script>
-    <meta name="theme-color" content="#07080b" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#f6f6f8" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -99,7 +107,7 @@ const searchIndex = {
       href="https://fonts.googleapis.com/css2?family=Geist:wght@400..700&family=Geist+Mono:wght@400..600&family=Instrument+Serif:ital@1&display=swap"
       rel="stylesheet"
     />
-    {jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+    {jsonLd && <script is:inline type="application/ld+json" set:html={safeJson(jsonLd)} />}
     {
       GA_MEASUREMENT_ID && (
         <>
@@ -253,7 +261,7 @@ const searchIndex = {
         <span><kbd>↵</kbd> open</span>
       </div>
     </dialog>
-    <script is:inline type="application/json" id="cmdk-data" set:html={JSON.stringify(searchIndex)} />
+    <script is:inline type="application/json" id="cmdk-data" set:html={safeJson(searchIndex)} />
   </body>
 </html>
 
@@ -265,6 +273,9 @@ const searchIndex = {
       root.dataset.theme ?? (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
     const next = current === 'light' ? 'dark' : 'light';
     root.dataset.theme = next;
+    document
+      .querySelectorAll('meta[name="theme-color"]')
+      .forEach((m) => m.setAttribute('content', next === 'light' ? '#f6f6f8' : '#07080b'));
     try {
       localStorage.setItem('theme', next);
     } catch {}
@@ -273,9 +284,22 @@ const searchIndex = {
   // ---- mobile menu --------------------------------------------------------
   const menuBtn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const menu = document.getElementById('mobile-menu');
+  const closeMenu = () => {
+    menu?.removeAttribute('data-open');
+    menuBtn?.setAttribute('aria-expanded', 'false');
+  };
   menuBtn?.addEventListener('click', () => {
     const open = menu!.toggleAttribute('data-open');
     menuBtn.setAttribute('aria-expanded', String(open));
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu?.hasAttribute('data-open')) {
+      closeMenu();
+      menuBtn?.focus();
+    }
+  });
+  document.addEventListener('click', (e) => {
+    if (menu?.hasAttribute('data-open') && !(e.target as Element).closest('#mobile-menu, [data-menu-toggle]')) closeMenu();
   });
 
   // ---- card spotlight -----------------------------------------------------
@@ -288,11 +312,23 @@ const searchIndex = {
   });
 
   // ---- clickable table rows ----------------------------------------------
-  document.addEventListener('click', (e) => {
+  // The name cell holds the real link; the rest of the row is a convenience.
+  // Leave text selection alone and honour new-tab gestures.
+  const rowHref = (e: MouseEvent) => {
     const t = e.target as HTMLElement;
-    if (t.closest('a, button, input, select, summary')) return;
-    const row = t.closest<HTMLElement>('tr[data-href]');
-    if (row?.dataset.href) location.href = row.dataset.href;
+    if (t.closest('a, button, input, select, summary, label')) return null;
+    if (getSelection()?.toString()) return null;
+    return t.closest<HTMLElement>('tr[data-href]')?.dataset.href ?? null;
+  };
+  document.addEventListener('click', (e) => {
+    const href = rowHref(e);
+    if (!href) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(href, '_blank', 'noopener');
+    else location.href = href;
+  });
+  document.addEventListener('auxclick', (e) => {
+    const href = e.button === 1 ? rowHref(e) : null;
+    if (href) window.open(href, '_blank', 'noopener');
   });
 
   // ---- copy buttons -------------------------------------------------------

@@ -16,13 +16,18 @@
   --text: #f3f4f6;
   --text-2: #b9bec9;
   --muted: #8a909c;
-  --faint: #5d626e;
+  --faint: #787e8a;
   --accent: #ff6b3d;
   --accent-2: #ff3d8b;
   --accent-3: #8b6cff;
   --accent-soft: rgba(255, 107, 61, 0.12);
   --grad: linear-gradient(100deg, #ff7a3d 0%, #ff3d8b 52%, #8b6cff 100%);
   --grad-soft: linear-gradient(100deg, rgba(255, 122, 61, 0.16), rgba(255, 61, 139, 0.12) 52%, rgba(139, 108, 255, 0.16));
+  /* Gradient for small text (e.g. WER chips) — solid in the light theme, where
+     the bright gradient stops fall below 4.5:1. */
+  --grad-small: var(--grad);
+  /* Filled buttons carry white text: every stop stays above 4.5:1 against white. */
+  --grad-btn: linear-gradient(100deg, #d63a1c 0%, #db2777 52%, #7c3aed 100%);
   --good: #3ddc97;
   --warn: #f5b83d;
   --bad: #ff6b6b;
@@ -59,15 +64,16 @@
   --text: #0b0c10;
   --text-2: #3a3f4a;
   --muted: #5f6572;
-  --faint: #9298a4;
-  --accent: #e4501d;
+  --faint: #6a707c;
+  --accent: #c2410c;
   --accent-2: #db1f70;
   --accent-3: #6a48f5;
-  --accent-soft: rgba(228, 80, 29, 0.09);
+  --accent-soft: rgba(194, 65, 12, 0.08);
   --grad: linear-gradient(100deg, #f0602a 0%, #e11d74 52%, #6a48f5 100%);
   --grad-soft: linear-gradient(100deg, rgba(240, 96, 42, 0.1), rgba(225, 29, 116, 0.07) 52%, rgba(106, 72, 245, 0.1));
-  --good: #0f8a5a;
-  --warn: #a86a0c;
+  --grad-small: linear-gradient(var(--accent), var(--accent));
+  --good: #087046;
+  --warn: #8f5b06;
   --bad: #c93636;
   --code-bg: #0e1016;
   --code-text: #e6e8ec;
@@ -92,15 +98,16 @@
     --text: #0b0c10;
     --text-2: #3a3f4a;
     --muted: #5f6572;
-    --faint: #9298a4;
-    --accent: #e4501d;
+    --faint: #6a707c;
+    --accent: #c2410c;
     --accent-2: #db1f70;
     --accent-3: #6a48f5;
-    --accent-soft: rgba(228, 80, 29, 0.09);
+    --accent-soft: rgba(194, 65, 12, 0.08);
     --grad: linear-gradient(100deg, #f0602a 0%, #e11d74 52%, #6a48f5 100%);
     --grad-soft: linear-gradient(100deg, rgba(240, 96, 42, 0.1), rgba(225, 29, 116, 0.07) 52%, rgba(106, 72, 245, 0.1));
-    --good: #0f8a5a;
-    --warn: #a86a0c;
+    --grad-small: linear-gradient(var(--accent), var(--accent));
+    --good: #087046;
+    --warn: #8f5b06;
     --bad: #c93636;
     --code-bg: #0e1016;
     --code-text: #e6e8ec;
@@ -342,15 +349,15 @@ svg {
 .btn-primary {
   border: 0;
   color: #fff;
-  background: var(--grad);
+  background: var(--grad-btn);
   box-shadow: 0 10px 30px -10px color-mix(in srgb, var(--accent-2) 70%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 .btn-primary:hover {
   color: #fff;
-  background: var(--grad);
-  filter: brightness(1.08) saturate(1.05);
+  background: var(--grad-btn);
+  filter: saturate(1.15);
   box-shadow: 0 14px 36px -10px color-mix(in srgb, var(--accent-2) 85%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
@@ -1047,7 +1054,6 @@ kbd {
 .marquee-track {
   display: flex;
   width: max-content;
-  gap: 40px;
   animation: marquee 60s linear infinite;
 }
 
@@ -1059,6 +1065,7 @@ kbd {
   display: inline-flex;
   align-items: center;
   gap: 40px;
+  padding-right: 40px;
   color: var(--muted);
   font: 500 14px var(--mono);
   letter-spacing: 0.02em;
@@ -1264,7 +1271,7 @@ kbd {
 
 .wer-chip b {
   font-weight: 600;
-  background: var(--grad);
+  background: var(--grad-small);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -1429,7 +1436,7 @@ kbd {
   width: 34px;
   height: 34px;
   border-radius: 10px;
-  background: var(--grad);
+  background: var(--grad-btn);
   color: #fff;
   font: 600 14px var(--mono);
 }
@@ -1760,6 +1767,12 @@ table.data th button {
   gap: 4px;
 }
 
+table.data th button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
 table.data th button:hover {
   color: var(--text);
 }
@@ -2035,7 +2048,6 @@ table.data tbody tr:hover {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 13px;
   font: 500 12.5px var(--mono);
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -2490,7 +2502,7 @@ table.data tbody tr:hover {
   width: 52px;
   height: 52px;
   border-radius: 50%;
-  background: var(--grad);
+  background: var(--grad-btn);
   color: #fff;
   font: 650 15px var(--mono);
   box-shadow: 0 10px 30px -10px var(--accent-2);
@@ -2722,6 +2734,11 @@ table.data tbody tr:hover {
   background: var(--surface);
 }
 
+.subscribe-form:focus-within {
+  border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
 .subscribe-form input {
   flex: 1;
   min-width: 0;
@@ -2742,7 +2759,7 @@ table.data tbody tr:hover {
   padding: 0 14px;
   border: 0;
   border-radius: 9px;
-  background: var(--grad);
+  background: var(--grad-btn);
   color: #fff;
   font: 500 14px var(--sans);
   cursor: pointer;
